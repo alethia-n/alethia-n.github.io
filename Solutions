@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Solutions — Mathesis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Solutions</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="exercices.html">Exercices</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Solution de l’exercice 1</h2>
+      <p>On pose $I = \int_{-\infty}^{+\infty} e^{-x^2}\,dx$.  
+      On considère $I^2 = \left(\int_{-\infty}^{+\infty} e^{-x^2}\,dx\right)^2$ et on le passe en coordonnées polaires.</p>
+      <p>On obtient alors : $$I^2 = \pi$$ donc $$I = \sqrt{\pi}.$$</p>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="index.html">Retour à l’accueil</a></p>
+  </footer>
+</body>
+</html>
