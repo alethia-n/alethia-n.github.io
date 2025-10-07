@@ -1,30 +1,42 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mathématiques – Cours Chimie L2</title>
+<title>Mathematics – Chemistry L2</title>
 <style>
-body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; padding:20px; line-height:1.6; }
-h1 { color:#ffcc00; }
-a { color:#ffcc00; text-decoration:none; margin-right:15px; }
+body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; text-align:center; padding:40px; }
+h1 { color:#ffcc00; margin-bottom:30px; }
+.menu { display:flex; justify-content:center; flex-wrap:wrap; gap:20px; }
+.menu-item {
+    display:inline-block;
+    background:#2e2e2e;
+    color:#ffcc00;
+    text-decoration:none;
+    padding:20px 40px;
+    font-size:1.2em;
+    border-radius:10px;
+    transition: transform 0.2s, background 0.2s;
+}
+.menu-item:hover {
+    background:#ffcc00;
+    color:#1e1e1e;
+    transform:scale(1.05);
+}
+a { color:#ffcc00; text-decoration:none; }
 a:hover { text-decoration:underline; }
-nav { margin-bottom:30px; }
 </style>
 </head>
 <body>
-<h1>Mathématiques – Cours Chimie L2</h1>
 
-<nav>
-<a href="integrals/rappel.html">Intégrales – Rappels</a>
-<a href="integrals/td1.html">Intégrales – TD1</a>
-<a href="Cours-02-indispensable/rappel.html">Cours 02 – Rappels</a>
-<a href="Cours-02-indispensable/td1.html">Cours 02 – TD1</a>
-<a href="Cours-03-indispensable/rappel.html">Cours 03 – Rappels</a>
-<a href="Cours-03-indispensable/td1.html">Cours 03 – TD1</a>
-</nav>
+<h1>Mathematics – Chemistry L2</h1>
 
-<p>Choisissez un chapitre pour consulter les rappels et exercices correspondants.</p>
-<p><a href="../../index.html">← Retour à l'accueil</a></p>
+<div class="menu">
+<a href="integrals/rappel.html" class="menu-item">Integrals – Notes</a>
+<a href="integrals/td.html" class="menu-item">Integrals – Exercises</a>
+<a href="../math-02-indisponible/index.html" class="menu-item">Course 02 – Empty</a>
+<a href="../math-03-indisponible/index.html" class="menu-item">Course 03 – Empty</a>
+</div>
 
+<p style="margin-top:30px;"><a href="../../index.html">← Back to Home</a></p>
 </body>
 </html>
