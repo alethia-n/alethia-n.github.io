@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rappels – Intégrales L2 Chimie</title>
+    <link rel="stylesheet" href="../style.css"> <!-- lien vers ton style global -->
+    <!-- MathJax pour formules -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+            font-family: "Times New Roman", serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #ffcc00;
+        }
+        code, pre {
+            background-color: #2e2e2e;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .example {
+            background-color: #2e2e2e;
+            border-left: 4px solid #ffcc00;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rappels – Intégrales Niveau L2 Chimie</h1>
+
+    <h2>1️⃣ Définition de l’intégrale</h2>
+    <p>L’intégrale d’une fonction \(f(x)\) sur un intervalle \([a,b]\) représente <strong>l’aire sous la courbe</strong> de \(f(x)\) entre \(x = a\) et \(x = b\).</p>
+    <p><strong>Notation :</strong> \\(\int_a^b f(x) dx\\)</p>
+    <p><strong>Intégrale indéfinie :</strong> \\(\int f(x) dx = F(x) + C\\), où \(F(x)\) est une primitive et \(C\) la constante d’intégration.</p>
+
+    <h2>2️⃣ Primitives des fonctions usuelles</h2>
+    <ul>
+        <li>Polynomiales : \\(\int x^n dx = \frac{x^{n+1}}{n+1} + C, n \neq -1\\)</li>
+        <li>Exponentielles : \\(\int e^{kx} dx = \frac{1}{k} e^{kx} + C\\)</li>
+        <li>Trigonométriques : \\(\int \sin(x) dx = -\cos(x) + C, \int \cos(x) dx = \sin(x) + C\\)</li>
+        <li>Trigonométriques inverses : \\(\int \frac{dx}{\sqrt{1-x^2}} = \arcsin(x)+C, \int \frac{dx}{1+x^2} = \arctan(x)+C\\)</li>
+    </ul>
+
+    <h2>3️⃣ Notion de composition de fonctions</h2>
+    <p>Une fonction \(h(x)\) peut être écrite comme composition de deux fonctions \(f\) et \(g\) :</p>
+    <p>\\(h(x) = f(g(x))\\)</p>
+    <div class="example">
+        <p>Exemples :</p>
+        <ul>
+            <li>\\(h(x) = \sin(x^2) \Rightarrow f(u)=\sin(u), g(x)=x^2\\)</li>
+            <li>\\(h(x) = e^{3x+1} \Rightarrow f(u)=e^u, g(x)=3x+1\\)</li>
+            <li>\\(h(x) = \ln(2x^2+5) \Rightarrow f(u)=\ln(u), g(x)=2x^2+5\\)</li>
+        </ul>
+    </div>
+
+    <h2>4️⃣ Décomposition en éléments simples</h2>
+    <p>Pour un rationnel \\(\frac{P(x)}{Q(x)}\\) avec \\(\deg(P)<\deg(Q)\\), on l’écrit comme somme de fractions simples faciles à intégrer.</p>
+    <div class="example">
+        <p>Exemple :</p>
+        <p>\\(\frac{2x+3}{x^2+3x+2} = \frac{2x+3}{(x+1)(x+2)} = \frac{A}{x+1} + \frac{B}{x+2}\\)</p>
+        <p>Multiplier par \\((x+1)(x+2)\\) : \\(2x+3 = A(x+2) + B(x+1)\\)</p>
+        <p>Identification : \\(A=1, B=1\\)</p>
+        <p>Intégrale : \\(\int \frac{2x+3}{x^2+3x+2} dx = \ln|x+1| + \ln|x+2| + C\\)</p>
+    </div>
+
+    <h2>5️⃣ Division euclidienne de polynômes</h2>
+    <p>Cas \\(\deg(P) \ge \deg(Q)\\) : on écrit</p>
+    <p>\\(P(x) = Q(x) \cdot S(x) + R(x), \deg(R)<\deg(Q)\\)</p>
+    <p>Alors :</p>
+    <p>\\(\frac{P(x)}{Q(x)} = S(x) + \frac{R(x)}{Q(x)}\\)</p>
+    <p>Intégration :</p>
+    <p>\\(\int \frac{P(x)}{Q(x)} dx = \int S(x) dx + \int \frac{R(x)}{Q(x)} dx\\)</p>
+    <div class="example">
+        <p>Exemple détaillé :</p>
+        <p>\\(\int \frac{x^2+3x+2}{x+1} dx\\)</p>
+        <p><strong>Étape 1 : Division</strong></p>
+        <pre>
+Dividende : x^2 + 3x + 2
+Diviseur  : x + 1
+
+1. Diviser le terme dominant : x^2 ÷ x = x → quotient partiel
+2. Multiplier : x*(x+1) = x^2 + x
+3. Soustraire : (x^2 + 3x + 2) - (x^2 + x) = 2x + 2
+4. Diviser terme dominant : 2x ÷ x = 2 → ajouter au quotient
+5. Multiplier : 2*(x+1) = 2x + 2
+6. Soustraire : (2x + 2) - (2x + 2) = 0
+        </pre>
+        <p>Quotient : \\(S(x)=x+2\\), reste : \\(R(x)=0\\)</p>
+        <p>Donc : \\(\frac{x^2+3x+2}{x+1} = x+2\\)</p>
+        <p>Intégration : \\(\int \frac{x^2+3x+2}{x+1} dx = \int (x+2) dx = \frac{x^2}{2}+2x+C\\)</p>
+    </div>
+
+    <h2>6️⃣ Exemples supplémentaires</h2>
+    <ul>
+        <li>Substitution trigonométrique : \\(\int \frac{dx}{\sqrt{a^2-x^2}} = \arcsin\left(\frac{x}{a}\right) + C\\)</li>
+        <li>Intégrale exponentielle : \\(\int e^{-kx} dx = -\frac{1}{k} e^{-kx} + C\\)</li>
+        <li>Intégrale rationnelle avec racine quadratique : \\(\int \frac{dx}{x^2+2x+5} = \frac{1}{2} \arctan\left(\frac{x+1}{2}\right) + C\\)</li>
+    </ul>
+
+</body>
+</html>
