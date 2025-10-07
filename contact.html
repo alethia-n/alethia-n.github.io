@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Contact</title>
 <style>
-body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; padding:20px; }
-h1 { color:#ffcc00; }
-input, textarea { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:none; }
-button { padding:10px 20px; background:#ffcc00; border:none; cursor:pointer; }
+body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; text-align:center; padding:40px; }
+h1 { color:#ffcc00; margin-bottom:30px; }
+input, textarea { width:80%; padding:10px; margin:10px 0; border-radius:5px; border:none; }
+button { padding:10px 20px; background:#ffcc00; border:none; cursor:pointer; font-size:1em; }
 a { color:#ffcc00; text-decoration:none; }
 a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
 
-<h1>Contact</h1>
+<h1>Contact Me</h1>
 
 <form action="https://formspree.io/f/mrbylnpn" method="POST">
-<input type="text" name="name" placeholder="Votre nom" required>
-<input type="email" name="_replyto" placeholder="Votre email" required>
-<textarea name="message" placeholder="Votre message" rows="5" required></textarea>
-<button type="submit">Envoyer</button>
+<input type="text" name="name" placeholder="Your Name" required><br>
+<input type="email" name="_replyto" placeholder="Your Email" required><br>
+<textarea name="message" placeholder="Your Message" rows="6" required></textarea><br>
+<button type="submit">Send</button>
 </form>
 
-<p><a href="index.html">← Retour à l'accueil</a></p>
+<p style="margin-top:30px;"><a href="index.html">← Back to Home</a></p>
+
 </body>
 </html>
