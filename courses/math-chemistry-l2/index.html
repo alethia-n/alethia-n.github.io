@@ -7,12 +7,10 @@
 body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; text-align:center; padding:40px; }
 h1 { color:#ffcc00; margin-bottom:30px; }
 .menu { display:flex; justify-content:center; flex-wrap:wrap; gap:20px; }
-.menu-item {
-    display:inline-block; background:#2e2e2e; color:#ffcc00; text-decoration:none;
-    padding:30px 60px; font-size:1.2em; border-radius:12px;
-    transition: transform 0.2s, background 0.2s;
-}
+.menu-item { display:inline-block; background:#2e2e2e; color:#ffcc00; text-decoration:none; padding:30px 60px; font-size:1.2em; border-radius:12px; transition: transform 0.2s, background 0.2s; }
 .menu-item:hover { background:#ffcc00; color:#1e1e1e; transform:scale(1.05); }
+a.back { display:block; margin-top:30px; color:#ffcc00; text-decoration:none; }
+a.back:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -22,6 +20,6 @@ h1 { color:#ffcc00; margin-bottom:30px; }
   <a href="cours-02-indisponible/index.html" class="menu-item">Course 02 – Empty</a>
   <a href="cours-03-indisponible/index.html" class="menu-item">Course 03 – Empty</a>
 </div>
-<p style="margin-top:30px;"><a href="../../index.html">← Back to Home</a></p>
+<a href="../../index.html" class="back">← Back to Home</a>
 </body>
 </html>
