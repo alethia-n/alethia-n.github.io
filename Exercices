@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Exercices — Mathesis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Exercices</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Exercice 1 : Intégrale de Gauss</h2>
+      <p>Montrer que :</p>
+      <p>$$\int_{-\infty}^{+\infty} e^{-x^2}\,dx = \sqrt{\pi}$$</p>
+    </section>
+
+    <section>
+      <h2>Exercice 2 : Suite récurrente</h2>
+      <p>Soit $(u_n)$ définie par $u_{n+1} = \frac{1}{2}\left(u_n + \frac{2}{u_n}\right)$.  
+      Montrer que $u_n \to \sqrt{2}$.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="index.html">Retour à l’accueil</a></p>
+  </footer>
+</body>
+</html>
