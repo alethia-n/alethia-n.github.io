@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Rappels – Intégrales</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; padding:20px; line-height:1.6; }
+h1,h2,h3 { color:#ffcc00; }
+a { color:#ffcc00; text-decoration:none; }
+a:hover { text-decoration:underline; }
+pre, code { background:#2e2e2e; padding:5px; border-radius:4px; font-family:monospace; }
+nav { background:#2e2e2e; padding:10px; margin-bottom:20px; }
+nav a { color:#ffcc00; margin-right:15px; }
+.example { background:#2e2e2e; border-left:4px solid #ffcc00; padding:10px; margin:10px 0; }
+</style>
+</head>
+<body>
+
+<nav>
+<a href="rappel.html">Intégrales Rappels</a>
+<a href="td1.html">Intégrales TD1</a>
+<a href="../../Cours-02-indispensable/rappel.html">Cours 02</a>
+<a href="../../Cours-03-indispensable/rappel.html">Cours 03</a>
+</nav>
+
+<h1>Rappels – Intégrales</h1>
+
+<h2>1️⃣ Définition</h2>
+<p>L’intégrale de \(f(x)\) sur [a,b] représente l’aire sous la courbe :</p>
+<p>\\(\int_a^b f(x) dx\\)</p>
+
+<h2>2️⃣ Primitives usuelles</h2>
+<ul>
+<li>\\(\int x^n dx = \frac{x^{n+1}}{n+1} + C\\)</li>
+<li>\\(\int e^{kx} dx = \frac{1}{k} e^{kx} + C\\)</li>
+<li>\\(\int \sin(x) dx = -\cos(x) + C\\)</li>
+<li>\\(\int \frac{dx}{\sqrt{1-x^2}} = \arcsin(x) + C\\)</li>
+</ul>
+
+<h2>3️⃣ Composition de fonctions</h2>
+<p>Exemples :</p>
+<ul>
+<li>\\(h(x) = \sin(x^2) = f(g(x))\\)</li>
+<li>\\(h(x) = e^{3x+1} = f(g(x))\\)</li>
+<li>\\(h(x) = \ln(2x^2+5) = f(g(x))\\)</li>
+</ul>
+
+<h2>4️⃣ Décomposition en éléments simples</h2>
+<div class="example">
+<p>\\(\frac{2x+3}{x^2+3x+2} = \frac{1}{x+1} + \frac{1}{x+2}\\)</p>
+<p>\\(\int \frac{2x+3}{x^2+3x+2} dx = \ln|x+1| + \ln|x+2| + C\\)</p>
+</div>
+
+<h2>5️⃣ Division euclidienne</h2>
+<div class="example">
+<pre>
+Dividende : x^2 + 3x + 2
+Diviseur  : x + 1
+1. x^2 ÷ x = x
+2. x*(x+1) = x^2 + x
+3. Soustraction : (x^2+3x+2)-(x^2+x)=2x+2
+4. 2x ÷ x = 2
+5. 2*(x+1)=2x+2
+6. Soustraction = 0
+Quotient : x+2, Reste : 0
+</pre>
+</div>
+
+<p><a href="../../index.html">← Retour à l'accueil</a></p>
+
+</body>
+</html>
