@@ -3,20 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <title>Integrals – Exercises</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 <style>
 body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; text-align:center; padding:40px; line-height:1.6; }
 h1,h2,h3 { color:#ffcc00; }
-.example { background:#2e2e2e; border-left:4px solid #ffcc00; padding:15px; margin:20px auto; max-width:700px; text-align:left; }
+.exercise { background:#2e2e2e; border-left:4px solid #ffcc00; padding:15px; margin:20px auto; max-width:700px; text-align:left; }
 a { color:#ffcc00; text-decoration:none; }
 a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
 
-<h1>Integrals – Exercises</h1>
+<h1>Integrals – Exercises (TD 1)</h1>
 
-<p>Exercises will be added here soon.</p>
+<h2>Exercise 1 – Substitution</h2>
+<div class="exercise">
+\[
+\int x \cos(x^2) dx
+\]
+Solution: Let \(u = x^2\), \(du = 2x dx\) → 
+\[
+\int x \cos(x^2) dx = \frac{1}{2} \int \cos(u) du = \frac{1}{2} \sin(u) + C = \frac{1}{2} \sin(x^2) + C
+\]
+</div>
 
-<p><a href="../index.html">← Back to Course Menu</a></p>
+<h2>Exercise 2 – Integration by Parts</h2>
+<div class="exercise">
+\[
+\int x e^{2x} dx
+\]
+Solution: \(u=x, dv=e^{2x}dx \Rightarrow du=dx, v=\frac{1}{2}e^{2x}\)
+\[
+\int x e^{2x} dx = x\frac{1}{2} e^{2x} - \int \frac{1}{2} e^{2x} dx = \frac{1}{2} x e^{2x} - \frac{1}{4} e^{2x} + C
+\]
+</div>
+
+<h2>Exercise 3 – Partial Fractions</h2>
+<div class="exercise">
+\[
+\int \frac{3x+5}{x^2+4x+3} dx
+\]
+Decompose: \(\frac{3x+5}{x^2+4x+3} = \frac{A}{x+1} + \frac{B}{x+3}\)
+Solve: \(A=2, B=1\)
+\[
+\int \frac{3x+5}{x^2+4x+3} dx = 2 \ln|x+1| + \ln|x+3| + C
+\]
+</div>
+
+<p><a href="index.html">← Back to Course 01</a></p>
 </body>
 </html>
