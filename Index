@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mathesis</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+</head>
+<body>
+  <header>
+    <h1>𝕄𝕒𝕥𝕙𝕖𝕤𝕚𝕤</h1>
+    <p class="subtitle">L’art d’apprendre les mathématiques</p>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="exercices.html">Exercices</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Bienvenue</h2>
+      <p>Bienvenue sur <strong>Mathesis</strong>, un espace dédié aux mathématiques, à la réflexion et à la compréhension.  
+      Vous trouverez ici des <em>exercices détaillés</em> et des <em>solutions commentées</em> pour étudiants et passionnés.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Mathesis — L’art d’apprendre</p>
+  </footer>
+</body>
+</html>
