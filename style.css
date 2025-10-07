@@ -1,97 +1,108 @@
-/* --- Style général --- */
+/* style.css */
+
+/* --- Couleurs générales --- */
 body {
+  background-color: #1e1e1e; /* fond sombre */
+  color: #e0e0e0;           /* texte clair */
+  font-family: 'Times New Roman', Times, serif;
   margin: 0;
-  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
-  background-color: #0d0d0d;
-  color: #f0f0f0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  padding: 0;
+  line-height: 1.6;
 }
 
+/* --- Header --- */
 header {
+  background-color: #2b2b2b;
+  padding: 20px;
   text-align: center;
-  padding: 2.5rem 1rem;
-  border-bottom: 1px solid #1b1b1b;
+  border-bottom: 2px solid #444;
 }
 
-h1 {
-  font-size: 2.6rem;
-  letter-spacing: 2px;
-  margin-bottom: 0.3rem;
-  text-transform: uppercase;
+header h1 {
+  font-size: 2.2em;
+  margin: 0;
+  color: #f5f5f5;
 }
 
-.subtitle {
-  font-style: italic;
-  color: #9a9a9a;
-  font-size: 1.1rem;
+header .subtitle {
+  font-size: 1.2em;
+  color: #ccc;
+  margin-top: 5px;
 }
 
+/* --- Navigation --- */
 nav {
-  margin-top: 1.2rem;
+  margin-top: 15px;
 }
 
 nav a {
-  color: #f0f0f0;
-  margin: 0 12px;
+  color: #e0e0e0;
   text-decoration: none;
-  font-weight: 500;
+  margin: 0 15px;
+  font-weight: bold;
   transition: color 0.3s;
 }
 
-nav a:hover {
-  color: #7a8cff;
+nav a:hover,
+nav a.active {
+  color: #ffcc00;
 }
 
+/* --- Sections principales --- */
 main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 3rem 1rem;
-  line-height: 1.7;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
 }
 
+/* Titres de sections */
+main h2 {
+  color: #ffcc00;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+  margin-top: 30px;
+}
+
+/* Paragraphes */
+main p {
+  margin: 15px 0;
+}
+
+/* Listes */
+main ul {
+  margin: 10px 0 20px 20px;
+}
+
+main li {
+  margin: 8px 0;
+}
+
+/* --- Code / MathJax --- */
+.math, .latex {
+  background-color: #2b2b2b;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+/* --- Footer --- */
 footer {
   text-align: center;
-  font-size: 0.9rem;
-  padding: 1rem;
-  border-top: 1px solid #1b1b1b;
+  padding: 20px;
+  background-color: #2b2b2b;
+  border-top: 2px solid #444;
+  margin-top: 50px;
   color: #888;
 }
 
-/* --- Styles pour les cours --- */
-.courses {
-  max-width: 800px;
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* --- Sections exercices / solutions --- */
+.exercises, .solutions {
+  background-color: #292929;
+  border-left: 4px solid #ffcc00;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 5px;
 }
 
-.course-card {
-  background-color: #141414;
-  border: 1px solid #222;
-  padding: 1.5rem;
-  border-radius: 10px;
-  transition: background 0.3s;
-}
-
-.course-card:hover {
-  background-color: #1d1d1d;
-}
-
-.course-card a {
-  color: #aab6ff;
-  text-decoration: none;
-  font-size: 1.3rem;
-}
-
-.course-card p {
-  color: #ccc;
-  margin-top: 0.5rem;
-  font-size: 0.95rem;
+.exercises h2, .solutions h2 {
+  color: #ffcc00;
 }
