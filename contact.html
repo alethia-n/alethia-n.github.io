@@ -1,37 +1,45 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Contact — Mathesis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact – Aletheia</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
+    <div class="logo-circle">NM</div>
     <h1>Contact</h1>
+    <p class="subtitle">Send me a message safely</p>
     <nav>
-      <a href="index.html">Accueil</a>
-      <a href="exercices.html">Exercices</a>
-      <a href="solutions.html">Solutions</a>
+      <a href="index.html">Home</a>
+      <a href="math.html">Mathematics</a>
+      <a href="reflections.html">Reflections</a>
+      <a href="art.html">Art</a>
+      <a href="quotes.html">Quotes</a>
+      <a href="contact.html" class="active">Contact</a>
     </nav>
   </header>
 
   <main>
-    <p>Vous pouvez me contacter directement via ce formulaire, sans voir mon adresse e-mail :</p>
+    <section>
+      <form action="https://formspree.io/f/mrbylnpn" method="POST">
+        <label for="name">Name:</label><br>
+        <input type="text" name="name" id="name" required><br><br>
 
-    <!-- 🔗 Remplace ce lien par ton propre lien Formspree -->
-   <form action="https://formspree.io/f/mrbylnpn" method="POST">
-      <label>Nom :</label><br>
-      <input type="text" name="name" required><br><br>
+        <label for="email">Email:</label><br>
+        <input type="email" name="_replyto" id="email" required><br><br>
 
-      <label>Message :</label><br>
-      <textarea name="message" rows="6" required></textarea><br><br>
+        <label for="message">Message:</label><br>
+        <textarea name="message" id="message" rows="6" required></textarea><br><br>
 
-      <button type="submit">Envoyer</button>
-    </form>
+        <button type="submit">Send</button>
+      </form>
+    </section>
   </main>
 
   <footer>
-    <p><a href="index.html">Retour à l’accueil</a></p>
+    <p>© 2025 — Aletheia</p>
   </footer>
 </body>
 </html>
