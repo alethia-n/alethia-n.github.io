@@ -1,12 +1,62 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mathesis – Test</title>
-</head>
-<body style="font-family: sans-serif; text-align: center; padding-top: 50px;">
-  <h1>Bienvenue sur Mathesis !</h1>
-  <p>Si vous voyez cette page, GitHub Pages fonctionne 🎉</p>
-</body>
-</html>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background-color: #0d0d0d;
+  color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  border-bottom: 1px solid #1b1b1b;
+}
+
+h1 {
+  font-size: 2.6rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-style: italic;
+  color: #9a9a9a;
+  font-size: 1.1rem;
+}
+
+nav {
+  margin-top: 1.2rem;
+}
+
+nav a {
+  color: #f0f0f0;
+  margin: 0 12px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #7a8cff;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1rem;
+  line-height: 1.7;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 1rem;
+  border-top: 1px solid #1b1b1b;
+  color: #888;
+}
