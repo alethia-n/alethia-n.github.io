@@ -2,39 +2,56 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accueil | Alethia </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alethia - Accueil</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 <body>
   <header>
-    <h1>Bienvenue sur Alethia-N</h1>
+    <h1>Alethia</h1>
     <nav>
       <a href="index.html">Accueil</a>
       <a href="art.html">Art</a>
       <a href="quotes.html">Citations</a>
+      <a href="courses/math-chemistry-l2/index.html">Cours</a>
       <a href="contact.html">Contact</a>
-      <a href="courses/math-chemistry-l2/index.html">Cours L2</a>
     </nav>
   </header>
 
   <main>
-    <h2>🌿 Esprit du site</h2> 
-<p>
-  <strong>Alètheia</strong> — ἀλήθεια — est un mot grec ancien qui signifie « dévoilement de la vérité ».  
-  Ce n’est pas la vérité imposée par les mots, mais celle qu’on découvre lentement,  
-  quand le regard se tourne vers l’intérieur.
-</p>
-  <p>
-  Dans ces pages, je partage ce qui me traverse :  
-  des réflexions nées du silence, des pensées éparses,  
-  des citations que je trouve magnifiques, et parfois,  
-  les fragments de ce voyage spirituel que je cherche à mener avec sincérité.
-</p>
+    <section>
+      <h2>Esprit du site</h2>
+      <p>
+        Le nom <strong>Alethia</strong> vient du grec ancien <em>ἀλήθεια</em>, qui signifie “vérité dévoilée”.  
+        Ce site est mon espace intérieur — un lieu où je partage mes réflexions,  
+        mes intuitions qui me traversent, les citations qui m’émeuvent,  
+        et mon propre voyage spirituel à la recherche de sens.  
+        Ici, je tente d’exprimer le vrai, le beau, et le profond.
+      </p>
+    </section>
+
+    <section>
+      <h2>MathJax Test</h2>
+      <p>Exemple d’équation écrite en LaTeX :</p>
+      <div class="math">$$\int_a^b f(x)\,dx = F(b) - F(a)$$</div>
+    </section>
   </main>
 
   <footer>
-    © 2025 Alethia-N — Tous droits réservés
+    <p>© 2025 Alethia</p>
+    <div id="comments">
+      <script src="https://utteranc.es/client.js"
+        repo="TON_NOM_D_UTILISATEUR/alethia-n.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
   </footer>
 </body>
 </html>
