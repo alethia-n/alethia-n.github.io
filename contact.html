@@ -1,29 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Contact</title>
-<style>
-body { background:#1e1e1e; color:#f0f0f0; font-family:"Times New Roman", serif; text-align:center; padding:40px; }
-h1 { color:#ffcc00; margin-bottom:30px; }
-input, textarea { width:80%; padding:10px; margin:10px 0; border-radius:5px; border:none; }
-button { padding:10px 20px; background:#ffcc00; border:none; cursor:pointer; font-size:1em; }
-a { color:#ffcc00; text-decoration:none; }
-a:hover { text-decoration:underline; }
-</style>
+  <meta charset="UTF-8">
+  <title>Contact – Alethia</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>Contact</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="art.html">Art</a>
+      <a href="quotes.html">Citations</a>
+      <a href="courses/math-chemistry-l2/index.html">Cours</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-<h1>Contact Me</h1>
+  <main>
+    <section>
+      <p>
+        Vous pouvez m’écrire directement ici.  
+        Le message me sera transmis de façon privée via Netlify.
+      </p>
 
-<form action="https://formspree.io/f/mrbylnpn" method="POST">
-<input type="text" name="name" placeholder="Your Name" required><br>
-<input type="email" name="_replyto" placeholder="Your Email" required><br>
-<textarea name="message" placeholder="Your Message" rows="6" required></textarea><br>
-<button type="submit">Send</button>
-</form>
+      <form name="contact" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="contact">
+        <label>Nom :</label>
+        <input type="text" name="name" required>
+        <label>Email :</label>
+        <input type="email" name="email" required>
+        <label>Message :</label>
+        <textarea name="message" rows="6" required></textarea>
+        <button type="submit">Envoyer</button>
+      </form>
+    </section>
+  </main>
 
-<p style="margin-top:30px;"><a href="index.html">← Back to Home</a></p>
-
+  <footer>
+    <p>© 2025 Alethia</p>
+  </footer>
 </body>
 </html>
