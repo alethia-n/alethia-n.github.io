@@ -2,27 +2,53 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Art | Alethia-N</title>
+  <title>Art – Alethia</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>Art & Inspiration</h1>
+    <h1>Art & Création</h1>
     <nav>
       <a href="index.html">Accueil</a>
+      <a href="art.html">Art</a>
       <a href="quotes.html">Citations</a>
+      <a href="courses/math-chemistry-l2/index.html">Cours</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <main>
-    <h2>Galerie à venir</h2>
-    <p>
-      Cette section accueillera prochainement une collection d'œuvres visuelles et poétiques.  
-      Chaque pièce cherchera à traduire une émotion, une idée, une lumière.
-    </p>
+    <section>
+      <h2>Exploration visuelle</h2>
+      <p>
+        Ici, je partage des fragments de ma sensibilité — des compositions,  
+        des couleurs, des formes ou des symboles qui traduisent ce que les mots ne peuvent dire.  
+        C’est une part silencieuse de ma recherche : comprendre la beauté dans l’ombre,  
+        et la lumière dans la profondeur.
+      </p>
+    </section>
+
+    <section>
+      <h2>Galerie</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div><img src="images/art1.jpg" alt="Œuvre 1" style="width:100%; border-radius:8px;"></div>
+        <div><img src="images/art2.jpg" alt="Œuvre 2" style="width:100%; border-radius:8px;"></div>
+        <div><img src="images/art3.jpg" alt="Œuvre 3" style="width:100%; border-radius:8px;"></div>
+      </div>
+    </section>
   </main>
 
-  <footer>© 2025 Alethia-N</footer>
+  <footer>
+    <p>© 2025 Alethia</p>
+    <div id="comments">
+      <script src="https://utteranc.es/client.js"
+        repo="TON_NOM_D_UTILISATEUR/alethia-n.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </footer>
 </body>
 </html>
