@@ -1,183 +1,61 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Rappels — Techniques d'intégration (L2)</title>
-  <style>
-    body{font-family:system-ui;padding:1.2rem;max-width:900px}
-    h2{color:#064}
-    pre{background:#f6f6f6;padding:.6rem;border-left:3px solid #ddd;overflow:auto}
-    code{background:#eee;padding:.1rem .3rem;border-radius:3px}
-    .tip{background:#fffbe6;border:1px solid #ffe58f;padding:.6rem;margin:.8rem 0}
-  </style>
+  <meta charset="UTF-8">
+  <title>Rappels – Intégrales</title>
+  <link rel="stylesheet" href="../../../style.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 <body>
-  <a href="index.html">← Retour</a>
-  <h1>Rappels : techniques d'intégration (niveau L2)</h1>
+  <header>
+    <h1>Rappels – Techniques d’intégration (L2)</h1>
+  </header>
 
-  <p>Cette page rassemble les méthodes usuelles, formules importantes et exemples-clefs pour les intégrales simples, impropres et multiples (double intégrale, changement de variables). Pour chaque technique : principe, quand l'utiliser, exemples.</p>
+  <main>
+    <section>
+      <h2>1. Intégration par parties</h2>
+      <p>Formule : </p>
+      <div class="math">$$\int u\,dv = uv - \int v\,du$$</div>
+    </section>
 
-  <h2>1. Définitions & rappels essentiels</h2>
-  <ul>
-    <li><strong>Primitive</strong> : F est une primitive de f sur I si F'(x)=f(x). Les primitives diffèrent par une constante : F+C.</li>
-    <li><strong>Intégrale indéfinie</strong> : notation ∫ f(x) dx — ensemble des primitives.</li>
-    <li><strong>Intégrale définie</strong> : ∫_a^b f(x) dx = F(b)-F(a) (Théorème fondamental de l'analyse).</li>
-    <li><strong>Intégrale impropre</strong> : une borne infinie ou une singularité dans l'intervalle → définition par limite (convergence / divergence).</li>
-  </ul>
+    <section>
+      <h2>2. Changement de variable</h2>
+      <div class="math">$$\int f(g(x))g'(x)\,dx = \int f(u)\,du$$</div>
+    </section>
 
-  <h2>2. Tableau de primitives usuelles (rapide)</h2>
-  <pre>
-∫ x^n dx = x^(n+1)/(n+1)   (n ≠ -1)
-∫ dx/x = ln|x| + C
-∫ e^x dx = e^x + C
-∫ a^x dx = a^x / ln a + C    (a>0, a≠1)
-∫ sin x dx = -cos x + C
-∫ cos x dx = sin x + C
-∫ 1/(1+x^2) dx = arctan x + C
-∫ 1/√(a^2 - x^2) dx = arcsin(x/a) + C
-  </pre>
+    <section>
+      <h2>3. Intégrales de fonctions rationnelles</h2>
+      <p>On effectue souvent une décomposition en éléments simples.</p>
+    </section>
 
-  <h2>3. Méthode de la substitution (chang. de variable)</h2>
-  <p><strong>Principe</strong> : si u = g(x) et du = g'(x) dx, on transforme ∫ f(g(x)) g'(x) dx en ∫ f(u) du. Utilisée partout : compositions, racines, puissances, trig.</p>
-  <p><strong>Exemple</strong> :</p>
-  <pre>
-∫ 2x cos(x^2) dx. Poser u = x^2 ⇒ du = 2x dx ⇒ ∫ cos(u) du = sin u + C = sin(x^2)+C
-  </pre>
+    <section>
+      <h2>4. Intégrales trigonométriques</h2>
+      <p>Utiliser les identités trigonométriques :  
+      <div class="math">$$\sin^2 x = \frac{1 - \cos(2x)}{2}, \quad
+      \cos^2 x = \frac{1 + \cos(2x)}{2}$$</div>
+      </p>
+    </section>
 
-  <h2>4. Intégration par parties</h2>
-  <p><strong>Formule</strong> : ∫ u dv = u v − ∫ v du.</p>
-  <p><strong>Conseil</strong> : choisir u = partie qui se simplifie quand on dérive (log, polynôme), dv = le reste.</p>
-  <p><strong>Exemple</strong> :</p>
-  <pre>
-∫ x e^x dx. Poser u=x (u'=1), dv=e^x dx (v=e^x)
-⇒ ∫ x e^x dx = x e^x − ∫ e^x dx = x e^x − e^x + C = e^x(x−1)+C
-  </pre>
-  <p>Technique tabulaire : répéter parties pour polynôme × exponentielle/trigonométrique.</p>
+    <section>
+      <h2>5. Intégrales impropres</h2>
+      <div class="math">$$\int_a^{+\infty} f(x)\,dx = \lim_{b\to+\infty} \int_a^b f(x)\,dx$$</div>
+    </section>
+  </main>
 
-  <h2>5. Intégrales trigonométriques</h2>
-  <ul>
-    <li><strong>sin^m x cos^n x</strong> :
-      <ul>
-        <li>si un exposant est impair → extraire un facteur sin x ou cos x et faire u = cos x ou u = sin x.</li>
-        <li>si les deux sont pairs → utiliser formules d'angle double : sin^2 = (1−cos2x)/2, cos^2 = (1+cos2x)/2, et réduire.</li>
-      </ul>
-    </li>
-    <li><strong>tan^n x sec^m x</strong> :
-      <ul>
-        <li>si m pair → extraire sec^2 x et poser u = tan x.</li>
-        <li>si n impair → extraire tan x sec x et poser u = sec x.</li>
-      </ul>
-    </li>
-    <li><strong>Weierstrass (t = tan(x/2))</strong> : utile pour rationaliser sin, cos, dx :
-      <pre>sin x = 2t/(1+t^2),  cos x = (1−t^2)/(1+t^2),  dx = 2/(1+t^2) dt</pre>
-    </li>
-  </ul>
-
-  <h2>6. Rationales : intégration de fonctions rationnelles</h2>
-  <p><strong>Procédure</strong> :</p>
-  <ol>
-    <li>Si deg(num) ≥ deg(den) → division polynomiale.</li>
-    <li>Factoriser dénominateur au degré 1 (linéaire) ou 2 irréductible (quadratique).</li>
-    <li>Décomposer en éléments simples (fractions partielles).</li>
-    <li>Intégrer chaque terme : ln pour pôles simples, arctan pour quadratiques irréductibles, etc.</li>
-  </ol>
-  <p><strong>Exemple</strong> :</p>
-  <pre>
-∫ dx/(x^2 − 1) = 1/2 ∫ (1/(x−1) − 1/(x+1)) dx = 1/2 [ln|x−1| − ln|x+1|] + C
-  </pre>
-
-  <h2>7. Substitutions trigonométriques (pour racines)</h2>
-  <p>Cas typiques :</p>
-  <ul>
-    <li>√(a^2 − x^2) → poser x = a sin θ</li>
-    <li>√(a^2 + x^2) → poser x = a tan θ</li>
-    <li>√(x^2 − a^2) → poser x = a sec θ</li>
-  </ul>
-  <p><strong>Exemple</strong> :
-  <pre>
-∫ dx / √(a^2 − x^2). Poser x = a sin θ ⇒ dx = a cos θ dθ, √(a^2 − x^2) = a cos θ
-⇒ ∫ (a cos θ)/(a cos θ) dθ = ∫ dθ = θ + C = arcsin(x/a) + C
-  </pre></p>
-
-  <h2>8. Intégrales impropres — tests de convergence</h2>
-  <p>Deux types : borne infinie (ex: ∫_1^∞) ou singularité interne (ex: ∫_0^1 1/√x dx). On définit par des limites.</p>
-  <p><strong>Tests usuels</strong> :</p>
-  <ul>
-    <li>Comparaison : si 0 ≤ f ≤ g et ∫ g converge ⇒ ∫ f converge.</li>
-    <li>Comparaison limite : si lim f/g = L ∈ (0, ∞) alors f et g ont même nature (conv/div).</li>
-    <li>p-intégrales : ∫_1^∞ 1/x^p converge ⇔ p>1 ; ∫_0^1 1/x^p converge ⇔ p<1.</li>
-    <li>Convergence absolue : si ∫ |f| converge alors ∫ f converge (mais pas réciproque).</li>
-  </ul>
-
-  <h2>9. Intégration numérique (approximations)</h2>
-  <p>Quand la primitive n'est pas élémentaire :</p>
-  <ul>
-    <li><strong>Riemann</strong> : définition → somme de moyennes × largeur.</li>
-    <li><strong>Trapèze</strong> : assez simple, erreur liée à f''(ξ).</li>
-    <li><strong>Simpson</strong> : meilleure précision pour polynômes de degré ≤ 3, erreur ~ f^{(4)}.</li>
-  </ul>
-  <p>Donner les formules si tu veux les implémentations en TD.</p>
-
-  <h2>10. Intégrales multiples (double intégrale)</h2>
-  <p><strong>Fubini</strong> : si f est continue sur rectangle, ∫∫_R f(x,y) dA = ∫ (∫ f(x,y) dx) dy = ∫ (∫ f(x,y) dy) dx.</p>
-  <p><strong>Coordonnées polaires</strong> : x = r cos θ, y = r sin θ, et dA = r dr dθ. Très utile pour régions circulaires.</p>
-  <pre>
-Ex : aire d'un disque de rayon R = ∫_{θ=0}^{2π} ∫_{r=0}^R r dr dθ = π R^2
-  </pre>
-
-  <h2>11. Changement de variable pour intégrales multiples (Jacobian)</h2>
-  <p>Si (x,y) = Φ(u,v), alors dA = |det DΦ(u,v)| du dv. Pour le passage cartésien→polaire, det = r.</p>
-
-  <h2>12. Fonctions spéciales (aperçu)</h2>
-  <p><strong>Gamma</strong> : Γ(s) = ∫_0^∞ t^{s-1} e^{-t} dt (prolonge factorielle).</p>
-  <p><strong>Beta</strong> : B(p,q) = ∫_0^1 t^{p-1} (1−t)^{q-1} dt, et B(p,q)=Γ(p)Γ(q)/Γ(p+q).</p>
-  <p>Utiles en intégrales paramétriques et calcul d'intégrales définies.</p>
-
-  <h2>13. Astuces pratiques & checklist</h2>
-  <div class="tip">
-    <strong>Checklist avant de commencer :</strong>
-    <ol>
-      <li>Simplifier l'expression (factoriser, développer si nécessaire).</li>
-      <li>Regarder si c'est une dérivée “facile” (substitution immédiate).</li>
-      <li>Tester une substitution u=g(x).</li>
-      <li>Tester parties (pour produit polynôme × exp/trig/log).</li>
-      <li>Pour rationnelles, envisager décomposition en fractions partielles.</li>
-      <li>Pour racines, envisager substitution trigonométrique.</li>
-      <li>Pour intégrales sur R ou avec singularités → penser aux tests de convergence.</li>
-    </ol>
-  </div>
-
-  <h2>14. Exemples rapides résolus</h2>
-  <p><strong>Ex. 1</strong> : ∫ x^2 ln x dx. Poser u = ln x → du = dx/x ; dv = x^2 dx → v = x^3/3 :</p>
-  <pre>
-∫ x^2 ln x dx = (ln x)(x^3/3) − ∫ (x^3/3) * (1/x) dx
-= x^3/3 ln x − ∫ x^2/3 dx = x^3/3 ln x − x^3/9 + C
-  </pre>
-
-  <p><strong>Ex. 2</strong> : ∫_1^∞ 1/(x (ln x)^2) dx. Poser t = ln x ⇒ dt = dx/x, limites : ln1=0 → ∞ ⇒ ∫_0^∞ 1/t^2 dt diverge en 0 ; mais attention à l'orientation : en fait ∫_2^∞ etc. (vérifier bornes avant de conclure).</p>
-
-  <h2>15. Table de primitives / formules utiles (annexe rapide)</h2>
-  <pre>
-∫ cos^n x dx, ∫ sin^n x dx (règle selon n pair/impair)
-Formules d'angle double/puissance :
-  sin^2 x = (1−cos 2x)/2 ; cos^2 x = (1+cos 2x)/2
-Intégrales usuelles pour fractions partielles : ∫ dx/(x−a) = ln|x−a|
-                                            ∫ dx/(x^2 + a^2) = 1/a arctan(x/a)
-  </pre>
-
-  <h2>16. Suggestions pour le TD</h2>
-  <ul>
-    <li>Mélange exercices faciles (substitution) et difficiles (fractions partielles, impropres, doubles intégrales).</li>
-    <li>Pour chaque exercice, propose une partie « Rappel » (méthode) + « Solution » (étapes) + « Remarques » (alternatives ou pièges).</li>
-    <li>Inclure un petit exercice numérique (trapèze / Simpson) pour montrer l'approximation.</li>
-  </ul>
-
-  <hr/>
-  <p>Si tu veux, je peux (sur demande) :</p>
-  <ul>
-    <li>Transformer cette page en Markdown ou en PDF.</li>
-    <li>Fournir 10 exercices de TD avec solutions détaillées prêtes à coller dans <code>td.html</code>.</li>
-  </ul>
+  <footer>
+    <p>© 2025 Alethia</p>
+    <div id="comments">
+      <script src="https://utteranc.es/client.js"
+        repo="TON_NOM_D_UTILISATEUR/alethia-n.github.io"
+        issue-term="pathname"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
+  </footer>
 </body>
 </html>
