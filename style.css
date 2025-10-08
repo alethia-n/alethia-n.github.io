@@ -1,88 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+/* === Thème sombre brun — Alethia-N === */
 
+/* --- Couleurs principales --- */
 :root {
-  --primary: #1e3a8a;
-  --accent: #60a5fa;
-  --background: #f9fafb;
-  --text: #111827;
+  --background: #1a1412;      /* brun noir profond */
+  --surface: #2a1f1c;         /* brun foncé pour les cartes */
+  --accent: #b58960;          /* marron doré doux */
+  --text: #f5ede3;            /* texte beige clair */
+  --text-muted: #cbb9a7;      /* texte secondaire */
+  --border: #3b2f2a;          /* bordures et séparations */
 }
+
+/* --- Police et mise en page globale --- */
 body {
   font-family: "Times New Roman", Times, serif;
-}
-
-* {
+  background-color: var(--background);
+  color: var(--text);
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--background);
-  color: var(--text);
   line-height: 1.6;
-  transition: all 0.3s ease;
 }
 
+/* --- Liens et survol --- */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+a:hover {
+  color: #e4b98a;
+  text-shadow: 0 0 5px rgba(181, 137, 96, 0.6);
+}
+
+/* --- En-tête --- */
 header {
-  background: var(--primary);
-  color: white;
-  padding: 1rem 0;
+  background-color: var(--surface);
+  padding: 1.5rem 1rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  margin: 0;
+  color: var(--accent);
+  letter-spacing: 1px;
+  font-size: 2rem;
+}
+
+/* --- Navigation --- */
+nav {
+  margin-top: 0.5rem;
 }
 
 nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 15px;
-  font-weight: 500;
-  transition: color 0.3s;
+  margin: 0 1rem;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
 nav a:hover {
-  color: var(--accent);
+  color: #eac198;
 }
 
+/* --- Contenu principal --- */
 main {
   max-width: 900px;
   margin: 2rem auto;
-  padding: 1rem 2rem;
-  background: white;
+  padding: 2rem;
+  background-color: var(--surface);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
+/* --- Titres --- */
+h2, h3 {
+  color: var(--accent);
+  border-left: 4px solid var(--accent);
+  padding-left: 0.5rem;
+}
+
+/* --- Listes et paragraphes --- */
+ul, p {
+  margin-bottom: 1rem;
+}
+
+/* --- Pied de page --- */
 footer {
   text-align: center;
-  padding: 1rem;
-  background: var(--primary);
-  color: white;
-  margin-top: 2rem;
-  font-size: 0.9em;
-  border-radius: 0 0 12px 12px;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-h1, h2, h3 {
-  color: var(--primary);
-  margin-bottom: 0.5rem;
-}
-
-a {
-  color: var(--accent);
-}
-
-/* Mode sombre */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: #93c5fd;
-    --accent: #2563eb;
-    --background: #0f172a;
-    --text: #f9fafb;
+/* --- Mode responsive (mobile) --- */
+@media (max-width: 700px) {
+  main {
+    padding: 1rem;
   }
 
-  main {
-    background: #1e293b;
-    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  nav a {
+    display: block;
+    margin: 0.5rem 0;
   }
 }
