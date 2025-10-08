@@ -6,6 +6,9 @@
   --background: #f9fafb;
   --text: #111827;
 }
+body {
+  font-family: "Times New Roman", Times, serif;
+}
 
 * {
   margin: 0;
