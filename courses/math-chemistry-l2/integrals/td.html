@@ -22,8 +22,46 @@
   </header>
 
   <main>
-    <h2>Exercices à venir</h2>
-    <p>Cette section sera remplie avec les séries de TD sur les intégrales.</p>
+ <section>
+  <h2>TD — Exercice 1</h2>
+  <p><strong>Énoncé :</strong> Calculer \(I=\displaystyle\int_{0}^{\pi/2} x\sin x\,dx\).</p>
+
+  <details>
+    <summary><strong>Solution</strong></summary>
+    <p>On applique l'intégration par parties :</p>
+    <p>
+      Pose \(u=x,\ dv=\sin x\,dx\). Alors \(du=dx,\ v=-\cos x\).<br>
+      \[
+      I=\Big[-x\cos x\Big]_{0}^{\pi/2} - \int_{0}^{\pi/2}(-\cos x)\,dx
+      = \int_{0}^{\pi/2}\cos x\,dx = \big[\sin x\big]_{0}^{\pi/2}=1.
+      \]
+    </p>
+    <p><strong>Réponse :</strong> \(I=1\).</p>
+  </details>
+</section>
+
+<section>
+  <h2>TD — Exercice 2</h2>
+  <p><strong>Énoncé :</strong> Étudier la convergence et, si elle converge, calculer \(J=\displaystyle\int_{1}^{\infty}\frac{1}{x(\ln x)^2}\,dx\).</p>
+
+  <details>
+    <summary><strong>Solution</strong></summary>
+    <p>Faire la substitution \(t=\ln x\) (donc \(dt=dx/x\)). L'intégrale devient</p>
+    <p>\[
+    \int_{1}^{R}\frac{1}{x(\ln x)^2}\,dx = \int_{0}^{\ln R}\frac{1}{t^2}\,dt.
+    \]</p>
+    <p>Or \(\int_{0}^{\ln R} 1/t^2\,dt\) diverge lorsque \(t\to 0^+\). Donc l'intégrale sur \([1,\infty)\) diverge à cause de la singularité en \(x=1\).</p>
+    <p>Cependant, pour \(a>1\),</p>
+    <p>\[
+    \int_{a}^{\infty}\frac{1}{x(\ln x)^2}\,dx
+    =\lim_{T\to\infty}\int_{\ln a}^{\ln T}\frac{1}{t^2}\,dt
+    =\lim_{T\to\infty}\Big(-\frac{1}{t}\Big)_{\ln a}^{\ln T}
+    =\frac{1}{\ln a}.
+    \]</p>
+    <p><strong>Conclusion :</strong> l'intégrale \(\displaystyle\int_{1}^{\infty}\frac{1}{x(\ln x)^2}\,dx\) diverge. Pour tout \(a>1\), \(\displaystyle\int_{a}^{\infty}\frac{1}{x(\ln x)^2}\,dx=\dfrac{1}{\ln a}.\)</p>
+  </details>
+</section>
+
   </main>
 
   <footer>© 2019 Alethia </footer>
