@@ -2,548 +2,126 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Rappels – Intégrales</title>
-  <link rel="stylesheet" href="../../../style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rappel de cours — Intégrales</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 40px auto;
+      max-width: 900px;
+      line-height: 1.7;
+      color: #222;
+    }
+    h1, h2, h3 { color: #004d99; }
+    h2 { border-bottom: 2px solid #004d99; padding-bottom: 4px; }
+    pre {
+      background: #f8f8f8;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 15px;
+    }
+    .math {
+      text-align: center;
+      font-size: 1.1em;
+      margin: 12px 0;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Rappels – Techniques d’intégration (L2)</h1>
-  </header>
 
-  <main>
+<h1>Rappel de cours : Techniques d’intégration</h1>
+
+<!-- SECTION 1 - Intégration par parties -->
 <section>
   <h2>1. Intégration par parties</h2>
-
-  <p><strong>Formule 1 (écriture en fonction de x) :</strong></p>
-  <div class="math">$$\displaystyle \int u(x)\,v'(x)\,dx = u(x)\,v(x) - \int u'(x)\,v(x)\,dx.$$</div>
-
-  <p><strong>Formule 2 (écriture abrégée) :</strong></p>
-  <div class="math">$$\displaystyle \int u\,dv = uv - \int v\,du.$$</div>
-
-  <p><strong>Comment relier les deux écritures :</strong></p>
-  <p>
-    Dans la première formule, tout est écrit en fonction de la variable \(x\).
-    On note que \(u'(x)\) est la dérivée de \(u\), et \(v'(x)\) celle de \(v\).
-  </p>
+  <p><strong>Formule principale :</strong></p>
+  <div class="math">$$\int u\,dv = uv - \int v\,du$$</div>
 
   <p>
-    Pour simplifier, on remplace :
+    Cette formule est très utile lorsqu’une fonction est un produit de deux autres fonctions.
+    Elle provient directement de la formule de dérivation du produit :
   </p>
+  <div class="math">$$(uv)' = u'v + uv'$$</div>
+
+  <p>
+    En intégrant les deux membres :
+  </p>
+  <div class="math">
+    $$\int (uv)'dx = \int u'v\,dx + \int uv'\,dx$$
+  </div>
+  <p>
+    Or, \(\int (uv)'dx = uv\), d’où la relation :
+  </p>
+  <div class="math">
+    $$\int u\,v'\,dx = uv - \int v\,u'\,dx$$
+  </div>
+  <p>
+    En posant \(dv = v'\,dx\) et \(du = u'\,dx\), on obtient la formule classique :
+    $$\int u\,dv = uv - \int v\,du$$
+  </p>
+
+  <h3>Exemple :</h3>
+  <p>Calculons \( I = \int \arctan(x)\,dx \)</p>
+
+  <p>On pose :</p>
   <ul>
-    <li><span class="math">\(du = u'(x)\,dx\)</span>,</li>
-    <li><span class="math">\(dv = v'(x)\,dx\)</span>.</li>
+    <li>\(u = \arctan(x)\)  ⇒  \(du = \dfrac{1}{1+x^2}dx\)</li>
+    <li>\(dv = dx\)  ⇒  \(v = x\)</li>
   </ul>
 
-  <p>
-    Ce ne sont pas de nouvelles notions : c’est simplement une manière plus courte d’écrire les mêmes choses.  
-    En remplaçant ces deux expressions dans la première formule, on obtient directement la deuxième :
-  </p>
-  <div class="math">$$\int u\,dv = uv - \int v\,du.$$</div>
+  <div class="math">
+    $$I = x\arctan(x) - \int \frac{x}{1+x^2}dx$$
+  </div>
 
   <p>
-    Cette formule vient de la règle de dérivation du produit :
+    Or \(\int \frac{x}{1+x^2}dx = \frac{1}{2}\ln(1+x^2)\),  
+    donc :
   </p>
-  <div class="math">$$(u v)' = u'v + uv'.$$</div>
-  <p>
-    En intégrant les deux côtés, on obtient :
-  </p>
-  <div class="math">$$uv = \int u'v\,dx + \int uv'\,dx,$$</div>
-  <p>
-    d’où :
-  </p>
-  <div class="math">$$\displaystyle \int uv'\,dx = uv - \int u'v\,dx.$$</div>
-
-  <hr/>
-
- <h3>Exemple :</h3>
-<div class="math">$$\displaystyle I=\int \arctan x\,dx.$$</div>
-
-<p><strong>Choix pour l'intégration par parties :</strong></p>
-<p>On choisit habituellement \(u\) comme la partie « compliquée » qui simplifie lorsqu'on la dérive.  
-Ici on prend :</p>
-<ul>
-  <li><span class="math">\(u=\arctan x\)</span> ⟶ <span class="math">\(du=\dfrac{1}{1+x^2}\,dx\)</span></li>
-  <li><span class="math">\(dv=dx\)</span> ⟶ <span class="math">\(v=x\)</span></li>
-</ul>
-
-<p><strong>Appliquer la formule d'intégration par parties</strong> :</p>
-<div class="math">$$\int u\,dv = uv - \int v\,du.$$</div>
-
-<p>Donc</p>
-<div class="math">
-  $$\begin{aligned}
-  I &= \int \arctan x \, dx = x\arctan x - \int x\cdot\frac{1}{1+x^2}\,dx \\
-    &= x\arctan x - \int \frac{x}{1+x^2}\,dx.
-  \end{aligned}$$
-</div>
-
-<p><strong>Calcul de la seconde intégrale</strong> :</p>
-<p>Posons \(t = 1+x^2\) (ou remarquez que la dérivée de \(1+x^2\) est \(2x\)), alors</p>
-<div class="math">
-  $$\int \frac{x}{1+x^2}\,dx = \frac{1}{2}\int \frac{2x}{1+x^2}\,dx = \frac{1}{2}\ln(1+x^2) + C.$$
-</div>
-
-<p><strong>Conclusion :</strong></p>
-<div class="math">
-  $$\boxed{\,\displaystyle \int \arctan x\,dx = x\arctan x - \frac{1}{2}\ln(1+x^2) + C \,}$$
-</div>
-
-<p><strong>Vérification (dérivation) :</strong></p>
-<div class="math">
-  $$\frac{d}{dx}\Big(x\arctan x - \tfrac{1}{2}\ln(1+x^2)\Big)
-    = \arctan x + x\cdot\frac{1}{1+x^2} - \frac{1}{2}\cdot\frac{2x}{1+x^2}
-    = \arctan x.$$
-</div>
-
-<p>Le résultat est donc correct. Remarque : le choix \(u=\arctan x\) est naturel car sa dérivée est simple (\(1/(1+x^2)\)) et \(dv=dx\) a pour primitive \(v=x\), ce qui rend le calcul direct.</p>
-
-
+  <div class="math">
+    $$\boxed{I = x\arctan(x) - \frac{1}{2}\ln(1+x^2) + C}$$
+  </div>
 </section>
 
-
- <section>
+<!-- SECTION 2 - Changement de variable -->
+<section>
   <h2>2. Changement de variable</h2>
-
-  <p><strong>Formule du changement de variable :</strong></p>
-  <div class="math">$$\displaystyle \int f(g(x))\,g'(x)\,dx = \int f(u)\,du$$</div>
-
-  <p><strong>Idée générale :</strong></p>
   <p>
-    Le changement de variable sert à simplifier une intégrale lorsqu’une partie de l’expression
-    est la dérivée d’une autre.  
-    On remplace cette expression par une nouvelle variable \(u\) afin d’obtenir une intégrale plus simple.
+    Le changement de variable permet de simplifier une intégrale en remplaçant \(x\) par une nouvelle variable \(u\).
   </p>
 
-  <p><strong>Étapes de la méthode :</strong></p>
-  <ol>
-    <li>Choisir une substitution \(u = g(x)\), souvent une fonction « intérieure » comme \(\ln x\), \(x^2\), \(\sin x\)…</li>
-    <li>Calculer la dérivée : \(du = g'(x)\,dx.\)</li>
-    <li>Remplacer dans l’intégrale : \(g(x)\) devient \(u\), et \(g'(x)\,dx\) devient \(du.\)</li>
-    <li>Résoudre l’intégrale en \(u\).</li>
-    <li>Revenir à la variable initiale \(x\) à la fin.</li>
-  </ol>
-
-  <hr/>
-
-  <h3>Exemple d’application</h3>
-
-  <p>Calculer l’intégrale suivante :</p>
-  <div class="math">$$\displaystyle I = \int \frac{dx}{x(1+\ln^2 x)}.$$</div>
-
-  <p><strong>Étape 1 :</strong> on reconnaît la présence de \(\ln x\) et de sa dérivée \(\dfrac{1}{x}\).  
-  On choisit donc la substitution :</p>
-  <div class="math">$$u = \ln x.$$</div>
-
-  <p><strong>Étape 2 :</strong> on dérive :</p>
-  <div class="math">$$du = \frac{1}{x}\,dx.$$</div>
-
-  <p><strong>Étape 3 :</strong> on remplace dans l’intégrale :</p>
   <div class="math">
-    $$I = \int \frac{dx}{x(1+\ln^2 x)} = \int \frac{du}{1+u^2}.$$
-  </div>
-
-  <p><strong>Étape 4 :</strong> on reconnaît une formule connue :</p>
-  <div class="math">
-    $$\int \frac{du}{1+u^2} = \arctan(u) + C.$$
-  </div>
-
-  <p><strong>Étape 5 :</strong> on revient à la variable \(x\) :</p>
-  <div class="math">
-    $$\boxed{I = \arctan(\ln x) + C.}$$
-  </div>
-
-  <p><strong>Vérification :</strong></p>
-  <div class="math">
-    $$\frac{d}{dx}\big[\arctan(\ln x)\big] = \frac{1}{1+(\ln x)^2}\cdot\frac{1}{x} = \frac{1}{x(1+\ln^2 x)}.$$
+    $$\int f(g(x))g'(x)\,dx = \int f(u)\,du \quad \text{où } u = g(x)$$
   </div>
 
   <p>
-    Le résultat est donc correct.  
-    Ce calcul illustre parfaitement l’intérêt du changement de variable : il transforme une intégrale compliquée en une intégrale simple et connue.
+    L’idée est simple : on cherche à reconnaître une <strong>dérivée g'(x)</strong> à côté d’une <strong>fonction composée f(g(x))</strong>.
   </p>
 
-  <hr/>
+  <h3>Exemple :</h3>
+  <p>Calculons \( I = \int \frac{dx}{x(1+\ln^2 x)} \)</p>
 
-  <h3>Remarques :</h3>
-  <ul>
-    <li>Le changement de variable ne modifie pas la valeur de l’intégrale, il sert uniquement à la simplifier.</li>
-    <li>La relation <span class="math">\(du = g'(x)\,dx\)</span> provient directement de la dérivation de \(u = g(x)\).</li>
-    <li>Pour une intégrale définie, il faut aussi changer les bornes :
-      <div class="math">
-        $$\int_a^b f(g(x))g'(x)\,dx = \int_{g(a)}^{g(b)} f(u)\,du.$$
-      </div>
-    </li>
-  </ul>
-
+  <p>On pose \( u = \ln x \) ⇒ \( du = \frac{dx}{x} \).</p>
+  <p>L’intégrale devient :</p>
+  <div class="math">
+    $$I = \int \frac{du}{1+u^2} = \arctan(u) + C = \boxed{\arctan(\ln x) + C}$$
+  </div>
 </section>
 
-
-  <section>
-  <h2>3. Intégrales de fonctions rationnelles</h2>
-
-  <p>
-    Une <strong>fonction rationnelle</strong> est le quotient de deux polynômes :
-  </p>
-
-  <div class="math">
-    $$R(x) = \frac{P(x)}{Q(x)}, \quad \text{où } P(x) \text{ et } Q(x) \text{ sont des polynômes, et } Q(x) \neq 0.$$
-  </div>
-
-  <p>
-    Pour intégrer ce type de fonction, on cherche souvent à la <strong>simplifier</strong> en la décomposant
-    en <strong>éléments simples</strong>.  
-    C’est ce qu’on appelle la <em>décomposition en éléments simples</em> (ou « D.E.S. »).
-  </p>
-
-  <hr/>
-
-  <h3>1. Notion de fraction rationnelle et d’élément irréductible</h3>
-
-  <p>
-    Une <strong>fraction rationnelle</strong> est simplement une fraction dont le numérateur et le dénominateur sont des polynômes.  
-    Exemple :
-  </p>
-
-  <div class="math">
-    $$\frac{x^2 + 3x + 2}{x^3 - x}.$$
-  </div>
-
-  <p>
-    Un <strong>élément irréductible</strong> (sur ℝ) est un polynôme qui ne peut pas être factorisé avec des coefficients réels.
-    Par exemple :
-  </p>
-
-  <ul>
-    <li><span class="math">\(x - a\)</span> est un facteur linéaire (donc irréductible).</li>
-    <li><span class="math">\(x^2 + bx + c\)</span> est irréductible si son discriminant est négatif : <span class="math">\(b^2 - 4c &lt; 0\)</span>.</li>
-  </ul>
-
-  <p>
-    Ainsi, tout dénominateur se factorise en produit de termes linéaires ou quadratiques irréductibles.
-  </p>
-
-  <hr/>
-
-  <h3>2. Comparaison des degrés</h3>
-
-  <ul>
-    <li><strong>Cas 1 :</strong> si le degré du numérateur est <em>inférieur</em> à celui du dénominateur,  
-    la fraction est dite <strong>propre</strong>.  
-    On peut directement la décomposer.</li>
-
-    <li><strong>Cas 2 :</strong> si le degré du numérateur est <em>supérieur ou égal</em> à celui du dénominateur,  
-    on doit d’abord effectuer une <strong>division euclidienne</strong> des polynômes.</li>
-  </ul>
-
-  <hr/>
-
-  <h3>3. Division euclidienne de deux polynômes</h3>
-
-  <p>
-    Soient \(P(x)\) et \(Q(x)\) deux polynômes.  
-    On peut écrire :
-  </p>
-
-  <div class="math">
-    $$P(x) = Q(x)\,A(x) + R(x),$$
-  </div>
-
-  <p>
-    où :
-  </p>
-  <ul>
-    <li><span class="math">\(A(x)\)</span> est le <strong>quotient</strong>,</li>
-    <li><span class="math">\(R(x)\)</span> est le <strong>reste</strong> (degré strictement inférieur à celui de \(Q(x)\)).</li>
-  </ul>
-
-  <p>
-    Ainsi :
-  </p>
-
-  <div class="math">
-    $$\frac{P(x)}{Q(x)} = A(x) + \frac{R(x)}{Q(x)}.$$
-  </div>
-
-  <p>On pourra ensuite intégrer \(A(x)\) et \(\dfrac{R(x)}{Q(x)}\) séparément.</p>
-
-  <h4>Exemple :</h4>
-  <p>Diviser \(P(x) = x^3\) par \(Q(x) = x^2 + 1\).</p>
-
-  <p>On cherche \(A(x)\) et \(R(x)\) tels que :</p>
-  <div class="math">$$x^3 = (x^2 + 1)A(x) + R(x).$$</div>
-
-  <p>On commence par :</p>
-  <ul>
-    <li>le terme dominant de \(P\) est \(x^3\), de \(Q\) c’est \(x^2\), donc le premier terme du quotient est \(x\).</li>
-  </ul>
-
-  <p>On soustrait :</p>
-  <div class="math">
-    $$x^3 - x(x^2 + 1) = -x.$$
-  </div>
-
-  <p>Donc :</p>
-  <div class="math">
-    $$A(x) = x,\quad R(x) = -x.$$
-  </div>
-
-  <p>Et ainsi :</p>
-  <div class="math">
-    $$\frac{x^3}{x^2 + 1} = x - \frac{x}{x^2 + 1}.$$
-  </div>
-
-  <p>On pourra donc intégrer :</p>
-  <div class="math">
-    $$\int \frac{x^3}{x^2 + 1}\,dx = \int x\,dx - \int \frac{x}{x^2 + 1}\,dx.$$
-  </div>
-
-  <p>
-    <strong>Intégration :</strong>  
-    - \(\displaystyle \int x\,dx = \frac{x^2}{2}\)  
-    - Pour la seconde, on pose \(u = x^2 + 1\), \(du = 2x\,dx\), donc :
-  </p>
-
-  <div class="math">
-    $$\int \frac{x}{x^2 + 1}\,dx = \frac{1}{2}\ln(x^2 + 1) + C.$$
-  </div>
-
-  <p><strong>Résultat final :</strong></p>
-  <div class="math">
-    $$\boxed{\,\displaystyle \int \frac{x^3}{x^2 + 1}\,dx = \frac{x^2}{2} - \frac{1}{2}\ln(1+x^2) + C\,}$$
-  </div>
-
-  <hr/>
-
-  <h3>4. Cas d’une fraction déjà propre</h3>
-
-  <p>Considérons maintenant un exemple où le numérateur est de degré plus petit que le dénominateur :</p>
-
-  <div class="math">
-    $$I = \int \frac{x}{x^2 + 1}\,dx.$$
-  </div>
-
-  <p>
-    Ici, le degré du numérateur (1) est inférieur à celui du dénominateur (2).  
-    On reconnaît directement une forme de dérivée : celle de \(x^2 + 1\).
-  </p>
-
-  <p>Posons \(u = x^2 + 1 \Rightarrow du = 2x\,dx\).</p>
-  <div class="math">
-    $$I = \frac{1}{2}\int \frac{du}{u} = \frac{1}{2}\ln|u| + C = \frac{1}{2}\ln(1 + x^2) + C.$$
-  </div>
-
-  <p>
-    C’est donc une intégrale de type simple, sans besoin de division.
-  </p>
-
-  <hr/>
-
-  <h3>5. Méthode générale</h3>
-
-  <ol>
-    <li>Vérifier le degré du numérateur et du dénominateur.</li>
-    <li>Si le numérateur a un degré ≥ au dénominateur, faire une division euclidienne.</li>
-    <li>Factoriser le dénominateur en éléments irréductibles.</li>
-    <li>Décomposer en éléments simples (formes du type \(\dfrac{A}{x-a}\), \(\dfrac{Bx+C}{x^2+px+q}\)…).</li>
-    <li>Intégrer chaque terme à l’aide de formules connues :
-      <ul>
-        <li>\(\displaystyle \int \frac{dx}{x-a} = \ln|x-a| + C\)</li>
-        <li>\(\displaystyle \int \frac{dx}{x^2 + 1} = \arctan x + C\)</li>
-        <li>\(\displaystyle \int \frac{x\,dx}{x^2 + 1} = \frac{1}{2}\ln(1+x^2) + C\)</li>
-      </ul>
-    </li>
-  </ol>
-
-  <p>
-    Cette méthode permet de traiter toutes les intégrales rationnelles, quelles que soient leurs formes.
-  </p>
-</section>
-
-
-<section>
-  <h2>4. Intégrales trigonométriques</h2>
-
-  <p>
-    Les intégrales trigonométriques sont celles qui contiennent des fonctions comme
-    <span class="math">$\sin x$</span>, <span class="math">$\cos x$</span>, <span class="math">$\tan x$</span>, etc.
-    Pour les résoudre, on utilise souvent les <strong>identités trigonométriques fondamentales</strong>.
-  </p>
-
-  <h3>1. Identités de base</h3>
-
-  <p>Les plus utiles sont :</p>
-  <div class="math">
-    $$\sin^2 x = \frac{1 - \cos(2x)}{2}, \qquad
-      \cos^2 x = \frac{1 + \cos(2x)}{2},$$
-  </div>
-
-  <div class="math">
-    $$\sin(2x) = 2\sin x \cos x, \qquad
-      \cos(2x) = \cos^2 x - \sin^2 x.$$
-  </div>
-
-  <p>
-    Ces formules permettent de <strong>réécrire les puissances</strong> de sin ou cos sous une forme plus simple,
-    afin d'obtenir des intégrales directement calculables.
-  </p>
-
-  <hr/>
-
-  <h3>2. Exemple 1 : $\displaystyle I = \int \sin^2 x\,dx$</h3>
-
-  <p><strong>Étape 1 :</strong> on remplace à l’aide de la formule de la double angle :</p>
-  <div class="math">
-    $$\sin^2 x = \frac{1 - \cos(2x)}{2}.$$
-  </div>
-
-  <p><strong>Étape 2 :</strong> on intègre :</p>
-  <div class="math">
-    $$I = \int \sin^2 x\,dx = \int \frac{1 - \cos(2x)}{2}\,dx = \frac{1}{2}\int 1\,dx - \frac{1}{2}\int \cos(2x)\,dx.$$
-  </div>
-
-  <p><strong>Étape 3 :</strong> on calcule chaque partie :</p>
-  <div class="math">
-    $$\int 1\,dx = x, \quad \int \cos(2x)\,dx = \frac{1}{2}\sin(2x).$$
-  </div>
-
-  <p><strong>Résultat final :</strong></p>
-  <div class="math">
-    $$\boxed{\,I = \frac{x}{2} - \frac{\sin(2x)}{4} + C\,}$$
-  </div>
-
-  <p>
-    C’est une formule classique à retenir :
-    <span class="math">$\displaystyle \int \sin^2 x\,dx = \frac{x}{2} - \frac{\sin(2x)}{4} + C.$</span>
-  </p>
-
-  <hr/>
-
-  <h3>3. Exemple 2 : $\displaystyle J = \int \cos^2 x\,dx$</h3>
-
-  <p>De même, on utilise l’identité :</p>
-  <div class="math">
-    $$\cos^2 x = \frac{1 + \cos(2x)}{2}.$$
-  </div>
-
-  <p><strong>Calcul :</strong></p>
-  <div class="math">
-    $$J = \int \frac{1 + \cos(2x)}{2}\,dx = \frac{1}{2}\int 1\,dx + \frac{1}{2}\int \cos(2x)\,dx.$$
-  </div>
-
-  <p><strong>Résultat final :</strong></p>
-  <div class="math">
-    $$\boxed{\,J = \frac{x}{2} + \frac{\sin(2x)}{4} + C\,}$$
-  </div>
-
-  <hr/>
-
-  <h3>4. Exemple 3 : $\displaystyle K = \int \sin x \cos x\,dx$</h3>
-
-  <p>On utilise ici la formule du double angle :
-  <span class="math">$\sin(2x) = 2\sin x \cos x.$</span></p>
-
-  <p>On réécrit :</p>
-  <div class="math">
-    $$\sin x \cos x = \frac{1}{2}\sin(2x).$$
-  </div>
-
-  <p>Alors :</p>
-  <div class="math">
-    $$K = \int \sin x \cos x\,dx = \frac{1}{2}\int \sin(2x)\,dx = -\frac{1}{4}\cos(2x) + C.$$
-  </div>
-
-  <p><strong>Résultat final :</strong></p>
-  <div class="math">
-    $$\boxed{\,K = -\frac{1}{4}\cos(2x) + C\,}$$
-  </div>
-
-  <hr/>
-
-  <h3>5. Exemple 4 : $\displaystyle L = \int \tan^2 x\,dx$</h3>
-
-  <p>On utilise ici la relation fondamentale :</p>
-  <div class="math">
-    $$1 + \tan^2 x = \frac{1}{\cos^2 x} = \sec^2 x.$$
-  </div>
-
-  <p>D’où :</p>
-  <div class="math">
-    $$\tan^2 x = \sec^2 x - 1.$$
-  </div>
-
-  <p>On remplace dans l’intégrale :</p>
-  <div class="math">
-    $$L = \int \tan^2 x\,dx = \int (\sec^2 x - 1)\,dx = \tan x - x + C.$$
-  </div>
-
-  <p><strong>Résultat final :</strong></p>
-  <div class="math">
-    $$\boxed{\,\displaystyle \int \tan^2 x\,dx = \tan x - x + C\,}$$
-  </div>
-
-  <hr/>
-
-  <h3>6. Méthode générale</h3>
-
-  <ol>
-    <li>Identifier si l’intégrale contient des puissances de <span class="math">$\sin x$</span> ou <span class="math">$\cos x$</span>.</li>
-    <li>Si les puissances sont paires, utiliser les formules :
-      <div class="math">
-        $$\sin^2 x = \frac{1 - \cos(2x)}{2}, \quad \cos^2 x = \frac{1 + \cos(2x)}{2}.$$
-      </div>
-    </li>
-    <li>Si les puissances sont impaires, isoler un facteur de <span class="math">$\sin x$</span> ou <span class="math">$\cos x$</span>
-        et utiliser une substitution comme \(u = \cos x\) ou \(u = \sin x\).</li>
-    <li>Utiliser les formules du double angle pour simplifier le reste.</li>
-  </ol>
-
-  <p><strong>Résumé des résultats à connaître :</strong></p>
-  <ul>
-    <li>\(\displaystyle \int \sin^2 x\,dx = \frac{x}{2} - \frac{\sin(2x)}{4} + C\)</li>
-    <li>\(\displaystyle \int \cos^2 x\,dx = \frac{x}{2} + \frac{\sin(2x)}{4} + C\)</li>
-    <li>\(\displaystyle \int \sin x \cos x\,dx = -\frac{1}{4}\cos(2x) + C\)</li>
-    <li>\(\displaystyle \int \tan^2 x\,dx = \tan x - x + C\)</li>
-  </ul>
-
-</section>
+<!-- SECTION 3 - Intégrales de fonctions rationnelles -->
 <section>
   <h2>3. Intégrales de fonctions rationnelles</h2>
 
-  <h3>1️⃣ Rappel de cours : fractions rationnelles</h3>
-
   <p>
-    Une <strong>fonction rationnelle</strong> est un quotient de deux polynômes :
+    Une fonction rationnelle est un quotient de deux polynômes :
+    $$f(x) = \frac{P(x)}{Q(x)}.$$
   </p>
 
-  <div class="math">$$ f(x) = \frac{P(x)}{Q(x)}, \quad Q(x) \neq 0 $$</div>
-
   <p>
-    Pour intégrer une telle fonction, on cherche souvent à la <strong>décomposer en éléments simples</strong>.
-  </p>
-
-  <h3>2️⃣ Composantes irréductibles</h3>
-
-  <p>
-    Le dénominateur \( Q(x) \) peut se factoriser en plusieurs blocs appelés <strong>composantes irréductibles</strong> :
-  </p>
-
-  <ul>
-    <li>
-      <strong>Facteur de degré 1 :</strong> une expression de la forme \( (x - a) \), où \( a \) est réel.
-      <br>👉 On l'appelle une <em>racine réelle simple</em> du dénominateur.
-    </li>
-    <li>
-      <strong>Facteur de degré 2 :</strong> un polynôme du type \( (x^2 + bx + c) \) sans racine réelle.
-      <br>👉 On dit qu’il est <em>irréductible sur ℝ</em> (on ne peut pas le factoriser davantage).
-    </li>
-  </ul>
-
-  <p>
-    La décomposition en éléments simples consiste à écrire :
+    Pour intégrer, on cherche à la <strong>décomposer en éléments simples</strong> :
   </p>
 
   <div class="math">
@@ -555,126 +133,78 @@ Ici on prend :</p>
   </div>
 
   <p>
-    Chaque facteur irréductible de degré 1 donne lieu à des <strong>termes de type</strong>
-    \( \frac{A}{x - a} + \frac{B}{(x - a)^2} + \dots \),  
-    et chaque facteur de degré 2 donne des <strong>termes de type</strong>
-    \( \frac{Bx + C}{x^2 + bx + c} + \frac{Dx + E}{(x^2 + bx + c)^2} + \dots \)
-  </p>
-
-  <hr>
-
-  <h3>3️⃣ Exemple 1 — Cas général</h3>
-  <div class="math">
-    $$ \frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)} $$
-  </div>
-
-  <p>
-    Le dénominateur contient :
+    Chaque facteur irréductible du dénominateur donne un terme :
   </p>
   <ul>
-    <li>Un facteur irréductible de degré 2 : \( (x^2 + 1)^2 \)</li>
-    <li>Deux facteurs linéaires (degré 1) : \( (x + 1)^2 \) et \( (x - 2) \)</li>
+    <li>\((x-a)\) : facteur linéaire (racine réelle)</li>
+    <li>\((x^2+bx+c)\) : facteur quadratique irréductible sur ℝ</li>
   </ul>
 
-  <p>
-    La décomposition générale s’écrit donc :
-  </p>
+  <h3>Exemple général :</h3>
+  <div class="math">
+    $$\frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x + 1)^2(x - 2)}$$
+  </div>
 
+  <p>
+    Décomposition générale :
+  </p>
   <div class="math">
     $$
-    \frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}
-    = \frac{Ax + B}{x^2 + 1} + \frac{Cx + D}{(x^2 + 1)^2}
+    \frac{Ax + B}{x^2 + 1} + \frac{Cx + D}{(x^2 + 1)^2}
     + \frac{E}{x + 1} + \frac{F}{(x + 1)^2} + \frac{G}{x - 2}
     $$
   </div>
 
+  <h3>Exemple avec division euclidienne :</h3>
   <p>
-    Pour déterminer les coefficients \( A, B, C, D, E, F, G \), on multiplie par le dénominateur complet et on identifie les coefficients.
+    Si le degré du numérateur ≥ degré du dénominateur, on commence par la division :
   </p>
 
-  <hr>
+  <pre>
+Dividende :  A(x) = x³ + 2x² + 3x + 4
+Diviseur :   B(x) = x² + 1
 
-  <h3>4️⃣ Exemple 2 — Avec division euclidienne préalable</h3>
+Étape 1 :  quotient partiel = x      car x³ ÷ x² = x
+Soustraction : (x³ + 2x² + 3x + 4) - x(x² + 1) = 2x² + 2x + 4
 
+Étape 2 :  quotient partiel = 2      car 2x² ÷ x² = 2
+Soustraction : (2x² + 2x + 4) - 2(x² + 1) = 3x + 2
+
+Reste : 3x + 2
+  </pre>
+
+  <p>Résultat :</p>
   <div class="math">
-    $$ \frac{x^3 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)} $$
+    $$\frac{x³ + 2x² + 3x + 4}{x² + 1} = (x + 2) + \frac{3x + 2}{x² + 1}$$
   </div>
-
-  <p>
-    Comme le degré du numérateur (3) est <strong>inférieur</strong> au degré du dénominateur (7),  
-    on <strong>ne fait pas de division euclidienne</strong> ici : on décompose directement.
-  </p>
-
-  <p>
-    La décomposition suit la même forme générale :
-  </p>
-
-  <div class="math">
-    $$
-    \frac{x^3 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}
-    = \frac{Ax + B}{x^2 + 1} + \frac{Cx + D}{(x^2 + 1)^2}
-    + \frac{E}{x + 1} + \frac{F}{(x + 1)^2} + \frac{G}{x - 2}
-    $$
-  </div>
-
-  <p>
-    On résout ensuite pour les constantes \( A, B, C, D, E, F, G \) en remplaçant \( x \) par les racines ou en égalant les coefficients.
-  </p>
-
-  <hr>
-
-  <h3>5️⃣ Cas où le degré du numérateur est supérieur — Division euclidienne complète</h3>
-
-  <p>
-    Si on prend maintenant un cas où le degré du numérateur est plus grand (par exemple 8 au lieu de 7), on commence par une <strong>division euclidienne</strong>.
-  </p>
-
-  <div class="math">
-    $$ A(x) = x^8 + 2x^2 + 3x + 4, \quad B(x) = (x^2 + 1)^2(x+1)^2(x-2) $$
-  </div>
-
-  <p>Les étapes de division se déroulent ainsi :</p>
-
-  <ol>
-    <li><strong>Dividende :</strong> \( A(x) = x^8 + 2x^2 + 3x + 4 \)</li>
-    <li><strong>Diviseur :</strong> \( B(x) = (x^2 + 1)^2(x+1)^2(x-2) \) (degré 7)</li>
-    <li><strong>Quotient :</strong> le premier terme est \( x \), car \( x^8 / x^7 = x \)</li>
-    <li><strong>Soustraction :</strong> on calcule \( A(x) - x \cdot B(x) \) pour obtenir le reste intermédiaire</li>
-    <li>On répète jusqu’à obtenir un reste de degré strictement inférieur à 7.</li>
-  </ol>
-
-  <p>
-    Finalement :
-  </p>
-  <div class="math">
-    $$ A(x) = B(x)\cdot Q(x) + R(x), \quad \deg(R) < \deg(B) $$
-  </div>
-
-  <p>
-    La fraction devient :
-  </p>
-  <div class="math">
-    $$ \frac{A(x)}{B(x)} = Q(x) + \frac{R(x)}{B(x)} $$
-  </div>
-
-  <p>
-    Puis on applique la décomposition en éléments simples sur la partie \(\frac{R(x)}{B(x)}\).
-  </p>
 </section>
 
-  </main>
+<!-- SECTION 4 - Intégrales trigonométriques -->
+<section>
+  <h2>4. Intégrales trigonométriques</h2>
+  <p>
+    Pour simplifier les puissances de sinus et cosinus, on utilise les identités :
+  </p>
 
-  <footer>
-    <p>© 2025 Alethia</p>
-    <div id="comments">
-      <script src="https://utteranc.es/client.js"
-        repo="TON_NOM_D_UTILISATEUR/alethia-n.github.io"
-        issue-term="pathname"
-        theme="github-dark"
-        crossorigin="anonymous"
-        async>
-      </script>
-    </div>
-  </footer>
+  <div class="math">
+    $$\sin^2 x = \frac{1 - \cos(2x)}{2}, \quad
+      \cos^2 x = \frac{1 + \cos(2x)}{2}$$
+  </div>
+
+  <p>Exemples :</p>
+
+  <h3>Exemple 1 :</h3>
+  <div class="math">
+    $$\int \sin^2 x\,dx = \frac{1}{2}\int (1 - \cos(2x))\,dx
+    = \frac{x}{2} - \frac{\sin(2x)}{4} + C$$
+  </div>
+
+  <h3>Exemple 2 :</h3>
+  <div class="math">
+    $$\int \cos^2 x\,dx = \frac{1}{2}\int (1 + \cos(2x))\,dx
+    = \frac{x}{2} + \frac{\sin(2x)}{4} + C$$
+  </div>
+</section>
+
 </body>
 </html>
