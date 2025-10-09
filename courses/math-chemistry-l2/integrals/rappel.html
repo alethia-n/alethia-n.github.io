@@ -182,10 +182,187 @@ Ici on prend :</p>
 </section>
 
 
-    <section>
-      <h2>3. Intégrales de fonctions rationnelles</h2>
-      <p>On effectue souvent une décomposition en éléments simples.</p>
-    </section>
+  <section>
+  <h2>3. Intégrales de fonctions rationnelles</h2>
+
+  <p>
+    Une <strong>fonction rationnelle</strong> est le quotient de deux polynômes :
+  </p>
+
+  <div class="math">
+    $$R(x) = \frac{P(x)}{Q(x)}, \quad \text{où } P(x) \text{ et } Q(x) \text{ sont des polynômes, et } Q(x) \neq 0.$$
+  </div>
+
+  <p>
+    Pour intégrer ce type de fonction, on cherche souvent à la <strong>simplifier</strong> en la décomposant
+    en <strong>éléments simples</strong>.  
+    C’est ce qu’on appelle la <em>décomposition en éléments simples</em> (ou « D.E.S. »).
+  </p>
+
+  <hr/>
+
+  <h3>1. Notion de fraction rationnelle et d’élément irréductible</h3>
+
+  <p>
+    Une <strong>fraction rationnelle</strong> est simplement une fraction dont le numérateur et le dénominateur sont des polynômes.  
+    Exemple :
+  </p>
+
+  <div class="math">
+    $$\frac{x^2 + 3x + 2}{x^3 - x}.$$
+  </div>
+
+  <p>
+    Un <strong>élément irréductible</strong> (sur ℝ) est un polynôme qui ne peut pas être factorisé avec des coefficients réels.
+    Par exemple :
+  </p>
+
+  <ul>
+    <li><span class="math">\(x - a\)</span> est un facteur linéaire (donc irréductible).</li>
+    <li><span class="math">\(x^2 + bx + c\)</span> est irréductible si son discriminant est négatif : <span class="math">\(b^2 - 4c &lt; 0\)</span>.</li>
+  </ul>
+
+  <p>
+    Ainsi, tout dénominateur se factorise en produit de termes linéaires ou quadratiques irréductibles.
+  </p>
+
+  <hr/>
+
+  <h3>2. Comparaison des degrés</h3>
+
+  <ul>
+    <li><strong>Cas 1 :</strong> si le degré du numérateur est <em>inférieur</em> à celui du dénominateur,  
+    la fraction est dite <strong>propre</strong>.  
+    On peut directement la décomposer.</li>
+
+    <li><strong>Cas 2 :</strong> si le degré du numérateur est <em>supérieur ou égal</em> à celui du dénominateur,  
+    on doit d’abord effectuer une <strong>division euclidienne</strong> des polynômes.</li>
+  </ul>
+
+  <hr/>
+
+  <h3>3. Division euclidienne de deux polynômes</h3>
+
+  <p>
+    Soient \(P(x)\) et \(Q(x)\) deux polynômes.  
+    On peut écrire :
+  </p>
+
+  <div class="math">
+    $$P(x) = Q(x)\,A(x) + R(x),$$
+  </div>
+
+  <p>
+    où :
+  </p>
+  <ul>
+    <li><span class="math">\(A(x)\)</span> est le <strong>quotient</strong>,</li>
+    <li><span class="math">\(R(x)\)</span> est le <strong>reste</strong> (degré strictement inférieur à celui de \(Q(x)\)).</li>
+  </ul>
+
+  <p>
+    Ainsi :
+  </p>
+
+  <div class="math">
+    $$\frac{P(x)}{Q(x)} = A(x) + \frac{R(x)}{Q(x)}.$$
+  </div>
+
+  <p>On pourra ensuite intégrer \(A(x)\) et \(\dfrac{R(x)}{Q(x)}\) séparément.</p>
+
+  <h4>Exemple :</h4>
+  <p>Diviser \(P(x) = x^3\) par \(Q(x) = x^2 + 1\).</p>
+
+  <p>On cherche \(A(x)\) et \(R(x)\) tels que :</p>
+  <div class="math">$$x^3 = (x^2 + 1)A(x) + R(x).$$</div>
+
+  <p>On commence par :</p>
+  <ul>
+    <li>le terme dominant de \(P\) est \(x^3\), de \(Q\) c’est \(x^2\), donc le premier terme du quotient est \(x\).</li>
+  </ul>
+
+  <p>On soustrait :</p>
+  <div class="math">
+    $$x^3 - x(x^2 + 1) = -x.$$
+  </div>
+
+  <p>Donc :</p>
+  <div class="math">
+    $$A(x) = x,\quad R(x) = -x.$$
+  </div>
+
+  <p>Et ainsi :</p>
+  <div class="math">
+    $$\frac{x^3}{x^2 + 1} = x - \frac{x}{x^2 + 1}.$$
+  </div>
+
+  <p>On pourra donc intégrer :</p>
+  <div class="math">
+    $$\int \frac{x^3}{x^2 + 1}\,dx = \int x\,dx - \int \frac{x}{x^2 + 1}\,dx.$$
+  </div>
+
+  <p>
+    <strong>Intégration :</strong>  
+    - \(\displaystyle \int x\,dx = \frac{x^2}{2}\)  
+    - Pour la seconde, on pose \(u = x^2 + 1\), \(du = 2x\,dx\), donc :
+  </p>
+
+  <div class="math">
+    $$\int \frac{x}{x^2 + 1}\,dx = \frac{1}{2}\ln(x^2 + 1) + C.$$
+  </div>
+
+  <p><strong>Résultat final :</strong></p>
+  <div class="math">
+    $$\boxed{\,\displaystyle \int \frac{x^3}{x^2 + 1}\,dx = \frac{x^2}{2} - \frac{1}{2}\ln(1+x^2) + C\,}$$
+  </div>
+
+  <hr/>
+
+  <h3>4. Cas d’une fraction déjà propre</h3>
+
+  <p>Considérons maintenant un exemple où le numérateur est de degré plus petit que le dénominateur :</p>
+
+  <div class="math">
+    $$I = \int \frac{x}{x^2 + 1}\,dx.$$
+  </div>
+
+  <p>
+    Ici, le degré du numérateur (1) est inférieur à celui du dénominateur (2).  
+    On reconnaît directement une forme de dérivée : celle de \(x^2 + 1\).
+  </p>
+
+  <p>Posons \(u = x^2 + 1 \Rightarrow du = 2x\,dx\).</p>
+  <div class="math">
+    $$I = \frac{1}{2}\int \frac{du}{u} = \frac{1}{2}\ln|u| + C = \frac{1}{2}\ln(1 + x^2) + C.$$
+  </div>
+
+  <p>
+    C’est donc une intégrale de type simple, sans besoin de division.
+  </p>
+
+  <hr/>
+
+  <h3>5. Méthode générale</h3>
+
+  <ol>
+    <li>Vérifier le degré du numérateur et du dénominateur.</li>
+    <li>Si le numérateur a un degré ≥ au dénominateur, faire une division euclidienne.</li>
+    <li>Factoriser le dénominateur en éléments irréductibles.</li>
+    <li>Décomposer en éléments simples (formes du type \(\dfrac{A}{x-a}\), \(\dfrac{Bx+C}{x^2+px+q}\)…).</li>
+    <li>Intégrer chaque terme à l’aide de formules connues :
+      <ul>
+        <li>\(\displaystyle \int \frac{dx}{x-a} = \ln|x-a| + C\)</li>
+        <li>\(\displaystyle \int \frac{dx}{x^2 + 1} = \arctan x + C\)</li>
+        <li>\(\displaystyle \int \frac{x\,dx}{x^2 + 1} = \frac{1}{2}\ln(1+x^2) + C\)</li>
+      </ul>
+    </li>
+  </ol>
+
+  <p>
+    Cette méthode permet de traiter toutes les intégrales rationnelles, quelles que soient leurs formes.
+  </p>
+</section>
+
 
     <section>
       <h2>4. Intégrales trigonométriques</h2>
