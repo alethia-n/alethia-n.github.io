@@ -59,29 +59,48 @@
 
   <hr/>
 
-  <h3>Exemple :</h3> 
-  <div class="math">$$\displaystyle I = \int \frac{dx}{x(1+\ln^2 x)}.$$</div> 
-  
-  <ol>
-    <li>On remarque la présence de \(\ln x\) et de sa dérivée \(\dfrac{1}{x}\).</li>
-    <li>On fait la substitution <span class="math">\(t = \ln x\)</span>, donc <span class="math">\(dt = \dfrac{dx}{x}\).</span></li>
-    <li>L’intégrale devient :</li>
-  </ol>
+ <h3>Exemple :</h3>
+<div class="math">$$\displaystyle I=\int \arctan x\,dx.$$</div>
 
-  <div class="math">$$I = \int \frac{dt}{1+t^2}.$$</div>
+<p><strong>Choix pour l'intégration par parties :</strong></p>
+<p>On choisit habituellement \(u\) comme la partie « compliquée » qui simplifie lorsqu'on la dérive.  
+Ici on prend :</p>
+<ul>
+  <li><span class="math">\(u=\arctan x\)</span> ⟶ <span class="math">\(du=\dfrac{1}{1+x^2}\,dx\)</span></li>
+  <li><span class="math">\(dv=dx\)</span> ⟶ <span class="math">\(v=x\)</span></li>
+</ul>
 
-  <p>On reconnaît la primitive connue :</p>
-  <div class="math">$$\int \frac{dt}{1+t^2} = \arctan(t) + C.$$</div>
+<p><strong>Appliquer la formule d'intégration par parties</strong> :</p>
+<div class="math">$$\int u\,dv = uv - \int v\,du.$$</div>
 
-  <p>En revenant à la variable \(x\) :</p>
-  <div class="math">$$\boxed{I = \arctan(\ln x) + C.}$$</div>
+<p>Donc</p>
+<div class="math">
+  $$\begin{aligned}
+  I &= \int \arctan x \, dx = x\arctan x - \int x\cdot\frac{1}{1+x^2}\,dx \\
+    &= x\arctan x - \int \frac{x}{1+x^2}\,dx.
+  \end{aligned}$$
+</div>
 
-  <p><strong>Vérification :</strong></p>
-  <div class="math">$$\frac{d}{dx}\big[\arctan(\ln x)\big] = \frac{1}{1+(\ln x)^2}\cdot\frac{1}{x} = \frac{1}{x(1+\ln^2 x)}.$$</div>
+<p><strong>Calcul de la seconde intégrale</strong> :</p>
+<p>Posons \(t = 1+x^2\) (ou remarquez que la dérivée de \(1+x^2\) est \(2x\)), alors</p>
+<div class="math">
+  $$\int \frac{x}{1+x^2}\,dx = \frac{1}{2}\int \frac{2x}{1+x^2}\,dx = \frac{1}{2}\ln(1+x^2) + C.$$
+</div>
 
-  <p>
-    Le résultat est donc correct.
-  </p>
+<p><strong>Conclusion :</strong></p>
+<div class="math">
+  $$\boxed{\,\displaystyle \int \arctan x\,dx = x\arctan x - \frac{1}{2}\ln(1+x^2) + C \,}$$
+</div>
+
+<p><strong>Vérification (dérivation) :</strong></p>
+<div class="math">
+  $$\frac{d}{dx}\Big(x\arctan x - \tfrac{1}{2}\ln(1+x^2)\Big)
+    = \arctan x + x\cdot\frac{1}{1+x^2} - \frac{1}{2}\cdot\frac{2x}{1+x^2}
+    = \arctan x.$$
+</div>
+
+<p>Le résultat est donc correct. Remarque : le choix \(u=\arctan x\) est naturel car sa dérivée est simple (\(1/(1+x^2)\)) et \(dv=dx\) a pour primitive \(v=x\), ce qui rend le calcul direct.</p>
+
 
 </section>
 
