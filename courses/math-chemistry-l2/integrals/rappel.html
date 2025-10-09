@@ -1,345 +1,265 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rappel de cours — Intégrales (complet)</title>
-
-  <!-- MathJax pour les formules -->
+  <meta charset="UTF-8">
+  <title>Rappels de cours : Intégration</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
-    body{
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      max-width:980px; margin:30px auto; color:#111; line-height:1.7;
-      padding: 0 18px;
+    /* === Style sombre et profond avec teinte marron === */
+    body {
+      font-family: "Times New Roman", serif;
+      background-color: #1a1410;
+      color: #e5d6c6;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
     }
-    h1 { color:#0a4b78; }
-    h2 { color:#0a4b78; border-bottom:2px solid #0a4b78; padding-bottom:6px; }
-    h3 { color:#0a5f99; }
-    .math { text-align:center; margin:14px 0; font-size:1.05em; }
-    pre { background:#f6f8fb; padding:12px; border-radius:6px; overflow:auto; }
-    .tip { background:#eef7ff; padding:10px; border-left:4px solid #0a4b78; border-radius:4px; margin:12px 0; }
-    .important { color:#c0392b; font-weight:600; } /* rouge */
-    .quotient { color:#0b63b1; font-weight:600; }   /* bleu */
-    .reste { color:#1a9a56; font-weight:600; }      /* vert */
-    .muted { color:#666; font-size:0.95em; }
-    table { border-collapse: collapse; margin:8px 0; }
-    td, th { padding:6px 8px; vertical-align:top; }
+
+    header {
+      text-align: center;
+      background: #2b211b;
+      padding: 25px;
+      border-bottom: 2px solid #4b3a2d;
+    }
+
+    header h1 {
+      color: #d6bfa9;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #d6bfa9;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #f0c997;
+    }
+
+    main {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section {
+      margin-bottom: 50px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2b211b;
+      border-top: 2px solid #4b3a2d;
+      color: #b79c83;
+    }
+
+    .math {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 1.2em;
+    }
+
+    pre {
+      background: #2b211b;
+      padding: 10px;
+      border-radius: 6px;
+      color: #f5e6d0;
+      overflow-x: auto;
+    }
+
+    strong { color: #f0c997; }
+    em { color: #d6bfa9; }
   </style>
 </head>
+
 <body>
+  <header>
+    <h1>Rappels de cours – Techniques d’intégration</h1>
+    <nav>
+      <a href="#parties">Intégration par parties</a>
+      <a href="#chgmt">Changement de variable</a>
+      <a href="#frac">Fractions rationnelles</a>
+      <a href="#trigo">Intégrales trigonométriques</a>
+    </nav>
+  </header>
 
-<h1>Rappel de cours — Techniques d’intégration (complet)</h1>
+  <main>
+    <!-- SECTION 1 : Intégration par parties -->
+    <section id="parties">
+      <h2>1. Intégration par parties</h2>
+      <p>
+        Cette méthode découle directement de la formule de dérivation du produit :
+        \((uv)' = u'v + uv'\).
+      </p>
+      <div class="math">
+        $$\int u\,dv = uv - \int v\,du$$
+      </div>
+      <p>
+        En posant \( du = u'(x)\,dx \) et \( dv = v'(x)\,dx \), la formule s’écrit :
+      </p>
+      <div class="math">
+        $$\int u(x)v'(x)\,dx = u(x)v(x) - \int u'(x)v(x)\,dx$$
+      </div>
+      <p>
+        <strong>Remarque :</strong> On choisit <em>u</em> pour qu’il devienne plus simple lorsqu’on le dérive,
+        et <em>dv</em> pour que son intégrale soit facile à calculer.
+      </p>
 
-<!-- SECTION 1: Integration par parties -->
-<section>
-  <h2>1. Intégration par parties</h2>
+      <h3>Exemple :</h3>
+      <p>Calculons \( I = \int \arctan(x)\,dx \).</p>
+      <p>Posons :
+        \(u = \arctan(x)\) ⇒ \(du = \frac{1}{1+x^2}\,dx\),  
+        \(dv = dx\) ⇒ \(v = x\)
+      </p>
+      <div class="math">
+        $$I = x\arctan(x) - \int \frac{x}{1+x^2}\,dx
+        = x\arctan(x) - \frac{1}{2}\ln(1+x^2) + C$$
+      </div>
+    </section>
 
-  <p><strong>Forme usuelle (en \(x\)) :</strong></p>
-  <div class="math">$$\displaystyle \int u(x)\,v'(x)\,dx = u(x)v(x) - \int u'(x)\,v(x)\,dx.$$</div>
+    <!-- SECTION 2 : Changement de variable -->
+    <section id="chgmt">
+      <h2>2. Changement de variable</h2>
+      <p>
+        Cette méthode est utilisée lorsqu’une substitution simplifie l’expression sous le signe intégral.
+      </p>
+      <div class="math">
+        $$\int f(g(x))\,g'(x)\,dx = \int f(u)\,du \quad \text{avec } u=g(x)$$
+      </div>
 
-  <p><strong>Forme abrégée (différentielle) :</strong></p>
-  <div class="math">$$\displaystyle \int u\,dv = uv - \int v\,du.$$</div>
+      <h3>Exemple :</h3>
+      <p>
+        Calculons \( I = \int \frac{dx}{x(1+\ln^2x)} \).
+      </p>
+      <p>
+        Posons \( u = \ln(x) \) ⇒ \( du = \frac{dx}{x} \).
+      </p>
+      <div class="math">
+        $$I = \int \frac{du}{1+u^2} = \arctan(u) + C = \arctan(\ln(x)) + C$$
+      </div>
+    </section>
 
-  <h3>Pourquoi on écrit \(du = u'(x)\,dx\) ? (explication simple et rigoureuse)</h3>
-  <p class="muted">
-    Si \(u\) est dérivable en \(x\), sa dérivée est \(\dfrac{du}{dx}=u'(x)\).
-    Par définition, pour un petit accroissement \(\Delta x\) on a :
-  </p>
-  <div class="math">$$u(x+\Delta x)-u(x) = u'(x)\,\Delta x + o(\Delta x).$$</div>
-  <p class="muted">
-    En posant \(dx=\Delta x\) et \(du=u(x+\Delta x)-u(x)\), on obtient (au premier ordre)
-  </p>
-  <div class="math">$$du = u'(x)\,dx.$$</div>
-  <p class="muted">
-    C'est donc une écriture compacte qui signifie « la variation linéaire de \(u\) associée à la variation \(dx\) de \(x\) ».
-  </p>
+    <!-- SECTION 3 : Fractions rationnelles -->
+    <section id="frac">
+      <h2>3. Intégrales de fonctions rationnelles</h2>
+      <p>
+        Une fonction rationnelle est un quotient de deux polynômes :
+        \( R(x) = \frac{P(x)}{Q(x)} \).
+      </p>
 
-  <h3>Origine de la formule</h3>
-  <div class="math">$$(u v)' = u'v + uv'$$</div>
-  <p class="muted">Intégrer des deux côtés et isoler la partie désirée donne la formule.</p>
-
-  <h3>Exemple (niveau L2) : \(\displaystyle I=\int \arctan x\,dx\)</h3>
-  <p><strong>Choix :</strong> prendre \(u=\arctan x\) (devient plus simple en la dérivant), \(dv=dx\).</p>
-  <ul>
-    <li>\(u=\arctan x \Rightarrow du=\dfrac{1}{1+x^2}\,dx\)</li>
-    <li>\(dv=dx \Rightarrow v=x\)</li>
-  </ul>
-
-  <div class="math">
-    $$\begin{aligned}
-      I &= x\arctan x - \int x\cdot\frac{1}{1+x^2}\,dx \\
-        &= x\arctan x - \frac{1}{2}\int \frac{2x}{1+x^2}\,dx
-        = x\arctan x - \frac{1}{2}\ln(1+x^2) + C.
-    \end{aligned}$$
-  </div>
-</section>
-
-<!-- SECTION 2: Changement de variable -->
-<section>
-  <h2>2. Changement de variable</h2>
-
-  <div class="math">$$\displaystyle \int f(g(x))\,g'(x)\,dx = \int f(u)\,du \quad\text{où } u=g(x).$$</div>
-
-  <p class="muted">Étapes : choisir \(u=g(x)\), calculer \(du=g'(x)\,dx\), remplacer et intégrer en \(u\).</p>
-
-  <h3>Exemple demandé (niveau L2) :</h3>
-  <p class="muted">Calcul de :</p>
-  <div class="math">$$\displaystyle I=\int \frac{dx}{x(1+\ln^2 x)}$$</div>
-
-  <p><strong>Substitution :</strong> \(u=\ln x \Rightarrow du=\dfrac{dx}{x}\).</p>
-  <div class="math">$$I=\int\frac{du}{1+u^2}=\arctan(u)+C=\boxed{\arctan(\ln x)+C}.$$</div>
-
-  <p class="muted">Vérification facile par dérivation : \(\dfrac{d}{dx}\arctan(\ln x)=\dfrac{1}{1+\ln^2 x}\cdot\dfrac{1}{x}\).</p>
-</section>
-
-<!-- SECTION 3: Integrales de fonctions rationnelles -->
-<section>
-  <h2>3. Intégrales de fonctions rationnelles — décomposition en éléments simples (complet)</h2>
-
-  <h3>Définition</h3>
-  <p>Une <strong>fraction rationnelle</strong> est un quotient de deux polynômes :</p>
-  <div class="math">$$R(x)=\dfrac{P(x)}{Q(x)},\qquad Q(x)\not\equiv 0.$$</div>
-
-  <h3>Composantes irréductibles (sur \(\mathbb{R}\))</h3>
-  <p>
-    Le polynôme \(Q(x)\) se factorise (sur \(\mathbb{R}\)) en facteurs linéaires et quadratiques irréductibles.
-  </p>
-
-  <ul>
-    <li>
-      <strong>Facteur linéaire (degré 1)</strong> : \((x-a)\).  
-      Il produit en éléments simples des termes du type :
-      \[
-        \frac{A}{x-a},\ \frac{B}{(x-a)^2},\ \dots,\ \frac{K}{(x-a)^n}
-      \]
-      si la racine \(a\) est de multiplicité \(n\).
-    </li>
-
-    <li>
-      <strong>Facteur quadratique irréductible (degré 2)</strong> : \(x^2+bx+c\) avec discriminant \(b^2-4c<0\).
-      Pour une puissance \(m\) de ce facteur, les termes en éléments simples sont :
-      \[
-        \frac{B_0x+C_0}{x^2+bx+c},\ \frac{B_1x+C_1}{(x^2+bx+c)^2},\ \dots,\ \frac{B_{m-1}x+C_{m-1}}{(x^2+bx+c)^m}.
-      \]
-      Les numérateurs sont linéaires (car degré inférieur à 2).
-    </li>
-  </ul>
-
-  <h3>Forme générale de la décomposition</h3>
-  <p>Si</p>
-  <div class="math">$$Q(x)=\prod_i (x-a_i)^{n_i}\prod_j (x^2+b_jx+c_j)^{m_j},$$</div>
-  <p>alors</p>
-  <div class="math">
-    $$
-    \frac{P(x)}{Q(x)}=
-    \sum_i\sum_{k=1}^{n_i}\frac{A_{i,k}}{(x-a_i)^k}
-    +\sum_j\sum_{k=1}^{m_j}\frac{B_{j,k}x+C_{j,k}}{(x^2+b_jx+c_j)^k}.
-    $$
-  </div>
-
-  <h3>Cas pratique — comparaison des degrés</h3>
-  <ul>
-    <li>Si \(\deg P < \deg Q\) : la fraction est <strong>propre</strong> → on décompose directement.</li>
-    <li>Si \(\deg P \ge \deg Q\) : on commence par une <strong>division euclidienne</strong> \(P=Q\cdot S + R\) avec \(\deg R < \deg Q\), puis
-      \(\dfrac{P}{Q}=S + \dfrac{R}{Q}\) et on décompose \(\dfrac{R}{Q}\).
-    </li>
-  </ul>
-
-  <hr />
-
-  <h3>Division euclidienne — rappel pratique (méthode verticale)</h3>
-  <p class="muted">On écrira à la main la division comme pour des entiers : on aligne les termes, on trouve le premier terme du quotient (terme dominant), on multiplie, on soustrait, etc. Voici des exemples complets avec indication du <span class="important">dividende</span>, du <span class="important">diviseur</span>, du <span class="quotient">quotient</span> et du <span class="reste">reste</span> à chaque étape.</p>
-
-  <h4>Exemple A (simple, déjà vu) :</h4>
-  <p>Diviser \(x^3 + 2x^2 + 3x + 4\) par \(x^2 + 1\).</p>
-
-  <pre>
-Dividende : <span style="color:#c0392b">x³ + 2x² + 3x + 4</span>
-Diviseur  : <span style="color:#0b63b1">x² + 1</span>
-
-Étape 1 :
-  - Terme dominant : x³ ÷ x² = <span class="quotient">x</span>
-  - On calcule <span style="color:#c0392b">x · (x²+1) = x³ + x</span>
-  - Soustraction : (x³+2x²+3x+4) - (x³+x) = 2x² + 2x + 4   ← <span class="reste">reste_1</span>
-
-Étape 2 :
-  - Terme dominant : 2x² ÷ x² = <span class="quotient">2</span>
-  - On calcule <span style="color:#c0392b">2 · (x²+1) = 2x² + 2</span>
-  - Soustraction : (2x²+2x+4) - (2x²+2) = 3x + 2  ← <span class="reste">reste_final</span>
-
-Résultat :
-  Quotient Q(x) = <span class="quotient">x + 2</span>
-  Reste R(x) = <span class="reste">3x + 2</span>
-
-Donc :
-  $$\frac{x^3 + 2x^2 + 3x + 4}{x^2 + 1} = x + 2 + \frac{3x+2}{x^2+1}.$$
-  </pre>
-
-  <hr />
-
-  <h3>Exemples demandés (cas avec dénominateur complexe)</h3>
-  <p>On considère le dénominateur commun :</p>
-  <div class="math">$$B(x)=(x^2+1)^2(x+1)^2(x-2).$$</div>
-
-  <p>Étudions les deux fractions demandées :</p>
-
-  <h4>Cas 1 — Numérateur de degré supérieur :</h4>
-  <div class="math">$$\frac{x^8 + 2x^2 + 3x + 4}{(x^2+1)^2(x+1)^2(x-2)}.$$</div>
-
-  <p><strong>Étape 1 — division euclidienne :</strong></p>
-
-  <p><strong>Dividende</strong> (A) : <span class="important">\(A(x)=x^8+2x^2+3x+4\)</span></p>
-  <p><strong>Diviseur</strong> (B) : <span class="important">\(B(x)=(x^2+1)^2(x+1)^2(x-2)\)</span></p>
-
-  <p><em>Pour manipuler la division il est pratique d'étendre \(B(x)\) :</em></p>
-  <div class="math">$$\displaystyle B_{\text{exp}}(x)=x^7 - x^5 - 2x^4 - 5x^3 - 4x^2 - 3x - 2.$$</div>
-
-  <p>On divise maintenant \(A(x)\) par \(B_{\text{exp}}(x)\) :</p>
-
-  <pre>
-Dividende A(x)  = <span style="color:#c0392b">x⁸ + 0·x⁷ + 0·x⁶ + 0·x⁵ + 0·x⁴ + 2x² + 3x + 4</span>
-Diviseur B(x)   = <span style="color:#0b63b1">x⁷ - x⁵ - 2x⁴ - 5x³ - 4x² - 3x - 2</span>
-
-Étape 1 :
-  - Terme dominant : x⁸ ÷ x⁷ = <span class="quotient">x</span>
-  - Produit : <span style="color:#c0392b">x · B(x) = x⁸ - x⁶ - 2x⁵ - 5x⁴ - 4x³ - 3x² - 2x</span>
-  - Soustraction : A(x) - x·B(x) =
-      <span class="reste">x⁶ + 2x⁵ + 5x⁴ + 4x³ + 5x² + 5x + 4</span>
-
-Comme le reste a maintenant degré 6 (< 7 = deg B), la division s'arrête.
-
-Donc :
-  Quotient Q(x) = <span class="quotient">x</span>
-  Reste R(x) = <span class="reste">x⁶ + 2x⁵ + 5x⁴ + 4x³ + 5x² + 5x + 4</span>
-
-On obtient :
-  $$\frac{A(x)}{B(x)} = x + \frac{R(x)}{B(x)}.$$
-  </pre>
-
-  <p class="muted">Remarque : ici la division n'a qu'un seul pas parce que \(\deg A - \deg B = 1\).</p>
-
-  <h4>Étape 2 — Décomposition en éléments simples de la partie propre</h4>
-  <p>On décompose la fraction propre \(\dfrac{R(x)}{B(x)}\). Le schéma de formes à prévoir (vu les facteurs) est :</p>
-
-  <div class="math">
-    $$
-    \frac{R(x)}{(x^2+1)^2(x+1)^2(x-2)}
-    = \frac{A_1x+B_1}{x^2+1} + \frac{A_2x+B_2}{(x^2+1)^2}
-      + \frac{C}{x+1} + \frac{D}{(x+1)^2} + \frac{E}{x-2}.
-    $$
-  </div>
-
-  <p class="muted">Après multiplication par le dénominateur complet et égalité des polynômes, on résout pour les constantes \(A_i,B_i,C,D,E\).</p>
-
-  <h4>Résultat (décomposition complète calculée)</h4>
-  <p class="muted">Pour ton exemple précis, la décomposition (obtenue en calcul symbolique) s'écrit :</p>
-
-  <div class="math">
-    $$
-    \boxed{
-      \frac{x^8 + 2x^2 + 3x + 4}{(x^2+1)^2(x+1)^2(x-2)}
-      = x
-      + \frac{3x-9}{10\,(x^2+1)^2}
-      - \frac{19x+13}{100\,(x^2+1)}
-      - \frac{1}{36(x+1)}
-      - \frac{1}{3(x+1)^2}
-      + \frac{274}{225(x-2)}
-    }
-    $$
-  </div>
-
-  <p class="muted">(Si tu veux, je peux fournir la démonstration du calcul des coefficients terme à terme — elle consiste à multiplier par le dénominateur et égaler coefficients, ou à évaluer en racines simples pour obtenir rapidement certains termes.)</p>
-
-  <hr />
-
-  <h4>Cas 2 — Numérateur de degré inférieur (donc fraction propre)</h4>
-  <div class="math">$$\frac{x^3 + 2x^2 + 3x + 4}{(x^2+1)^2(x+1)^2(x-2)}$$</div>
-
-  <p>Le degré du numérateur (3) est strictement inférieur à celui du dénominateur (7) : <strong>pas de division</strong>, on décompose directement.</p>
-
-  <p>Forme générale prévue :</p>
-  <div class="math">
-    $$
-    \frac{x^3 + 2x^2 + 3x + 4}{(x^2+1)^2(x+1)^2(x-2)}
-    = \frac{A x + B}{x^2+1} + \frac{C x + D}{(x^2+1)^2}
-    + \frac{E}{x+1} + \frac{F}{(x+1)^2} + \frac{G}{x-2}.
-    $$
-  </div>
-
-  <p class="muted">En multipliant par le dénominateur et en identifiant les coefficients, on obtient (résultat calculé) :</p>
-
-  <div class="math">
-    $$
-    \boxed{
-      \frac{x^3 + 2x^2 + 3x + 4}{(x^2+1)^2(x+1)^2(x-2)}
-      =
-      \frac{x-3}{5\,(x^2+1)^2}
-      + \frac{22x-31}{50\,(x^2+1)}
-      - \frac{5}{9(x+1)}
-      - \frac{1}{6(x+1)^2}
-      + \frac{26}{225(x-2)}
-    }
-    $$
-  </div>
-
-  <p class="muted">Tu peux vérifier en multipliant les deux membres par le dénominateur et en vérifiant que les coefficients des puissances de \(x\) coïncident.</p>
-
-  <hr />
-
-  <h3>Méthode pratique pour trouver les constantes</h3>
-  <ol>
-    <li>Écrire la forme générale (selon les facteurs irréductibles et leurs puissances).</li>
-    <li>Multiplier par le dénominateur complet pour obtenir une égalité entre deux polynômes.</li>
-    <li>Soit :
+      <h3>Composantes irréductibles :</h3>
       <ul>
-        <li>évaluer en \(x=a\) quand \(a\) est une racine simple (pour éliminer beaucoup de termes),</li>
-        <li>ou identifier coefficient par coefficient (décomposer et comparer les coefficients des puissances de \(x\)).</li>
+        <li>
+          Une composante <strong>irréductible de degré 1</strong> : facteur linéaire du type \((x - a)\).
+        </li>
+        <li>
+          Une composante <strong>irréductible de degré 2</strong> : polynôme quadratique sans racine réelle,
+          du type \((x^2 + px + q)\) avec \(\Delta < 0\).
+        </li>
       </ul>
-    </li>
-    <li>Résoudre le système linéaire obtenu pour les constantes.</li>
-  </ol>
 
-  <p class="muted">Remarque : pour des quadratiques irréductibles, on ne peut pas utiliser la substitution \(x=a\) (racine réelle) ; on utilise l'identification des coefficients ou parfois des méthodes astucieuses (dériver l'identité, etc.).</p>
+      <p>
+        Toute fraction rationnelle peut être décomposée en somme d’éléments simples selon la nature de ces facteurs.
+      </p>
 
-</section>
+      <h3>Cas où le degré du numérateur ≥ degré du dénominateur :</h3>
+      <p>
+        On effectue d’abord une <strong>division euclidienne</strong> :
+      </p>
+      <div class="math">
+        $$P(x) = Q(x)\,D(x) + R(x), \quad \deg(R) < \deg(Q)$$
+      </div>
 
-<!-- SECTION 4: Integrales trigonométriques -->
-<section>
-  <h2>4. Intégrales trigonométriques</h2>
+      <h3>Exemple :</h3>
+      <p>
+        Soit 
+        \[
+        \frac{x^3 + 2x^2 + 3x + 4}{x^2 + 1}.
+        \]
+        On effectue la division euclidienne :
+      </p>
 
-  <p>
-    Utiliser les identités trigonométriques pour réduire puissances et produits :
-  </p>
-  <div class="math">$$\sin^2 x = \frac{1-\cos(2x)}{2},\quad \cos^2 x = \frac{1+\cos(2x)}{2},\quad \sin(2x)=2\sin x\cos x.$$
-  </div>
+      <pre>
+Diviseur :   x² + 1
+Dividende :  x³ + 2x² + 3x + 4
 
-  <h3>Exemples (niveau L2)</h3>
+1re étape : (x³ + 2x² + 3x + 4) ÷ (x² + 1)
+→ Quotient partiel : x → on soustrait (x³ + x)
 
-  <p><strong>1)</strong> \(\displaystyle \int \sin^2 x\,dx = \frac{x}{2}-\frac{\sin(2x)}{4}+C.\)</p>
+Reste 1 : (2x² + 2x + 4)
+→ Quotient partiel suivant : +2 → on soustrait (2x² + 2)
 
-  <p><strong>2)</strong> \(\displaystyle \int \cos^2 x\,dx = \frac{x}{2}+\frac{\sin(2x)}{4}+C.\)</p>
+Reste final : 3x + 2
+      </pre>
 
-  <p><strong>3)</strong> \(\displaystyle \int \sin x\cos x\,dx = -\frac{1}{4}\cos(2x)+C.\)</p>
+      <p>
+        Donc :
+        \[
+        \frac{x^3 + 2x^2 + 3x + 4}{x^2 + 1} = (x + 2) + \frac{3x + 2}{x^2 + 1}
+        \]
+      </p>
 
-  <p><strong>4)</strong> \(\displaystyle \int \tan^2 x\,dx = \int (\sec^2 x -1)\,dx = \tan x - x + C.\)</p>
+      <h3>Exemple général :</h3>
+      <p>
+        Si le dénominateur contient des facteurs répétés ou quadratiques irréductibles, par exemple :
+      </p>
+      <div class="math">
+        $$\frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}$$
+      </div>
+      <p>
+        On décompose selon le schéma :
+      </p>
+      <div class="math">
+        $$\frac{A}{x-2} + \frac{B}{x+1} + \frac{C}{(x+1)^2} + 
+          \frac{Dx + E}{x^2+1} + \frac{Fx + G}{(x^2+1)^2}$$
+      </div>
 
-  <p class="muted">Méthode : si puissances paires → utiliser identités de double angle ; si impaires → isoler un facteur sin ou cos et substituer \(u=\cos x\) ou \(u=\sin x\).</p>
-</section>
+      <p>
+        Les coefficients \(A, B, C, D, E, F, G\) sont déterminés par identification des coefficients
+        après remise au même dénominateur.
+      </p>
+    </section>
 
-<!-- FIN -->
-<footer style="margin-top:26px; border-top:1px solid #ddd; padding-top:12px;">
-  <p class="muted">Fichier généré : rappel complet (intégrales). Si tu veux, je peux :
-    <ul>
-      <li>ajouter les démonstrations détaillées du calcul des coefficients pour les deux décompositions (pas à pas),</li>
-      <li>convertir en Markdown pour ton README GitHub,</li>
-      <li>ou produire une version imprimable / PDF.</li>
-    </ul>
-  </p>
-</footer>
+    <!-- SECTION 4 : Intégrales trigonométriques -->
+    <section id="trigo">
+      <h2>4. Intégrales trigonométriques</h2>
+      <p>
+        Ces intégrales utilisent les identités fondamentales :
+      </p>
+      <div class="math">
+        $$\sin^2x = \frac{1 - \cos(2x)}{2}, \quad
+        \cos^2x = \frac{1 + \cos(2x)}{2}$$
+      </div>
 
+      <p>
+        Ces formules permettent de transformer des puissances de sinus ou cosinus
+        en expressions plus simples intégrables directement.
+      </p>
+
+      <h3>Exemple :</h3>
+      <p>
+        Calculons \( I = \int \sin^2x\,dx \)
+      </p>
+      <div class="math">
+        $$I = \int \frac{1 - \cos(2x)}{2}\,dx
+        = \frac{x}{2} - \frac{\sin(2x)}{4} + C$$
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 - Cours d’analyse intégrale | M. Medjoudj Nouredine</p>
+  </footer>
 </body>
 </html>
