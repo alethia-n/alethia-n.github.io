@@ -86,10 +86,82 @@
 </section>
 
 
-    <section>
-      <h2>2. Changement de variable</h2>
-      <div class="math">$$\int f(g(x))g'(x)\,dx = \int f(u)\,du$$</div>
-    </section>
+ <section>
+  <h2>2. Changement de variable</h2>
+
+  <p><strong>Formule du changement de variable :</strong></p>
+  <div class="math">$$\displaystyle \int f(g(x))\,g'(x)\,dx = \int f(u)\,du$$</div>
+
+  <p><strong>Idée générale :</strong></p>
+  <p>
+    Le changement de variable sert à simplifier une intégrale lorsqu’une partie de l’expression
+    est la dérivée d’une autre.  
+    On remplace cette expression par une nouvelle variable \(u\) afin d’obtenir une intégrale plus simple.
+  </p>
+
+  <p><strong>Étapes de la méthode :</strong></p>
+  <ol>
+    <li>Choisir une substitution \(u = g(x)\), souvent une fonction « intérieure » comme \(\ln x\), \(x^2\), \(\sin x\)…</li>
+    <li>Calculer la dérivée : \(du = g'(x)\,dx.\)</li>
+    <li>Remplacer dans l’intégrale : \(g(x)\) devient \(u\), et \(g'(x)\,dx\) devient \(du.\)</li>
+    <li>Résoudre l’intégrale en \(u\).</li>
+    <li>Revenir à la variable initiale \(x\) à la fin.</li>
+  </ol>
+
+  <hr/>
+
+  <h3>Exemple d’application</h3>
+
+  <p>Calculer l’intégrale suivante :</p>
+  <div class="math">$$\displaystyle I = \int \frac{dx}{x(1+\ln^2 x)}.$$</div>
+
+  <p><strong>Étape 1 :</strong> on reconnaît la présence de \(\ln x\) et de sa dérivée \(\dfrac{1}{x}\).  
+  On choisit donc la substitution :</p>
+  <div class="math">$$u = \ln x.$$</div>
+
+  <p><strong>Étape 2 :</strong> on dérive :</p>
+  <div class="math">$$du = \frac{1}{x}\,dx.$$</div>
+
+  <p><strong>Étape 3 :</strong> on remplace dans l’intégrale :</p>
+  <div class="math">
+    $$I = \int \frac{dx}{x(1+\ln^2 x)} = \int \frac{du}{1+u^2}.$$
+  </div>
+
+  <p><strong>Étape 4 :</strong> on reconnaît une formule connue :</p>
+  <div class="math">
+    $$\int \frac{du}{1+u^2} = \arctan(u) + C.$$
+  </div>
+
+  <p><strong>Étape 5 :</strong> on revient à la variable \(x\) :</p>
+  <div class="math">
+    $$\boxed{I = \arctan(\ln x) + C.}$$
+  </div>
+
+  <p><strong>Vérification :</strong></p>
+  <div class="math">
+    $$\frac{d}{dx}\big[\arctan(\ln x)\big] = \frac{1}{1+(\ln x)^2}\cdot\frac{1}{x} = \frac{1}{x(1+\ln^2 x)}.$$
+  </div>
+
+  <p>
+    Le résultat est donc correct.  
+    Ce calcul illustre parfaitement l’intérêt du changement de variable : il transforme une intégrale compliquée en une intégrale simple et connue.
+  </p>
+
+  <hr/>
+
+  <h3>Remarques :</h3>
+  <ul>
+    <li>Le changement de variable ne modifie pas la valeur de l’intégrale, il sert uniquement à la simplifier.</li>
+    <li>La relation <span class="math">\(du = g'(x)\,dx\)</span> provient directement de la dérivation de \(u = g(x)\).</li>
+    <li>Pour une intégrale définie, il faut aussi changer les bornes :
+      <div class="math">
+        $$\int_a^b f(g(x))g'(x)\,dx = \int_{g(a)}^{g(b)} f(u)\,du.$$
+      </div>
+    </li>
+  </ul>
+
+</section>
+
 
     <section>
       <h2>3. Intégrales de fonctions rationnelles</h2>
