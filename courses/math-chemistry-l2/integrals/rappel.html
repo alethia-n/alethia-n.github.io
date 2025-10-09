@@ -15,11 +15,76 @@
   </header>
 
   <main>
-    <section>
-      <h2>1. Intégration par parties</h2>
-      <p>Formule : </p>
-      <div class="math">$$\int u\,dv = uv - \int v\,du$$</div>
-    </section>
+<section>
+  <h2>1. Intégration par parties</h2>
+
+  <p><strong>Formule 1 (écriture en fonction de x) :</strong></p>
+  <div class="math">$$\displaystyle \int u(x)\,v'(x)\,dx = u(x)\,v(x) - \int u'(x)\,v(x)\,dx.$$</div>
+
+  <p><strong>Formule 2 (écriture abrégée) :</strong></p>
+  <div class="math">$$\displaystyle \int u\,dv = uv - \int v\,du.$$</div>
+
+  <p><strong>Comment relier les deux écritures :</strong></p>
+  <p>
+    Dans la première formule, tout est écrit en fonction de la variable \(x\).
+    On note que \(u'(x)\) est la dérivée de \(u\), et \(v'(x)\) celle de \(v\).
+  </p>
+
+  <p>
+    Pour simplifier, on remplace :
+  </p>
+  <ul>
+    <li><span class="math">\(du = u'(x)\,dx\)</span>,</li>
+    <li><span class="math">\(dv = v'(x)\,dx\)</span>.</li>
+  </ul>
+
+  <p>
+    Ce ne sont pas de nouvelles notions : c’est simplement une manière plus courte d’écrire les mêmes choses.  
+    En remplaçant ces deux expressions dans la première formule, on obtient directement la deuxième :
+  </p>
+  <div class="math">$$\int u\,dv = uv - \int v\,du.$$</div>
+
+  <p>
+    Cette formule vient de la règle de dérivation du produit :
+  </p>
+  <div class="math">$$(u v)' = u'v + uv'.$$</div>
+  <p>
+    En intégrant les deux côtés, on obtient :
+  </p>
+  <div class="math">$$uv = \int u'v\,dx + \int uv'\,dx,$$</div>
+  <p>
+    d’où :
+  </p>
+  <div class="math">$$\displaystyle \int uv'\,dx = uv - \int u'v\,dx.$$</div>
+
+  <hr/>
+
+  <h3>Exemple :</h3> 
+  <div class="math">$$\displaystyle I = \int \frac{dx}{x(1+\ln^2 x)}.$$</div> 
+  
+  <ol>
+    <li>On remarque la présence de \(\ln x\) et de sa dérivée \(\dfrac{1}{x}\).</li>
+    <li>On fait la substitution <span class="math">\(t = \ln x\)</span>, donc <span class="math">\(dt = \dfrac{dx}{x}\).</span></li>
+    <li>L’intégrale devient :</li>
+  </ol>
+
+  <div class="math">$$I = \int \frac{dt}{1+t^2}.$$</div>
+
+  <p>On reconnaît la primitive connue :</p>
+  <div class="math">$$\int \frac{dt}{1+t^2} = \arctan(t) + C.$$</div>
+
+  <p>En revenant à la variable \(x\) :</p>
+  <div class="math">$$\boxed{I = \arctan(\ln x) + C.}$$</div>
+
+  <p><strong>Vérification :</strong></p>
+  <div class="math">$$\frac{d}{dx}\big[\arctan(\ln x)\big] = \frac{1}{1+(\ln x)^2}\cdot\frac{1}{x} = \frac{1}{x(1+\ln^2 x)}.$$</div>
+
+  <p>
+    Le résultat est donc correct.
+  </p>
+
+</section>
+
 
     <section>
       <h2>2. Changement de variable</h2>
