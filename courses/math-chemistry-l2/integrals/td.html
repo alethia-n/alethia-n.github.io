@@ -2,14 +2,30 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>TD Intégrales — Solutions Exercice 01 | Alethia</title>
   <link rel="stylesheet" href="../../../style.css">
 
-  <!-- MathJax -->
+  <!-- MathJax : active l'inline et le display ($$, \[ \]) -->
   <script>
-    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    /* petites améliorations locales d'affichage des solutions (facultatif) */
+    .solution { margin: .4rem 0 1.2rem 0; line-height: 1.6; }
+    .step { margin: .4rem 0; padding-left: .6rem; }
+    .explication { background:#f7f7f7; border-left:4px solid #bfbfbf; padding:.6rem; margin:.6rem 0; }
+    details summary { cursor: pointer; font-weight: 700; }
+    .remarque { font-style: italic; color: #333; }
+  </style>
 </head>
 
 <body>
@@ -24,79 +40,290 @@
 
   <main>
     <section>
-      <h2>TD — Exercice 1 (suite)</h2>
-      <p><strong>Énoncé :</strong> Calculer les intégrales indéfinies suivantes :</p>
+      <h2>TD — Exercice 1 (énoncé étendu)</h2>
+
+      <p><strong>Énoncé :</strong> Calculer les intégrales indéfinies suivantes et fournir des explications détaillées :</p>
       <ol>
-        <li>$I_1 = \displaystyle\int \frac{dx}{x(1+\ln^2 x)}$</li>
-        <li>$I_2 = \displaystyle\int \arctan x\,dx$</li>
-        <li>$I_3 = \displaystyle\int \ln(1+x^2)\,dx$</li>
-        <li>$I_4 = \displaystyle\int \frac{dx}{2+e^x}$</li>
-        <li>$I_5 = \displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$</li>
-        <li>$I_6 = \displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$</li>
+        <li>$$I_1=\displaystyle\int \frac{dx}{x\bigl(1+\ln^2 x\bigr)}$$</li>
+        <li>$$I_2=\displaystyle\int \arctan x\,dx$$</li>
+        <li>$$I_3=\displaystyle\int \ln\bigl(1+x^2\bigr)\,dx$$</li>
+        <li>$$I_4=\displaystyle\int \frac{dx}{2+e^x}$$</li>
+        <li>$$I_5=\displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$$</li>
+        <li>$$I_6=\displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$$</li>
       </ol>
 
-      <details>
-        <summary><strong>Solution complète</strong></summary>
+      <details open>
+        <summary><strong>Solutions très détaillées (clic pour réduire)</strong></summary>
 
-        <h3>$I_1 = \displaystyle\int \frac{dx}{x(1+\ln^2 x)}$</h3>
-        <p>Substitution $t = \ln x$ donc $dt = \frac{dx}{x}$.</p>
-        <p>\\[
-        I_1 = \int \frac{dt}{1+t^2} = \arctan t + C = \arctan(\ln x) + C.
-        \\]</p>
+        <!-- I1 -->
+        <div class="solution">
+          <h3>I₁ = $$\displaystyle\int \frac{dx}{x(1+\ln^2 x)}$$</h3>
 
-        <h3>$I_2 = \displaystyle\int \arctan x\,dx$</h3>
-        <p>Intégration par parties : $u = \arctan x$, $dv = dx$. Alors $du = \frac{dx}{1+x^2}$ et $v = x$.</p>
-        <p>\\[
-        I_2 = x\arctan x - \int \frac{x}{1+x^2}\,dx.
-        \\]</p>
-        <p>Substitution $w = 1+x^2$, $dw = 2x\,dx$ :</p>
-        <p>\\[
-        \int \frac{x}{1+x^2}\,dx = \frac{1}{2}\ln(1+x^2).
-        \\]</p>
-        <p>Donc $I_2 = x\arctan x - \tfrac{1}{2}\ln(1+x^2) + C.$</p>
+          <div class="step">
+            <strong>Idée (intuitive) :</strong>
+            on reconnaît une forme du type $\dfrac{u'}{1+u^2}$ dont primitive connue est $\arctan u$.
+            Concrètement, si on pose $u=\ln x$, la dérivée de $\ln x$ est $\dfrac{1}{x}$ : c'est exactement la partie $\dfrac{1}{x}\,dx$ devant.
+          </div>
 
-        <h3>$I_3 = \displaystyle\int \ln(1+x^2)\,dx$</h3>
-        <p>Intégration par parties : $u = \ln(1+x^2)$, $dv = dx$ donc $du = \frac{2x}{1+x^2}\,dx$, $v = x$.</p>
-        <p>\\[
-        I_3 = x\ln(1+x^2) - 2\int \frac{x^2}{1+x^2}\,dx.
-        \\]</p>
-        <p>Or $\frac{x^2}{1+x^2} = 1 - \frac{1}{1+x^2}$. Donc</p>
-        <p>\\[
-        I_3 = x\ln(1+x^2) - 2x + 2\arctan x + C.
-        \\]</p>
+          <div class="step">
+            <strong>Étapes de calcul :</strong>
+            \[
+              t = \ln x \qquad\Rightarrow\qquad dt=\frac{dx}{x}.
+            \]
+            En remplaçant dans l'intégrale :
+            \[
+              I_1=\int \frac{dx}{x(1+\ln^2 x)}=\int \frac{dt}{1+t^2}.
+            \]
+            La primitive de $\dfrac{1}{1+t^2}$ est $\arctan t$, donc
+            \[
+              I_1=\arctan t + C = \arctan(\ln x) + C.
+            \]
+          </div>
 
-        <h3>$I_4 = \displaystyle\int \frac{dx}{2+e^x}$</h3>
-        <p>Posons $t = e^x$, donc $dt = e^x dx = t\,dx$, ainsi $dx = \frac{dt}{t}$ :</p>
-        <p>\\[
-        I_4 = \int \frac{1}{t(2+t)}\,dt.
-        \\]</p>
-        <p>Décomposition en éléments simples :</p>
-        <p>\\[
-        \frac{1}{t(2+t)} = \frac{1}{2}\left(\frac{1}{t} - \frac{1}{t+2}\right).
-        \\]</p>
-        <p>Donc</p>
-        <p>\\[
-        I_4 = \tfrac{1}{2}\ln\left|\frac{t}{t+2}\right| + C = \tfrac{1}{2}\ln\left(\frac{e^x}{e^x+2}\right) + C.
-        \\]</p>
+          <div class="explication">
+            <strong>Explication pour un débutant :</strong>
+            imagine que l'on remplace temporairement la quantité compliquée $\ln x$ par une nouvelle lettre $t$.  
+            Le morceau $\dfrac{dx}{x}$ devient alors $dt$ — on a transformé l'intégrale compliquée en une intégrale simple qu'on connaît : celle de $\dfrac{1}{1+t^2}$.
+          </div>
 
-        <h3>$I_5 = \displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$</h3>
-        <p>Posons $u = x^2 + 1$, $du = 2x\,dx$, donc $x\,dx = \frac{1}{2}du$.</p>
-        <p>\\[
-        I_5 = \frac{1}{2}\int u^{-1/3}\,du = \frac{1}{2}\cdot\frac{u^{2/3}}{2/3} + C = \frac{3}{4}(x^2 + 1)^{2/3} + C.
-        \\]</p>
+          <div class="step">
+            <strong>Vérification rapide :</strong>
+            calculons la dérivée de la réponse :
+            \[
+              \frac{d}{dx}\bigl(\arctan(\ln x)\bigr)
+              = \frac{1}{1+\ln^2 x}\cdot\frac{d}{dx}(\ln x)
+              = \frac{1}{1+\ln^2 x}\cdot\frac{1}{x},
+            \]
+            qui est bien l'intégrande initial.
+          </div>
 
-        <h3>$I_6 = \displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$</h3>
-        <p>On cherche $A,B$ tels que</p>
-        <p>\\[
-        \frac{x+1}{(x+2)(x+3)} = \frac{A}{x+2} + \frac{B}{x+3}.
-        \\]</p>
-        <p>En développant : $x+1 = A(x+3) + B(x+2)$, donc</p>
-        <p>$A + B = 1$ et $3A + 2B = 1$. Résolution : $A = -1$, $B = 2$.</p>
-        <p>\\[
-        I_6 = \int\left(-\frac{1}{x+2} + \frac{2}{x+3}\right)dx = -\ln|x+2| + 2\ln|x+3| + C.
-        \\]</p>
+          <p class="remarque"><strong>Remarque importante :</strong> la substitution $t=\ln x$ nécessite $x>0$ si l'on prend la fonction logarithme usuelle. En pratique on peut écrire la primitive valable sur chaque intervalle sans traverser 0 : $$\arctan(\ln|x|)+C\quad(x\neq0),$$ puisque $\dfrac{d}{dx}\ln|x|=1/x$ pour $x\ne0$.</p>
+        </div>
 
-        <p><strong>Remarque :</strong> Dans toutes les expressions, $C$ est une constante d’intégration.</p>
+        <hr>
+
+        <!-- I2 -->
+        <div class="solution">
+          <h3>I₂ = $$\displaystyle\int \arctan x\,dx$$</h3>
+
+          <div class="step">
+            <strong>Idée (intuitive) :</strong>
+            on utilise l'« intégration par parties » — c'est la version de l'intégrale qui inverse la règle du produit pour les dérivées.
+            Prenons $u=\arctan x$ (une chose qu'on sait dériver) et $dv=dx$ (très simple à intégrer).
+          </div>
+
+          <div class="step">
+            Posons :
+            \[
+              u=\arctan x,\quad dv=dx \quad\Rightarrow\quad du=\frac{dx}{1+x^2},\quad v=x.
+            \]
+            La formule d'intégration par parties donne :
+            \[
+              \int u\,dv = uv - \int v\,du,
+            \]
+            donc
+            \[
+              I_2 = x\arctan x - \int x\cdot\frac{dx}{1+x^2}.
+            \]
+          </div>
+
+          <div class="step">
+            Calculons la dernière intégrale avec la substitution $w=1+x^2$ ($dw=2x\,dx$) :
+            \[
+              \int \frac{x}{1+x^2}\,dx = \frac{1}{2}\int \frac{dw}{w} = \frac{1}{2}\ln(1+x^2)+C.
+            \]
+            D'où finalement :
+            \[
+              \boxed{\,I_2 = x\arctan x - \tfrac{1}{2}\ln(1+x^2) + C\,.}
+            \]
+          </div>
+
+          <div class="explication">
+            <strong>Pour comprendre :</strong> on a séparé l'intégrale en un produit $x\cdot\arctan x$ (après parties) puis réduit la partie restante à une logarithme simple : c'est une technique standard quand on a un produit où l'une des fonctions est plus facile à dériver.
+          </div>
+
+          <div class="step">
+            <strong>Vérification :</strong> différencions la réponse (exercice mécanique) pour s'assurer qu'on récupère $\arctan x$.
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- I3 -->
+        <div class="solution">
+          <h3>I₃ = $$\displaystyle\int \ln(1+x^2)\,dx$$</h3>
+
+          <div class="step">
+            <strong>Idée :</strong> encore une fois l'intégration par parties est utile : prenons $u=\ln(1+x^2)$ (car on sait dériver un log) et $dv=dx$.
+          </div>
+
+          <div class="step">
+            Posons :
+            \[
+              u=\ln(1+x^2),\quad dv=dx \quad\Rightarrow\quad du=\frac{2x}{1+x^2}\,dx,\quad v=x.
+            \]
+            Alors
+            \[
+              I_3 = x\ln(1+x^2) - \int x\cdot\frac{2x}{1+x^2}\,dx
+              = x\ln(1+x^2) - 2\int \frac{x^2}{1+x^2}\,dx.
+            \]
+          </div>
+
+          <div class="step">
+            Observons que
+            \[
+              \frac{x^2}{1+x^2} = 1 - \frac{1}{1+x^2}.
+            \]
+            Donc
+            \[
+              \int \frac{x^2}{1+x^2}\,dx = \int 1\,dx - \int \frac{1}{1+x^2}\,dx = x - \arctan x + C.
+            \]
+            Ainsi
+            \[
+              I_3 = x\ln(1+x^2) - 2\bigl(x - \arctan x\bigr) + C = x\ln(1+x^2) - 2x + 2\arctan x + C.
+            \]
+          </div>
+
+          <div class="explication">
+            <strong>En clair :</strong> on a transformé une intégrale de log en une combinaison simple : un terme $x\ln(1+x^2)$ moins des intégrales élémentaires, aboutissant à une somme de $x$, $\ln$ et $\arctan$.
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- I4 -->
+        <div class="solution">
+          <h3>I₄ = $$\displaystyle\int \frac{dx}{2+e^x}$$</h3>
+
+          <div class="step">
+            <strong>Idée :</strong> la substitution $t=e^x$ est naturelle quand on voit $e^x$ : elle transforme la partie exponentielle en une variable simple.
+          </div>
+
+          <div class="step">
+            Posons $t=e^x$. Alors $dt=e^x dx = t\,dx$, donc $dx=\dfrac{dt}{t}$. L'intégrale devient :
+            \[
+              I_4=\int \frac{dx}{2+e^x} = \int \frac{1}{2+t}\cdot\frac{dt}{t} = \int \frac{dt}{t(2+t)}.
+            \]
+          </div>
+
+          <div class="step">
+            Décomposons en fractions partielles :
+            cherchons $A,B$ tels que
+            \[
+              \frac{1}{t(2+t)}=\frac{A}{t}+\frac{B}{t+2}.
+            \]
+            On trouve (en identifiant les coefficients) $A=\tfrac12$, $B=-\tfrac12$, donc
+            \[
+              \frac{1}{t(2+t)}=\frac{1}{2}\Bigl(\frac{1}{t}-\frac{1}{t+2}\Bigr).
+            \]
+            En intégrant :
+            \[
+              I_4=\frac{1}{2}\bigl(\ln|t|-\ln|t+2|\bigr) + C
+              = \frac{1}{2}\ln\Bigl(\frac{t}{t+2}\Bigr)+C.
+            \]
+            En revenant à $x$ (puisque $t=e^x$), on peut écrire de façon plus claire :
+            \[
+              \boxed{\,I_4 = \frac{x}{2} - \frac{1}{2}\ln\bigl(e^x+2\bigr) + C\,}
+            \]
+            (car $\frac{1}{2}\ln\frac{e^x}{e^x+2}=\frac12(x-\ln(e^x+2))$).
+          </div>
+
+          <div class="explication">
+            <strong>Vérification simple :</strong> différencier $\tfrac12 x - \tfrac12\ln(e^x+2)$ donne bien $\dfrac{1}{e^x+2}$ après simplifications.
+          </div>
+
+          <p class="remarque">Ici $e^x>0$ pour tout $x$, donc pas de soucis de signe dans les logarithmes (on peut aussi écrire les valeurs absolues pour être rigoureux).</p>
+        </div>
+
+        <hr>
+
+        <!-- I5 -->
+        <div class="solution">
+          <h3>I₅ = $$\displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$$</h3>
+
+          <div class="step">
+            <strong>Idée :</strong> on remarque la présence de $x$ et de $x^2+1$ ; la substitution $u=x^2+1$ transforme $x\,dx$ en un multiple de $du$.
+          </div>
+
+          <div class="step">
+            Posons $u=x^2+1\Rightarrow du=2x\,dx$, donc $x\,dx=\tfrac12 du$. L'intégrale devient :
+            \[
+              I_5=\frac{1}{2}\int u^{-1/3}\,du.
+            \]
+            Intégrons une puissance : $\int u^{\alpha}\,du = \dfrac{u^{\alpha+1}}{\alpha+1}$ (si $\alpha\neq -1$). Ici $\alpha=-\tfrac13$, donc $\alpha+1=\tfrac23$ :
+            \[
+              I_5=\frac{1}{2}\cdot\frac{u^{2/3}}{2/3}+C = \frac{3}{4}u^{2/3}+C.
+            \]
+            Revenir à $x$ :
+            \[
+              \boxed{\,I_5 = \frac{3}{4}(x^2+1)^{2/3} + C\,.}
+            \]
+          </div>
+
+          <div class="explication">
+            <strong>Pourquoi c'est logique :</strong> l'exposant $1/3$ au dénominateur devient $2/3$ après intégration (puisque on ajoute 1 à l'exposant). La substitution a rendu la forme immédiate.
+          </div>
+
+          <div class="step">
+            <strong>Vérification :</strong> en dérivant $(3/4)(x^2+1)^{2/3}$ on retrouve l'intégrande (c'est un calcul direct avec la règle de la chaîne).
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- I6 -->
+        <div class="solution">
+          <h3>I₆ = $$\displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$$</h3>
+
+          <div class="step">
+            <strong>Idée :</strong> c'est une fraction rationnelle où le numérateur a un degré < degré du dénominateur (ici degré 1 vs 2). On utilise la <em>décomposition en éléments simples</em> : écrire la fraction comme somme de termes simples.
+          </div>
+
+          <div class="step">
+            Cherchons $A,B$ tels que
+            \[
+              \frac{x+1}{(x+2)(x+3)}=\frac{A}{x+2}+\frac{B}{x+3}.
+            \]
+            Multiplions par $(x+2)(x+3)$ :
+            \[
+              x+1 = A(x+3)+B(x+2) = (A+B)x + (3A+2B).
+            \]
+            On identifie les coefficients : système
+            \[
+              A+B=1,\qquad 3A+2B=1.
+            \]
+            En résolvant : $A=-1$, $B=2$.
+          </div>
+
+          <div class="step">
+            On intègre alors terme à terme :
+            \[
+              I_6 = \int\Bigl(-\frac{1}{x+2}+\frac{2}{x+3}\Bigr)\,dx
+              = -\ln|x+2| + 2\ln|x+3| + C.
+            \]
+            On peut aussi écrire en une seule logarithme :
+            \[
+              I_6 = \ln\Bigl(\frac{(x+3)^2}{x+2}\Bigr) + C'
+            \]
+            (où $C'$ est une autre constante d'intégration).
+          </div>
+
+          <div class="explication">
+            <strong>Pour un non-mathématicien :</strong> on transforme la fraction compliquée en deux fractions très simples (1 sur une expression linéaire) ; l'intégrale de $1/(x+a)$ est $\ln|x+a|$ — c'est pourquoi on obtient des logarithmes.
+          </div>
+
+          <p class="remarque">Attention aux valeurs qui annulent les dénominateurs : l'expression initiale n'est pas définie en $x=-2$ et $x=-3$. La primitive donnée est valable sur chaque intervalle où la fonction est définie (par exemple $(-\infty,-3)$, $(-3,-2)$, $(-2,+\infty)$) avec éventuellement des constantes d'intégration différentes selon l'intervalle.</p>
+        </div>
+
+        <hr>
+
+        <p><strong>Remarques finales générales :</strong></p>
+        <ul>
+          <li>Dans toutes les primitives ci-dessus, $C$ est une constante arbitraire : deux primitives ne diffèrent que par une constante.</li>
+          <li>Avant d'appliquer une substitution, vérifie toujours que la substitution rend l'intégrande plus simple (par exemple, quand tu vois $\ln x$ et $1/x$, pense à $t=\ln x$ ; quand tu vois $e^x$, pense à $t=e^x$ ; quand tu vois $x\,dx$ et $x^2+1$, pense à $u=x^2+1$).</li>
+          <li>Si tu veux, je peux préparer une version imprimable (PDF) de cette page ou une version traduite en anglais, ou encore raccourcir les solutions pour une feuille de TD concise.</li>
+        </ul>
+
       </details>
     </section>
   </main>
