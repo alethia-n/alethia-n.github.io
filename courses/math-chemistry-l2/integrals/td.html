@@ -27,73 +27,73 @@
       <h2>TD — Exercice 1 (suite)</h2>
       <p><strong>Énoncé :</strong> Calculer les intégrales indéfinies suivantes :</p>
       <ol>
-        <li>$I_1 = \\displaystyle\\int \\frac{dx}{x(1+\\ln^2 x)}$</li>
-        <li>$I_2 = \\displaystyle\\int \\arctan x\\,dx$</li>
-        <li>$I_3 = \\displaystyle\\int \\ln(1+x^2)\\,dx$</li>
-        <li>$I_4 = \\displaystyle\\int \\frac{dx}{2+e^x}$</li>
-        <li>$I_5 = \\displaystyle\\int \\frac{x\\,dx}{(x^2+1)^{1/3}}$</li>
-        <li>$I_6 = \\displaystyle\\int \\frac{x+1}{(x+2)(x+3)}\\,dx$</li>
+        <li>$I_1 = \displaystyle\int \frac{dx}{x(1+\ln^2 x)}$</li>
+        <li>$I_2 = \displaystyle\int \arctan x\,dx$</li>
+        <li>$I_3 = \displaystyle\int \ln(1+x^2)\,dx$</li>
+        <li>$I_4 = \displaystyle\int \frac{dx}{2+e^x}$</li>
+        <li>$I_5 = \displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$</li>
+        <li>$I_6 = \displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$</li>
       </ol>
 
       <details>
-        <summary><strong>Solution </strong></summary>
+        <summary><strong>Solution complète</strong></summary>
 
-        <h3>$I_1 = \\displaystyle\\int \\frac{dx}{x(1+\\ln^2 x)}$</h3>
-        <p>Substitution $t = \\ln x$ donc $dt = \\frac{dx}{x}$.</p>
+        <h3>$I_1 = \displaystyle\int \frac{dx}{x(1+\ln^2 x)}$</h3>
+        <p>Substitution $t = \ln x$ donc $dt = \frac{dx}{x}$.</p>
         <p>\\[
-        I_1 = \\int \\frac{dt}{1+t^2} = \\arctan t + C = \\arctan(\\ln x) + C.
-        \\]</p>
-
-        <h3>$I_2 = \\displaystyle\\int \\arctan x\\,dx$</h3>
-        <p>Intégration par parties : $u = \\arctan x$, $dv = dx$. Alors $du = \\frac{dx}{1+x^2}$ et $v = x$.</p>
-        <p>\\[
-        I_2 = x\\arctan x - \\int \\frac{x}{1+x^2}\\,dx.
-        \\]</p>
-        <p>Substitution $w = 1+x^2$, $dw = 2x\\,dx$ :</p>
-        <p>\\[
-        \\int \\frac{x}{1+x^2}\\,dx = \\frac{1}{2}\\ln(1+x^2).
-        \\]</p>
-        <p>Donc \\(I_2 = x\\arctan x - \\tfrac{1}{2}\\ln(1+x^2) + C.\\)</p>
-
-        <h3>$I_3 = \\displaystyle\\int \\ln(1+x^2)\\,dx$</h3>
-        <p>Intégration par parties : $u = \\ln(1+x^2)$, $dv = dx$ donc $du = \\frac{2x}{1+x^2}\\,dx$, $v = x$.</p>
-        <p>\\[
-        I_3 = x\\ln(1+x^2) - 2\\int \\frac{x^2}{1+x^2}\\,dx.
-        \\]</p>
-        <p>Or \\(\\frac{x^2}{1+x^2} = 1 - \\frac{1}{1+x^2}\\). Donc</p>
-        <p>\\[
-        I_3 = x\\ln(1+x^2) - 2x + 2\\arctan x + C.
+        I_1 = \int \frac{dt}{1+t^2} = \arctan t + C = \arctan(\ln x) + C.
         \\]</p>
 
-        <h3>$I_4 = \\displaystyle\\int \\frac{dx}{2+e^x}$</h3>
-        <p>Posons $t = e^x$, donc $dt = e^x dx = t\\,dx$, ainsi $dx = \\frac{dt}{t}$ :</p>
+        <h3>$I_2 = \displaystyle\int \arctan x\,dx$</h3>
+        <p>Intégration par parties : $u = \arctan x$, $dv = dx$. Alors $du = \frac{dx}{1+x^2}$ et $v = x$.</p>
         <p>\\[
-        I_4 = \\int \\frac{1}{t(2+t)}\\,dt.
+        I_2 = x\arctan x - \int \frac{x}{1+x^2}\,dx.
+        \\]</p>
+        <p>Substitution $w = 1+x^2$, $dw = 2x\,dx$ :</p>
+        <p>\\[
+        \int \frac{x}{1+x^2}\,dx = \frac{1}{2}\ln(1+x^2).
+        \\]</p>
+        <p>Donc $I_2 = x\arctan x - \tfrac{1}{2}\ln(1+x^2) + C.$</p>
+
+        <h3>$I_3 = \displaystyle\int \ln(1+x^2)\,dx$</h3>
+        <p>Intégration par parties : $u = \ln(1+x^2)$, $dv = dx$ donc $du = \frac{2x}{1+x^2}\,dx$, $v = x$.</p>
+        <p>\\[
+        I_3 = x\ln(1+x^2) - 2\int \frac{x^2}{1+x^2}\,dx.
+        \\]</p>
+        <p>Or $\frac{x^2}{1+x^2} = 1 - \frac{1}{1+x^2}$. Donc</p>
+        <p>\\[
+        I_3 = x\ln(1+x^2) - 2x + 2\arctan x + C.
+        \\]</p>
+
+        <h3>$I_4 = \displaystyle\int \frac{dx}{2+e^x}$</h3>
+        <p>Posons $t = e^x$, donc $dt = e^x dx = t\,dx$, ainsi $dx = \frac{dt}{t}$ :</p>
+        <p>\\[
+        I_4 = \int \frac{1}{t(2+t)}\,dt.
         \\]</p>
         <p>Décomposition en éléments simples :</p>
         <p>\\[
-        \\frac{1}{t(2+t)} = \\frac{1}{2}\\left(\\frac{1}{t} - \\frac{1}{t+2}\\right).
+        \frac{1}{t(2+t)} = \frac{1}{2}\left(\frac{1}{t} - \frac{1}{t+2}\right).
         \\]</p>
         <p>Donc</p>
         <p>\\[
-        I_4 = \\tfrac{1}{2}\\ln\\left|\\frac{t}{t+2}\\right| + C = \\tfrac{1}{2}\\ln\\left(\\frac{e^x}{e^x+2}\\right) + C.
+        I_4 = \tfrac{1}{2}\ln\left|\frac{t}{t+2}\right| + C = \tfrac{1}{2}\ln\left(\frac{e^x}{e^x+2}\right) + C.
         \\]</p>
 
-        <h3>$I_5 = \\displaystyle\\int \\frac{x\\,dx}{(x^2+1)^{1/3}}$</h3>
-        <p>Posons $u = x^2 + 1$, $du = 2x\\,dx$, donc $x\\,dx = \\frac{1}{2}du$.</p>
+        <h3>$I_5 = \displaystyle\int \frac{x\,dx}{(x^2+1)^{1/3}}$</h3>
+        <p>Posons $u = x^2 + 1$, $du = 2x\,dx$, donc $x\,dx = \frac{1}{2}du$.</p>
         <p>\\[
-        I_5 = \\frac{1}{2}\\int u^{-1/3}\\,du = \\frac{1}{2}\\cdot\\frac{u^{2/3}}{2/3} + C = \\frac{3}{4}(x^2 + 1)^{2/3} + C.
+        I_5 = \frac{1}{2}\int u^{-1/3}\,du = \frac{1}{2}\cdot\frac{u^{2/3}}{2/3} + C = \frac{3}{4}(x^2 + 1)^{2/3} + C.
         \\]</p>
 
-        <h3>$I_6 = \\displaystyle\\int \\frac{x+1}{(x+2)(x+3)}\\,dx$</h3>
+        <h3>$I_6 = \displaystyle\int \frac{x+1}{(x+2)(x+3)}\,dx$</h3>
         <p>On cherche $A,B$ tels que</p>
         <p>\\[
-        \\frac{x+1}{(x+2)(x+3)} = \\frac{A}{x+2} + \\frac{B}{x+3}.
+        \frac{x+1}{(x+2)(x+3)} = \frac{A}{x+2} + \frac{B}{x+3}.
         \\]</p>
         <p>En développant : $x+1 = A(x+3) + B(x+2)$, donc</p>
-        <p>\\(A + B = 1\\) et \\(3A + 2B = 1\\). Résolution : $A = -1$, $B = 2$.</p>
+        <p>$A + B = 1$ et $3A + 2B = 1$. Résolution : $A = -1$, $B = 2$.</p>
         <p>\\[
-        I_6 = \\int\\left(-\\frac{1}{x+2} + \\frac{2}{x+3}\\right)dx = -\\ln|x+2| + 2\\ln|x+3| + C.
+        I_6 = \int\left(-\frac{1}{x+2} + \frac{2}{x+3}\right)dx = -\ln|x+2| + 2\ln|x+3| + C.
         \\]</p>
 
         <p><strong>Remarque :</strong> Dans toutes les expressions, $C$ est une constante d’intégration.</p>
