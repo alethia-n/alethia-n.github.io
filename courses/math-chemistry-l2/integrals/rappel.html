@@ -364,18 +364,304 @@ Ici on prend :</p>
 </section>
 
 
-    <section>
-      <h2>4. Intégrales trigonométriques</h2>
-      <p>Utiliser les identités trigonométriques :  
-      <div class="math">$$\sin^2 x = \frac{1 - \cos(2x)}{2}, \quad
-      \cos^2 x = \frac{1 + \cos(2x)}{2}$$</div>
-      </p>
-    </section>
+<section>
+  <h2>4. Intégrales trigonométriques</h2>
 
-    <section>
-      <h2>5. Intégrales impropres</h2>
-      <div class="math">$$\int_a^{+\infty} f(x)\,dx = \lim_{b\to+\infty} \int_a^b f(x)\,dx$$</div>
-    </section>
+  <p>
+    Les intégrales trigonométriques sont celles qui contiennent des fonctions comme
+    <span class="math">$\sin x$</span>, <span class="math">$\cos x$</span>, <span class="math">$\tan x$</span>, etc.
+    Pour les résoudre, on utilise souvent les <strong>identités trigonométriques fondamentales</strong>.
+  </p>
+
+  <h3>1. Identités de base</h3>
+
+  <p>Les plus utiles sont :</p>
+  <div class="math">
+    $$\sin^2 x = \frac{1 - \cos(2x)}{2}, \qquad
+      \cos^2 x = \frac{1 + \cos(2x)}{2},$$
+  </div>
+
+  <div class="math">
+    $$\sin(2x) = 2\sin x \cos x, \qquad
+      \cos(2x) = \cos^2 x - \sin^2 x.$$
+  </div>
+
+  <p>
+    Ces formules permettent de <strong>réécrire les puissances</strong> de sin ou cos sous une forme plus simple,
+    afin d'obtenir des intégrales directement calculables.
+  </p>
+
+  <hr/>
+
+  <h3>2. Exemple 1 : $\displaystyle I = \int \sin^2 x\,dx$</h3>
+
+  <p><strong>Étape 1 :</strong> on remplace à l’aide de la formule de la double angle :</p>
+  <div class="math">
+    $$\sin^2 x = \frac{1 - \cos(2x)}{2}.$$
+  </div>
+
+  <p><strong>Étape 2 :</strong> on intègre :</p>
+  <div class="math">
+    $$I = \int \sin^2 x\,dx = \int \frac{1 - \cos(2x)}{2}\,dx = \frac{1}{2}\int 1\,dx - \frac{1}{2}\int \cos(2x)\,dx.$$
+  </div>
+
+  <p><strong>Étape 3 :</strong> on calcule chaque partie :</p>
+  <div class="math">
+    $$\int 1\,dx = x, \quad \int \cos(2x)\,dx = \frac{1}{2}\sin(2x).$$
+  </div>
+
+  <p><strong>Résultat final :</strong></p>
+  <div class="math">
+    $$\boxed{\,I = \frac{x}{2} - \frac{\sin(2x)}{4} + C\,}$$
+  </div>
+
+  <p>
+    C’est une formule classique à retenir :
+    <span class="math">$\displaystyle \int \sin^2 x\,dx = \frac{x}{2} - \frac{\sin(2x)}{4} + C.$</span>
+  </p>
+
+  <hr/>
+
+  <h3>3. Exemple 2 : $\displaystyle J = \int \cos^2 x\,dx$</h3>
+
+  <p>De même, on utilise l’identité :</p>
+  <div class="math">
+    $$\cos^2 x = \frac{1 + \cos(2x)}{2}.$$
+  </div>
+
+  <p><strong>Calcul :</strong></p>
+  <div class="math">
+    $$J = \int \frac{1 + \cos(2x)}{2}\,dx = \frac{1}{2}\int 1\,dx + \frac{1}{2}\int \cos(2x)\,dx.$$
+  </div>
+
+  <p><strong>Résultat final :</strong></p>
+  <div class="math">
+    $$\boxed{\,J = \frac{x}{2} + \frac{\sin(2x)}{4} + C\,}$$
+  </div>
+
+  <hr/>
+
+  <h3>4. Exemple 3 : $\displaystyle K = \int \sin x \cos x\,dx$</h3>
+
+  <p>On utilise ici la formule du double angle :
+  <span class="math">$\sin(2x) = 2\sin x \cos x.$</span></p>
+
+  <p>On réécrit :</p>
+  <div class="math">
+    $$\sin x \cos x = \frac{1}{2}\sin(2x).$$
+  </div>
+
+  <p>Alors :</p>
+  <div class="math">
+    $$K = \int \sin x \cos x\,dx = \frac{1}{2}\int \sin(2x)\,dx = -\frac{1}{4}\cos(2x) + C.$$
+  </div>
+
+  <p><strong>Résultat final :</strong></p>
+  <div class="math">
+    $$\boxed{\,K = -\frac{1}{4}\cos(2x) + C\,}$$
+  </div>
+
+  <hr/>
+
+  <h3>5. Exemple 4 : $\displaystyle L = \int \tan^2 x\,dx$</h3>
+
+  <p>On utilise ici la relation fondamentale :</p>
+  <div class="math">
+    $$1 + \tan^2 x = \frac{1}{\cos^2 x} = \sec^2 x.$$
+  </div>
+
+  <p>D’où :</p>
+  <div class="math">
+    $$\tan^2 x = \sec^2 x - 1.$$
+  </div>
+
+  <p>On remplace dans l’intégrale :</p>
+  <div class="math">
+    $$L = \int \tan^2 x\,dx = \int (\sec^2 x - 1)\,dx = \tan x - x + C.$$
+  </div>
+
+  <p><strong>Résultat final :</strong></p>
+  <div class="math">
+    $$\boxed{\,\displaystyle \int \tan^2 x\,dx = \tan x - x + C\,}$$
+  </div>
+
+  <hr/>
+
+  <h3>6. Méthode générale</h3>
+
+  <ol>
+    <li>Identifier si l’intégrale contient des puissances de <span class="math">$\sin x$</span> ou <span class="math">$\cos x$</span>.</li>
+    <li>Si les puissances sont paires, utiliser les formules :
+      <div class="math">
+        $$\sin^2 x = \frac{1 - \cos(2x)}{2}, \quad \cos^2 x = \frac{1 + \cos(2x)}{2}.$$
+      </div>
+    </li>
+    <li>Si les puissances sont impaires, isoler un facteur de <span class="math">$\sin x$</span> ou <span class="math">$\cos x$</span>
+        et utiliser une substitution comme \(u = \cos x\) ou \(u = \sin x\).</li>
+    <li>Utiliser les formules du double angle pour simplifier le reste.</li>
+  </ol>
+
+  <p><strong>Résumé des résultats à connaître :</strong></p>
+  <ul>
+    <li>\(\displaystyle \int \sin^2 x\,dx = \frac{x}{2} - \frac{\sin(2x)}{4} + C\)</li>
+    <li>\(\displaystyle \int \cos^2 x\,dx = \frac{x}{2} + \frac{\sin(2x)}{4} + C\)</li>
+    <li>\(\displaystyle \int \sin x \cos x\,dx = -\frac{1}{4}\cos(2x) + C\)</li>
+    <li>\(\displaystyle \int \tan^2 x\,dx = \tan x - x + C\)</li>
+  </ul>
+
+</section>
+<section>
+  <h2>3. Intégrales de fonctions rationnelles</h2>
+
+  <h3>1️⃣ Rappel de cours : fractions rationnelles</h3>
+
+  <p>
+    Une <strong>fonction rationnelle</strong> est un quotient de deux polynômes :
+  </p>
+
+  <div class="math">$$ f(x) = \frac{P(x)}{Q(x)}, \quad Q(x) \neq 0 $$</div>
+
+  <p>
+    Pour intégrer une telle fonction, on cherche souvent à la <strong>décomposer en éléments simples</strong>.
+  </p>
+
+  <h3>2️⃣ Composantes irréductibles</h3>
+
+  <p>
+    Le dénominateur \( Q(x) \) peut se factoriser en plusieurs blocs appelés <strong>composantes irréductibles</strong> :
+  </p>
+
+  <ul>
+    <li>
+      <strong>Facteur de degré 1 :</strong> une expression de la forme \( (x - a) \), où \( a \) est réel.
+      <br>👉 On l'appelle une <em>racine réelle simple</em> du dénominateur.
+    </li>
+    <li>
+      <strong>Facteur de degré 2 :</strong> un polynôme du type \( (x^2 + bx + c) \) sans racine réelle.
+      <br>👉 On dit qu’il est <em>irréductible sur ℝ</em> (on ne peut pas le factoriser davantage).
+    </li>
+  </ul>
+
+  <p>
+    La décomposition en éléments simples consiste à écrire :
+  </p>
+
+  <div class="math">
+    $$
+    \frac{P(x)}{Q(x)} =
+    \sum \frac{A_i}{(x - a_i)^{n_i}} +
+    \sum \frac{B_jx + C_j}{(x^2 + b_jx + c_j)^{m_j}}
+    $$
+  </div>
+
+  <p>
+    Chaque facteur irréductible de degré 1 donne lieu à des <strong>termes de type</strong>
+    \( \frac{A}{x - a} + \frac{B}{(x - a)^2} + \dots \),  
+    et chaque facteur de degré 2 donne des <strong>termes de type</strong>
+    \( \frac{Bx + C}{x^2 + bx + c} + \frac{Dx + E}{(x^2 + bx + c)^2} + \dots \)
+  </p>
+
+  <hr>
+
+  <h3>3️⃣ Exemple 1 — Cas général</h3>
+  <div class="math">
+    $$ \frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)} $$
+  </div>
+
+  <p>
+    Le dénominateur contient :
+  </p>
+  <ul>
+    <li>Un facteur irréductible de degré 2 : \( (x^2 + 1)^2 \)</li>
+    <li>Deux facteurs linéaires (degré 1) : \( (x + 1)^2 \) et \( (x - 2) \)</li>
+  </ul>
+
+  <p>
+    La décomposition générale s’écrit donc :
+  </p>
+
+  <div class="math">
+    $$
+    \frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}
+    = \frac{Ax + B}{x^2 + 1} + \frac{Cx + D}{(x^2 + 1)^2}
+    + \frac{E}{x + 1} + \frac{F}{(x + 1)^2} + \frac{G}{x - 2}
+    $$
+  </div>
+
+  <p>
+    Pour déterminer les coefficients \( A, B, C, D, E, F, G \), on multiplie par le dénominateur complet et on identifie les coefficients.
+  </p>
+
+  <hr>
+
+  <h3>4️⃣ Exemple 2 — Avec division euclidienne préalable</h3>
+
+  <div class="math">
+    $$ \frac{x^3 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)} $$
+  </div>
+
+  <p>
+    Comme le degré du numérateur (3) est <strong>inférieur</strong> au degré du dénominateur (7),  
+    on <strong>ne fait pas de division euclidienne</strong> ici : on décompose directement.
+  </p>
+
+  <p>
+    La décomposition suit la même forme générale :
+  </p>
+
+  <div class="math">
+    $$
+    \frac{x^3 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}
+    = \frac{Ax + B}{x^2 + 1} + \frac{Cx + D}{(x^2 + 1)^2}
+    + \frac{E}{x + 1} + \frac{F}{(x + 1)^2} + \frac{G}{x - 2}
+    $$
+  </div>
+
+  <p>
+    On résout ensuite pour les constantes \( A, B, C, D, E, F, G \) en remplaçant \( x \) par les racines ou en égalant les coefficients.
+  </p>
+
+  <hr>
+
+  <h3>5️⃣ Cas où le degré du numérateur est supérieur — Division euclidienne complète</h3>
+
+  <p>
+    Si on prend maintenant un cas où le degré du numérateur est plus grand (par exemple 8 au lieu de 7), on commence par une <strong>division euclidienne</strong>.
+  </p>
+
+  <div class="math">
+    $$ A(x) = x^8 + 2x^2 + 3x + 4, \quad B(x) = (x^2 + 1)^2(x+1)^2(x-2) $$
+  </div>
+
+  <p>Les étapes de division se déroulent ainsi :</p>
+
+  <ol>
+    <li><strong>Dividende :</strong> \( A(x) = x^8 + 2x^2 + 3x + 4 \)</li>
+    <li><strong>Diviseur :</strong> \( B(x) = (x^2 + 1)^2(x+1)^2(x-2) \) (degré 7)</li>
+    <li><strong>Quotient :</strong> le premier terme est \( x \), car \( x^8 / x^7 = x \)</li>
+    <li><strong>Soustraction :</strong> on calcule \( A(x) - x \cdot B(x) \) pour obtenir le reste intermédiaire</li>
+    <li>On répète jusqu’à obtenir un reste de degré strictement inférieur à 7.</li>
+  </ol>
+
+  <p>
+    Finalement :
+  </p>
+  <div class="math">
+    $$ A(x) = B(x)\cdot Q(x) + R(x), \quad \deg(R) < \deg(B) $$
+  </div>
+
+  <p>
+    La fraction devient :
+  </p>
+  <div class="math">
+    $$ \frac{A(x)}{B(x)} = Q(x) + \frac{R(x)}{B(x)} $$
+  </div>
+
+  <p>
+    Puis on applique la décomposition en éléments simples sur la partie \(\frac{R(x)}{B(x)}\).
+  </p>
+</section>
+
   </main>
 
   <footer>
