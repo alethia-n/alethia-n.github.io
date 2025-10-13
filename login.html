@@ -7,43 +7,51 @@
   <link rel="stylesheet" href="style.css">
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { auth } from "./firebase-config.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // 🔥 Initialisation Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    // Vérifie si l’utilisateur est déjà connecté
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Redirection automatique si déjà connecté
+        window.location.href = "courses.html";
+      }
+    });
 
+    // Quand la page est chargée
     window.addEventListener("DOMContentLoaded", () => {
       const registerForm = document.getElementById("registerForm");
       const loginForm = document.getElementById("loginForm");
 
-      // 🧾 Inscription
+      // 🔹 Inscription
       registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const email = document.getElementById("regEmail").value.trim();
-        const pass = document.getElementById("regPassword").value.trim();
+        const email = document.getElementById("regEmail").value;
+        const pass = document.getElementById("regPassword").value;
         try {
           await createUserWithEmailAndPassword(auth, email, pass);
           alert("✅ Inscription réussie !");
-          window.location.href = "quotes.html";
+          window.location.href = "courses.html";
         } catch (err) {
-          alert("❌ Erreur : " + err.message);
+          alert("⚠️ Erreur : " + err.message);
         }
       });
 
-      // 🔑 Connexion
+      // 🔹 Connexion
       loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const email = document.getElementById("logEmail").value.trim();
-        const pass = document.getElementById("logPassword").value.trim();
+        const email = document.getElementById("logEmail").value;
+        const pass = document.getElementById("logPassword").value;
         try {
           await signInWithEmailAndPassword(auth, email, pass);
           alert("✅ Connexion réussie !");
-          window.location.href = "quotes.html";
+          window.location.href = "courses.html";
         } catch (err) {
-          alert("❌ Erreur : " + err.message);
+          alert("⚠️ Erreur : " + err.message);
         }
       });
     });
@@ -52,7 +60,7 @@
 
 <body>
   <header>
-    <h1>Alethia</h1>
+    <h1>Connexion / Inscription</h1>
     <nav>
       <a href="index.html">Accueil</a>
       <a href="courses.html">Cours</a>
@@ -61,29 +69,25 @@
     </nav>
   </header>
 
-  <main>
-    <section style="max-width: 400px; margin: 50px auto; text-align:center;">
-      <h2>Connexion / Inscription</h2>
+  <main style="max-width: 500px; margin: auto; text-align: center;">
+    <section>
+      <h2>Se connecter</h2>
+      <form id="loginForm">
+        <input type="email" id="logEmail" placeholder="Adresse e-mail" required><br>
+        <input type="password" id="logPassword" placeholder="Mot de passe" required><br>
+        <button type="submit">Connexion</button>
+      </form>
+    </section>
 
-      <div class="auth-box">
-        <h3>Se connecter</h3>
-        <form id="loginForm">
-          <input type="email" id="logEmail" placeholder="Adresse e-mail" required><br>
-          <input type="password" id="logPassword" placeholder="Mot de passe" required><br>
-          <button type="submit">Connexion</button>
-        </form>
-      </div>
+    <hr>
 
-      <hr style="margin: 30px 0;">
-
-      <div class="auth-box">
-        <h3>Créer un compte</h3>
-        <form id="registerForm">
-          <input type="email" id="regEmail" placeholder="Adresse e-mail" required><br>
-          <input type="password" id="regPassword" placeholder="Mot de passe" required><br>
-          <button type="submit">Inscription</button>
-        </form>
-      </div>
+    <section>
+      <h2>Créer un compte</h2>
+      <form id="registerForm">
+        <input type="email" id="regEmail" placeholder="Adresse e-mail" required><br>
+        <input type="password" id="regPassword" placeholder="Mot de passe" required><br>
+        <button type="submit">Inscription</button>
+      </form>
     </section>
   </main>
 
