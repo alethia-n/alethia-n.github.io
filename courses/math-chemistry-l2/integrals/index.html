@@ -2,56 +2,73 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Cours sur les Intégrales | Alethia</title>
-  <link rel="stylesheet" href="../../../style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intégrales — Alethia</title>
+  <link rel="stylesheet" href="../../../../style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body>
   <header>
-    <h1>Cours 01 — Intégrales</h1>
+    <h1>Intégrales — L2 Math & Chimie</h1>
     <nav>
-      <a href="../../../index.html">Accueil</a>
-      <a href="../index.html">Cours L2</a>
+      <a href="../../../index.html">Cours</a>
+      <a href="td.html">TD</a>
+      <a href="rappel.html">Rappels</a>
       <span id="user-section" style="float:right;">
-        Connecté en tant que <strong id="user-email"></strong> |
-        <a href="../../../login.html" id="logout-link">Déconnexion</a>
+        <a href="../../../login.html" id="login-link">Login</a>
+        <span id="user-info" style="display:none;">
+          Connecté : <strong id="user-email"></strong> |
+          <a href="#" id="logout-link">Logout</a>
+        </span>
       </span>
     </nav>
   </header>
 
   <main>
-    <h2>Contenu</h2>
-    <ul>
-      <li><a href="rappel.html">Rappels de cours</a></li>
-      <li><a href="td.html">Travaux Dirigés</a></li>
-      <li><a href="note-de-cours.html">Notes de cours</a></li>
-    </ul>
+    <section>
+      <h2>Contenu du cours</h2>
+      <p>Bienvenue dans le cours sur les intégrales pour L2 Math & Chimie.  
+      Sélectionnez une section ci-dessus pour accéder aux TD ou aux rappels.</p>
+    </section>
   </main>
 
-  <footer>© 2019 Alethia</footer>
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
 
-  <!-- ✅ Protection par connexion Firebase -->
   <script type="module">
-    import { auth } from "../../../firebase-config.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { auth } from "../../../../firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    const userEmailEl = document.getElementById("user-email");
+    const loginLink = document.getElementById("login-link");
+    const userInfo = document.getElementById("user-info");
+    const userEmail = document.getElementById("user-email");
     const logoutLink = document.getElementById("logout-link");
 
-    // Vérifier si l’utilisateur est connecté
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Rediriger vers login si non connecté
-        window.location.href = "../../../login.html";
+      if (user) {
+        loginLink.style.display = "none";
+        userInfo.style.display = "inline";
+        userEmail.textContent = user.email;
       } else {
-        userEmailEl.textContent = user.email;
+        loginLink.style.display = "inline";
+        userInfo.style.display = "none";
       }
     });
 
-    // Déconnexion
     logoutLink.addEventListener("click", (e) => {
       e.preventDefault();
       signOut(auth).then(() => {
-        window.location.href = "../../../login.html";
+        window.location.href = "../../../../login.html";
       });
     });
   </script>
