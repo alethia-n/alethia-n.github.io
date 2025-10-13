@@ -91,6 +91,10 @@
       <a href="#chgmt">Changement de variable</a>
       <a href="#frac">Fractions rationnelles</a>
       <a href="#trigo">Intégrales trigonométriques</a>
+      <span id="user-section" style="float:right;">
+        Connecté en tant <strong id="user-email"></strong> |
+        <a href="../../../login.html" id="logout-link">Déconnexion</a>
+      </span>
     </nav>
   </header>
 
@@ -211,90 +215,9 @@ Reste final : 3x + 2
       </p>
 
       <h3>Exemple général :</h3>
-      <p>
-        Si le dénominateur contient des facteurs répétés ou quadratiques irréductibles, par exemple :
-      </p>
       <div class="math">
         $$\frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}$$
       </div>
-      <p>
-        On décompose selon le schéma :
-      </p>
       <div class="math">
         $$\frac{A}{x-2} + \frac{B}{x+1} + \frac{C}{(x+1)^2} + 
-          \frac{Dx + E}{x^2+1} + \frac{Fx + G}{(x^2+1)^2}$$
-      </div>
-
-      <p>
-        Les coefficients \(A, B, C, D, E, F, G\) sont déterminés par identification des coefficients
-        après remise au même dénominateur.
-      </p>
-    </section>
-
-    <!-- SECTION 4 : Intégrales trigonométriques -->
-    <section id="trigo">
-      <h2>4. Intégrales trigonométriques</h2>
-      <p>
-        Ces intégrales utilisent les identités fondamentales :
-      </p>
-      <div class="math">
-        $$\sin^2x = \frac{1 - \cos(2x)}{2}, \quad
-        \cos^2x = \frac{1 + \cos(2x)}{2}$$
-      </div>
-
-      <p>
-        Ces formules permettent de transformer des puissances de sinus ou cosinus
-        en expressions plus simples intégrables directement.
-      </p>
-
-      <h3>Exemple :</h3>
-      <p>
-        Calculons \( I = \int \sin^2x\,dx \)
-      </p>
-      <div class="math">
-        $$I = \int \frac{1 - \cos(2x)}{2}\,dx
-        = \frac{x}{2} - \frac{\sin(2x)}{4} + C$$
-      </div>
-    </section>
-
-
-  <!-- SECTION 5 : La composé de fonction -->
-    <section id="trigo">
-      <h2>5. composée de fonctions </h2>
-      <p>
-       Soient \( f \) et \( g \) deux fonctions définies respectivement sur \( I_f \) et \( I_g \), telles que :
-      </p>
-      <div class="math">
-        $$ g(x) \in I_f, \; \forall x \in  I_g $$
-      </div>
-       Alors, la composée de deux fonctions \( (f \circ g)(x) \) est définie sur \( I_g \) par la formule suivante&nbsp;:
-       <div class="math">
-        $$ (f \circ g)(x) = f(g(x)) $$
-      </div>
-
-      <h3>Exemple :</h3>
-       <p>
-    Calculons la composée des fonctions \( f(x) = \dfrac{1}{1+x^{2}} \) et \( g(x) = \ln x \).
-  </p>
-
-  <div class="math">
-    \[
-      (f \circ g)(x) = f(g(x)) = \dfrac{1}{1+(\ln x)^{2}} = \dfrac{1}{1+\ln^{2}x}
-    \]
-  </div>
-    </section>
-
-
-
-
-
-
-
-          
-  </main>
-
-  <footer>
-    <p>© 2025 - Cours d’analyse intégrale | M. Medjoudj Nouredine</p>
-  </footer>
-</body>
-</html>
+          \frac{Dx + E}{x^2+1} + \frac{Fx + G}{
