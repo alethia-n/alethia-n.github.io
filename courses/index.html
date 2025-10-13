@@ -1,49 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cours – Alethia</title>
-  <link rel="stylesheet" href="../style.css"> <!-- Chemin relatif vers le style -->
-  
-  <!-- Firebase Auth pour restreindre l'accès -->
-  <script type="module">
-    import { auth } from "../firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    // Vérifier si l'utilisateur est connecté
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Redirection vers login si non connecté
-        window.location.href = "../login.html";
-      }
-    });
-  </script>
+  <title>Cours — Alethia</title>
+  <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
   <header>
-    <h1>Cours – Alethia</h1>
+    <h1>Cours — Alethia</h1>
     <nav>
       <a href="../index.html">Accueil</a>
       <a href="index.html" class="active">Cours</a>
       <a href="../quotes.html">Citations</a>
       <a href="../contact.html">Contact</a>
       <span id="user-section" style="float:right;">
-        <strong id="user-email">Connecté</strong> |
-        <a href="../login.html">Déconnexion</a>
+        <a href="../login.html" id="login-link">Login</a>
+        <span id="user-info" style="display:none;">
+          Connecté : <strong id="user-email"></strong> |
+          <a href="#" id="logout-link">Logout</a>
+        </span>
       </span>
     </nav>
   </header>
 
   <main>
     <section>
-      <h2>Bienvenue dans les cours</h2>
-      <p>Vous pouvez accéder aux différentes sections des cours ci-dessous :</p>
-
+      <h2>Liste des cours disponibles</h2>
       <ul>
-        <li><a href="chimie/index.html">Chimie</a></li>
-        <!-- Ajouter d'autres matières ici si besoin -->
+        <li><a href="math-chemistry-l2/integrals/index.html">Math & Chimie L2 — Intégrales</a></li>
+        <li><a href="math-chemistry-l2/cours-03-indisponible/index.html">Math & Chimie L2 — Cours 03 (indisponible)</a></li>
+        <li><a href="math-chemistry-l2/cours-02-indisponible/index.html">Math & Chimie L2 — Cours 02 (indisponible)</a></li>
       </ul>
     </section>
   </main>
@@ -52,16 +40,34 @@
     <p>© 2019 Alethia</p>
   </footer>
 
-  <!-- Afficher l'email de l'utilisateur connecté -->
+  <!-- 🔹 Firebase : gestion du statut utilisateur -->
   <script type="module">
     import { auth } from "../firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
+    const loginLink = document.getElementById("login-link");
+    const userInfo = document.getElementById("user-info");
     const userEmail = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
+
+    // Vérification si l’utilisateur est connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        loginLink.style.display = "none";
+        userInfo.style.display = "inline";
         userEmail.textContent = user.email;
+      } else {
+        loginLink.style.display = "inline";
+        userInfo.style.display = "none";
       }
+    });
+
+    // Déconnexion
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "../login.html";
+      });
     });
   </script>
 </body>
