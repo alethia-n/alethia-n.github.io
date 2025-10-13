@@ -3,18 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cours — Alethia</title>
+  <title>Cours L2 — Alethia</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
   <header>
-    <h1>Cours — Alethia</h1>
+    <h1>Cours de Mathématiques & Chimie L2</h1>
     <nav>
       <a href="../index.html">Accueil</a>
-      <a href="index.html" class="active">Cours</a>
-      <a href="../quotes.html">Citations</a>
-      <a href="../contact.html">Contact</a>
       <span id="user-section" style="float:right;">
         <a href="../login.html" id="login-link">Login</a>
         <span id="user-info" style="display:none;">
@@ -25,22 +22,20 @@
     </nav>
   </header>
 
-  <main>
-    <section>
-      <h2>Liste des cours disponibles</h2>
-      <ul>
-        <li><a href="math-chemistry-l2/integrals/index.html">Math & Chimie L2 — Intégrales</a></li>
-        <li><a href="math-chemistry-l2/cours-03-indisponible/index.html">Math & Chimie L2 — Cours 03 (indisponible)</a></li>
-        <li><a href="math-chemistry-l2/cours-02-indisponible/index.html">Math & Chimie L2 — Cours 02 (indisponible)</a></li>
-      </ul>
-    </section>
+  <main style="max-width: 800px; margin: auto;">
+    <h2>Liste des cours</h2>
+    <ul>
+      <li><a href="math-chemistry-l2/integrals/index.html">Intégrales</a></li>
+      <li><a href="math-chemistry-l2/cours-02-indisponible/index.html">Cours 02 (Indisponible)</a></li>
+      <li><a href="math-chemistry-l2/cours-03-indisponible/index.html">Cours 03 (Indisponible)</a></li>
+    </ul>
   </main>
 
   <footer>
     <p>© 2019 Alethia</p>
   </footer>
 
-  <!-- 🔹 Firebase : gestion du statut utilisateur -->
+  <!-- ✅ Firebase : gestion du statut utilisateur -->
   <script type="module">
     import { auth } from "../firebase-config.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -50,7 +45,7 @@
     const userEmail = document.getElementById("user-email");
     const logoutLink = document.getElementById("logout-link");
 
-    // Vérification si l’utilisateur est connecté
+    // Vérifier si l’utilisateur est connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
         loginLink.style.display = "none";
