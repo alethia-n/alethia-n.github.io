@@ -56,7 +56,7 @@
     // Redirection automatique si déjà connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        window.location.href = "courses/math-chemistry-l2/integrals/index.html";
+        window.location.href = "courses/index.html";
       }
     });
 
@@ -72,7 +72,7 @@
         try {
           await createUserWithEmailAndPassword(auth, email, pass);
           alert("✅ Inscription réussie !");
-          window.location.href = "courses/math-chemistry-l2/integrals/index.html";
+          window.location.href = "courses/index.html";
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
@@ -86,7 +86,7 @@
         try {
           await signInWithEmailAndPassword(auth, email, pass);
           alert("✅ Connexion réussie !");
-          window.location.href = "courses/math-chemistry-l2/integrals/index.html";
+          window.location.href = "courses/index.html";
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
