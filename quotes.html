@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -107,4 +107,42 @@
 </head>
 <body>
   <header>
-    <h1>Citations & Réflexions</
+    <h1>Citations & Réflexions</h1>
+    <nav>
+      <a href="index.html">Accueil</a> 
+      <a href="quotes.html" class="active">Citations</a>
+      <a href="courses.html">Cours</a>
+      <a href="contact.html">Contact</a>
+      <span id="user-section" style="float: right;">
+        Connecté en tant que <strong id="user-email"></strong> |
+        <a href="#" onclick="logout()">Déconnexion</a>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Section si l'utilisateur est autorisé -->
+    <section id="quotes-section" style="display:none;">
+      <div id="quotes-container">
+        <p>Chargement des citations...</p>
+      </div>
+    </section>
+
+    <!-- Section de demande d'accès -->
+    <section id="request-section" style="display:none; text-align:center;">
+      <h3>Demande d'autorisation</h3>
+      <p>Vous devez obtenir une autorisation pour accéder à cette section.</p>
+      <form id="access-request-form">
+        <input type="text" id="nom" placeholder="Nom" required><br>
+        <input type="text" id="prenom" placeholder="Prénom" required><br>
+        <textarea id="motif" placeholder="Expliquez votre motivation..." required></textarea><br>
+        <button type="submit">Envoyer la demande</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+</body>
+</html>
