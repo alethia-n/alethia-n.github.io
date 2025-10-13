@@ -10,20 +10,50 @@
     <h1>Cours L2 Mathématiques-Chimie</h1>
     <nav>
       <a href="../../../index.html">Accueil</a>
+      <span id="user-section" style="float:right;">
+        Connecté en tant que <strong id="user-email"></strong> |
+        <a href="../../../login.html" id="logout-link">Déconnexion</a>
+      </span>
     </nav>
   </header>
 
   <main>
     <h2>Liste des cours</h2>
     <ul>
-      <li><a href="integrals/index.html">Cours 01 — Intégrales</a></li>
-      <li><a href="cours-02-indisponible/index.html">Cours 02 — Indisponible</a></li>
-      <li><a href="cours-03-indisponible/index.html">Cours 03 — Indisponible</a></li>
+      <li><a href="integrale/index.html">Cours 01 — Intégrales</a></li>
+      <li><a href="Cours 02/index.html">Cours 02 — À venir</a></li>
+      <li><a href="Cours 03/index.html">Cours 03 — À venir</a></li>
     </ul>
   </main>
 
-  <footer>© 2019 Alethia </footer>
-   <!-- ✅ Protection par connexion Firebase -->
-  <script type="module" src="../../auth-guard.js"></script>
+  <footer>© 2019 Alethia</footer>
+
+  <!-- ✅ Protection par connexion Firebase -->
+  <script type="module">
+    import { auth } from "../../../firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const userEmailEl = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
+
+    // Vérifier si l’utilisateur est connecté
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Redirection vers login si non connecté
+        window.location.href = "../../../login.html";
+      } else {
+        // Afficher l'email connecté
+        userEmailEl.textContent = user.email;
+      }
+    });
+
+    // Déconnexion
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "../../../login.html";
+      });
+    });
+  </script>
 </body>
 </html>
