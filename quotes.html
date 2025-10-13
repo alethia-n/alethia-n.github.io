@@ -1,28 +1,100 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <title>Citations – Alethia</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./firebase-config.js"; // Ton fichier de config
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      doc, 
+      getDoc, 
+      addDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
 
     // Initialisation Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Vérifier si l’utilisateur est connecté
-    onAuthStateChanged(auth, (user) => {
+    const quotesSection = document.getElementById("quotes-section");
+    const requestSection = document.getElementById("request-section");
+
+    // Vérifier la connexion
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // Redirection si non connecté
         window.location.href = "login.html";
-      } else {
-        document.getElementById("user-email").textContent = user.email;
+        return;
       }
+
+      document.getElementById("user-email").textContent = user.email;
+
+      // Vérifier autorisation
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists() && userSnap.data().authorized === true) {
+        // ✅ Utilisateur autorisé : afficher les citations
+        quotesSection.style.display = "block";
+        requestSection.style.display = "none";
+        loadQuotes();
+      } else {
+        // ❌ Non autorisé : afficher le formulaire de demande
+        quotesSection.style.display = "none";
+        requestSection.style.display = "block";
+      }
+    });
+
+    // Charger les citations depuis Firestore
+    async function loadQuotes() {
+      const quotesCol = collection(db, "quotes");
+      const snapshot = await getDocs(quotesCol);
+      const container = document.getElementById("quotes-container");
+      container.innerHTML = "";
+
+      snapshot.forEach((doc) => {
+        const q = doc.data();
+        const article = document.createElement("article");
+        article.innerHTML = `
+          <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
+            “${q.text}”<br>
+            — ${q.author} – ${q.date || "Date non précisée"}
+          </blockquote>
+        `;
+        container.appendChild(article);
+      });
+    }
+
+    // Envoyer une demande d'autorisation
+    const form = document.getElementById("access-request-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const motif = document.getElementById("motif").value;
+      const nom = document.getElementById("nom").value;
+      const prenom = document.getElementById("prenom").value;
+      const user = auth.currentUser;
+
+      await addDoc(collection(db, "requests"), {
+        uid: user.uid,
+        email: user.email,
+        nom,
+        prenom,
+        motif,
+        date: new Date().toISOString()
+      });
+
+      alert("Votre demande a été envoyée. Vous recevrez une autorisation dès validation.");
+      form.reset();
     });
 
     // Déconnexion
@@ -35,49 +107,4 @@
 </head>
 <body>
   <header>
-    <h1>Citations & Réflexions</h1>
-    <nav>
-      <a href="index.html">Accueil</a> 
-      <a href="quotes.html" class="active">Citations</a>
-      <a href="courses.html">Cours</a>
-      <a href="contact.html">Contact</a>
-      <span id="user-section" style="float: right;">
-        Connecté en tant que <strong id="user-email"></strong> |
-        <a href="#" onclick="logout()">Déconnexion</a>
-      </span>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <article style="margin-bottom: 40px;">
-        <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
-          “Les gars comme nous, qui travaillent dans les ranchs, sont les types les plus seuls du monde. (…) Mais nous, on n’est pas comme ça. Nous, on a quelqu’un à qui parler.”  
-          <br>— Des souris et des hommes - Steinbeck
-          <br>— 03/04/2021
-        </blockquote>
-      </article>
-
-      <article style="margin-bottom: 40px;">
-        <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
-          “Me voici donc seul sur la terre, n'ayant plus de frère, de prochain, d'ami, de société que moi-même. (...) Mais moi, détaché d'eux et de tout, que suis-je moi-même ? Voilà ce qui me reste à chercher.”  
-          <br>— J.J. Rousseau – 23/11/2020
-        </blockquote>
-      </article>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2019 Alethia</p>
-    <div id="comments">
-      <script src="https://utteranc.es/client.js"
-        repo="TON_NOM_D_UTILISATEUR/alethia-n.github.io"
-        issue-term="pathname"
-        theme="github-dark"
-        crossorigin="anonymous"
-        async>
-      </script>
-    </div>
-  </footer>
-</body>
-</html>
+    <h1>Citations & Réflexions</
