@@ -21,7 +21,7 @@
       <span id="user-section" style="float:right;">
         <a href="login.html" id="login-link">Login</a>
         <span id="user-info" style="display:none;">
-          <strong id="user-email"></strong> |
+          Connecté : <strong id="user-email"></strong> |
           <a href="#" id="logout-link">Logout</a>
         </span>
       </span>
@@ -56,7 +56,7 @@
   <!-- ✅ Firebase : gestion du statut utilisateur -->
   <script type="module">
     import { auth } from "./firebase-config.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
     const loginLink = document.getElementById("login-link");
     const userInfo = document.getElementById("user-info");
