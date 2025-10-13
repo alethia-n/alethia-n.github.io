@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cours – Alethia</title>
+  <link rel="stylesheet" href="../style.css"> <!-- Chemin relatif vers le style -->
+  
+  <!-- Firebase Auth pour restreindre l'accès -->
+  <script type="module">
+    import { auth } from "../firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Vérifier si l'utilisateur est connecté
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Redirection vers login si non connecté
+        window.location.href = "../login.html";
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <header>
+    <h1>Cours – Alethia</h1>
+    <nav>
+      <a href="../index.html">Accueil</a>
+      <a href="index.html" class="active">Cours</a>
+      <a href="../quotes.html">Citations</a>
+      <a href="../contact.html">Contact</a>
+      <span id="user-section" style="float:right;">
+        <strong id="user-email">Connecté</strong> |
+        <a href="../login.html">Déconnexion</a>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Bienvenue dans les cours</h2>
+      <p>Vous pouvez accéder aux différentes sections des cours ci-dessous :</p>
+
+      <ul>
+        <li><a href="chimie/index.html">Chimie</a></li>
+        <!-- Ajouter d'autres matières ici si besoin -->
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+
+  <!-- Afficher l'email de l'utilisateur connecté -->
+  <script type="module">
+    import { auth } from "../firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const userEmail = document.getElementById("user-email");
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userEmail.textContent = user.email;
+      }
+    });
+  </script>
+</body>
+</html>
