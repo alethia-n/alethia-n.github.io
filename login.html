@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - Alethia</title>
+</head>
+<body>
+  <h1>🔐 Connexion / Inscription</h1>
+
+  <div>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Mot de passe"><br>
+    <button id="signup">S’inscrire</button>
+    <button id="login">Se connecter</button>
+  </div>
+
+  <p id="message"></p>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCuwjW3DjLYvo2gorazMA99qPam4mQ3D5k",
+      authDomain: "alethiamessage.firebaseapp.com",
+      projectId: "alethiamessage",
+      storageBucket: "alethiamessage.firebasestorage.app",
+      messagingSenderId: "1093724154743",
+      appId: "1:1093724154743:web:e90669c98f47dc64d48f72",
+      measurementId: "G-4YJ1K1Y7FT"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const emailInput = document.getElementById("email");
+    const passInput = document.getElementById("password");
+    const msg = document.getElementById("message");
+
+    document.getElementById("signup").onclick = async () => {
+      try {
+        await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
+        msg.textContent = "✅ Compte créé avec succès !";
+      } catch (err) {
+        msg.textContent = "⚠️ " + err.message;
+      }
+    };
+
+    document.getElementById("login").onclick = async () => {
+      try {
+        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
+        msg.textContent = "✅ Connexion réussie ! Redirection...";
+        setTimeout(() => window.location.href = "index.html", 1000);
+      } catch (err) {
+        msg.textContent = "⚠️ " + err.message;
+      }
+    };
+  </script>
+</body>
+</html>
