@@ -12,7 +12,7 @@
     <h1>Connexion / Inscription</h1>
     <nav>
       <a href="index.html">Accueil</a>
-      <a href="courses.html">Cours</a>
+      <a href="courses/index.html">Cours</a>
       <a href="quotes.html">Citations</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -56,7 +56,7 @@
     // Redirection automatique si déjà connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        window.location.href = "courses.html";
+        window.location.href = "courses/index.html"; // ← chemin corrigé
       }
     });
 
@@ -73,7 +73,7 @@
         try {
           await createUserWithEmailAndPassword(auth, email, pass);
           alert("✅ Inscription réussie !");
-          window.location.href = "courses.html";
+          window.location.href = "courses/index.html"; // ← chemin corrigé
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
@@ -87,7 +87,7 @@
         try {
           await signInWithEmailAndPassword(auth, email, pass);
           alert("✅ Connexion réussie !");
-          window.location.href = "courses.html";
+          window.location.href = "courses/index.html"; // ← chemin corrigé
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
