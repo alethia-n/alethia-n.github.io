@@ -14,10 +14,17 @@
   <header>
     <h1>Alethia</h1>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="courses/math-chemistry-l2/index.html">Courses</a>
+      <a href="index.html" class="active">Home</a>
+      <a href="courses.html">Courses</a>
       <a href="quotes.html">Quotes</a>
       <a href="contact.html">Contact</a>
+      <span id="user-section" style="float:right;">
+        <a href="login.html" id="login-link">Login</a>
+        <span id="user-info" style="display:none;">
+          <strong id="user-email"></strong> |
+          <a href="#" onclick="logout()">Logout</a>
+        </span>
+      </span>
     </nav>
   </header>
 
@@ -45,32 +52,40 @@
       </script>
     </div>
   </footer>
-  <!-- 🔥 Initialisation Firebase pour ton site Alethia -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // 🔧 Configuration Firebase de ton projet
-  const firebaseConfig = {
-    apiKey: "AIzaSyCuwjW3DjLYvo2gorazMA99qPam4mQ3D5k",
-    authDomain: "alethiamessage.firebaseapp.com",
-    projectId: "alethiamessage",
-    storageBucket: "alethiamessage.firebasestorage.app",
-    messagingSenderId: "1093724154743",
-    appId: "1:1093724154743:web:e90669c98f47dc64d48f72",
-    measurementId: "G-4YJ1K1Y7FT"
-  };
+  <!-- 🔥 Connexion à Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { firebaseConfig } from "./firebase-config.js";
 
-  // 🚀 Initialisation Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    // Initialiser Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-  console.log("✅ Firebase est connecté à ton site Alethia !");
-</script>
+    // Vérifier si un utilisateur est connecté
+    onAuthStateChanged(auth, (user) => {
+      const loginLink = document.getElementById("login-link");
+      const userInfo = document.getElementById("user-info");
+      const userEmail = document.getElementById("user-email");
+
+      if (user) {
+        loginLink.style.display = "none";
+        userInfo.style.display = "inline";
+        userEmail.textContent = user.email;
+      } else {
+        loginLink.style.display = "inline";
+        userInfo.style.display = "none";
+      }
+    });
+
+    // Déconnexion
+    window.logout = () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    };
+  </script>
 
 </body>
 </html>
