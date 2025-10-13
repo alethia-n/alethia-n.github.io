@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion - Alethia</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import { 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const registerForm = document.getElementById("registerForm");
+      const loginForm = document.getElementById("loginForm");
+
+      // Inscription
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("regEmail").value;
+        const pass = document.getElementById("regPassword").value;
+        try {
+          await createUserWithEmailAndPassword(auth, email, pass);
+          alert("Inscription réussie !");
+          window.location.href = "quotes.html";
+        } catch (err) {
+          alert("Erreur : " + err.message);
+        }
+      });
+
+      // Connexion
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("logEmail").value;
+        const pass = document.getElementById("logPassword").value;
+        try {
+          await signInWithEmailAndPassword(auth, email, pass);
+          alert("Connexion réussie !");
+          window.location.href = "quotes.html";
+        } catch (err) {
+          alert("Erreur : " + err.message);
+        }
+      });
+    });
+  </script>
 </head>
 <body>
-  <h1>🔐 Connexion / Inscription</h1>
+  <h2>Connexion / Inscription</h2>
 
-  <div>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Mot de passe"><br>
-    <button id="signup">S’inscrire</button>
-    <button id="login">Se connecter</button>
-  </div>
+  <section>
+    <h3>Se connecter</h3>
+    <form id="loginForm">
+      <input type="email" id="logEmail" placeholder="Adresse e-mail" required><br>
+      <input type="password" id="logPassword" placeholder="Mot de passe" required><br>
+      <button type="submit">Connexion</button>
+    </form>
+  </section>
 
-  <p id="message"></p>
+  <hr>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCuwjW3DjLYvo2gorazMA99qPam4mQ3D5k",
-      authDomain: "alethiamessage.firebaseapp.com",
-      projectId: "alethiamessage",
-      storageBucket: "alethiamessage.firebasestorage.app",
-      messagingSenderId: "1093724154743",
-      appId: "1:1093724154743:web:e90669c98f47dc64d48f72",
-      measurementId: "G-4YJ1K1Y7FT"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const emailInput = document.getElementById("email");
-    const passInput = document.getElementById("password");
-    const msg = document.getElementById("message");
-
-    document.getElementById("signup").onclick = async () => {
-      try {
-        await createUserWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        msg.textContent = "✅ Compte créé avec succès !";
-      } catch (err) {
-        msg.textContent = "⚠️ " + err.message;
-      }
-    };
-
-    document.getElementById("login").onclick = async () => {
-      try {
-        await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
-        msg.textContent = "✅ Connexion réussie ! Redirection...";
-        setTimeout(() => window.location.href = "index.html", 1000);
-      } catch (err) {
-        msg.textContent = "⚠️ " + err.message;
-      }
-    };
-  </script>
+  <section>
+    <h3>Créer un compte</h3>
+    <form id="registerForm">
+      <input type="email" id="regEmail" placeholder="Adresse e-mail" required><br>
+      <input type="password" id="regPassword" placeholder="Mot de passe" required><br>
+      <button type="submit">Inscription</button>
+    </form>
+  </section>
 </body>
 </html>
