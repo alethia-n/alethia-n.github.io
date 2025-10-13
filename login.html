@@ -44,7 +44,7 @@
     <p>© 2019 Alethia</p>
   </footer>
 
-  <!-- 🔹 Firebase -->
+  <!-- 🔹 Firebase Auth -->
   <script type="module">
     import { auth } from "./firebase-config.js";
     import { 
@@ -56,11 +56,10 @@
     // Redirection automatique si déjà connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        window.location.href = "courses/index.html"; // ← chemin corrigé
+        window.location.href = "courses/index.html";
       }
     });
 
-    // Quand la page est chargée
     window.addEventListener("DOMContentLoaded", () => {
       const registerForm = document.getElementById("registerForm");
       const loginForm = document.getElementById("loginForm");
@@ -73,7 +72,7 @@
         try {
           await createUserWithEmailAndPassword(auth, email, pass);
           alert("✅ Inscription réussie !");
-          window.location.href = "courses/index.html"; // ← chemin corrigé
+          window.location.href = "courses/index.html";
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
@@ -87,7 +86,7 @@
         try {
           await signInWithEmailAndPassword(auth, email, pass);
           alert("✅ Connexion réussie !");
-          window.location.href = "courses/index.html"; // ← chemin corrigé
+          window.location.href = "courses/index.html";
         } catch (err) {
           alert("⚠️ Erreur : " + err.message);
         }
