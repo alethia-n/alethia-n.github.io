@@ -7,9 +7,9 @@
   <link rel="stylesheet" href="style.css" />
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body>
   <header>
     <h1>Alethia</h1>
@@ -22,7 +22,7 @@
         <a href="login.html" id="login-link">Login</a>
         <span id="user-info" style="display:none;">
           <strong id="user-email"></strong> |
-          <a href="#" onclick="logout()">Logout</a>
+          <a href="#" id="logout-link">Logout</a>
         </span>
       </span>
     </nav>
@@ -32,12 +32,12 @@
     <section>
       <h2>Spirit of the Site</h2>
       <p>
-        The name <strong>Alethia</strong> derives from the Ancient Greek <em>ἀλήθεια</em>, 
+        The name <strong>Alethia</strong> derives from the Ancient Greek <em>ἀλήθεια</em>,
         meaning “unveiled truth.”  
-        This site stands as an inner sanctuary — a space where I unfold my reflections,  
-        the intuitions that traverse my mind, and the words that stir my soul.  
+        This site stands as an inner sanctuary — a space where I unfold my reflections,
+        the intuitions that traverse my mind, and the words that stir my soul.
       </p>
-    </section> 
+    </section>
   </main>
 
   <footer>
@@ -53,22 +53,18 @@
     </div>
   </footer>
 
-  <!-- 🔥 Connexion à Firebase -->
+  <!-- ✅ Firebase : gestion du statut utilisateur -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { auth } from "./firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // Initialiser Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const loginLink = document.getElementById("login-link");
+    const userInfo = document.getElementById("user-info");
+    const userEmail = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
 
-    // Vérifier si un utilisateur est connecté
+    // Vérifier si l’utilisateur est connecté
     onAuthStateChanged(auth, (user) => {
-      const loginLink = document.getElementById("login-link");
-      const userInfo = document.getElementById("user-info");
-      const userEmail = document.getElementById("user-email");
-
       if (user) {
         loginLink.style.display = "none";
         userInfo.style.display = "inline";
@@ -80,11 +76,12 @@
     });
 
     // Déconnexion
-    window.logout = () => {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
       signOut(auth).then(() => {
         window.location.href = "index.html";
       });
-    };
+    });
   </script>
 
 </body>
