@@ -1,97 +1,97 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion - Alethia</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Inscription</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+        form { border: 1px solid #ccc; padding: 20px; margin: 10px; width: 300px; border-radius: 5px; }
+        input { width: 100%; padding: 8px; margin: 5px 0; }
+        button { padding: 10px; width: 100%; margin-top: 10px; cursor: pointer; }
+        h2 { text-align: center; }
+        .message { color: red; text-align: center; }
+    </style>
 </head>
-
 <body>
-  <header>
-    <h1>Connexion / Inscription</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="courses/index.html">Cours</a>
-      <a href="quotes.html">Citations</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
 
-  <main style="max-width: 500px; margin: auto; text-align: center;">
-    <section>
-      <h2>Se connecter</h2>
-      <form id="loginForm">
-        <input type="email" id="logEmail" placeholder="Adresse e-mail" required><br>
-        <input type="password" id="logPassword" placeholder="Mot de passe" required><br>
-        <button type="submit">Connexion</button>
-      </form>
-    </section>
+    <h2>Connexion</h2>
+    <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+        <p class="message" id="loginMessage"></p>
+    </form>
 
-    <hr>
+    <h2>Inscription</h2>
+    <form id="signupForm">
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <input type="password" id="signupPassword" placeholder="Mot de passe" required>
+        <button type="submit">S'inscrire</button>
+        <p class="message" id="signupMessage"></p>
+    </form>
 
-    <section>
-      <h2>Créer un compte</h2>
-      <form id="registerForm">
-        <input type="email" id="regEmail" placeholder="Adresse e-mail" required><br>
-        <input type="password" id="regPassword" placeholder="Mot de passe" required><br>
-        <button type="submit">Inscription</button>
-      </form>
-    </section>
-  </main>
+    <script>
+        // Configuration Firebase (remplacez avec vos informations)
+        const firebaseConfig = {
+            apiKey: "VOTRE_API_KEY",
+            authDomain: "VOTRE_AUTH_DOMAIN",
+            projectId: "VOTRE_PROJECT_ID",
+            storageBucket: "VOTRE_STORAGE_BUCKET",
+            messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
+            appId: "VOTRE_APP_ID"
+        };
 
-  <footer>
-    <p>© 2019 Alethia</p>
-  </footer>
+        // Initialisation Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-  <!-- 🔹 Firebase Auth -->
-  <script type="module">
-    import { auth } from "./firebase-config.js";
-    import { 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+        // Connexion
+        const loginForm = document.getElementById('loginForm');
+        const loginMessage = document.getElementById('loginMessage');
 
-    // Redirection automatique si déjà connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        window.location.href = "courses/index.html";
-      }
-    });
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const registerForm = document.getElementById("registerForm");
-      const loginForm = document.getElementById("loginForm");
+            auth.signInWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    loginMessage.style.color = 'green';
+                    loginMessage.textContent = "Connexion réussie ! Redirection...";
+                    setTimeout(() => {
+                        window.location.href = "index.html"; // Page après connexion
+                    }, 1000);
+                })
+                .catch(error => {
+                    loginMessage.style.color = 'red';
+                    loginMessage.textContent = error.message;
+                });
+        });
 
-      // 🔹 Inscription
-      registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("regEmail").value;
-        const pass = document.getElementById("regPassword").value;
-        try {
-          await createUserWithEmailAndPassword(auth, email, pass);
-          alert("✅ Inscription réussie !");
-          window.location.href = "courses/index.html";
-        } catch (err) {
-          alert("⚠️ Erreur : " + err.message);
-        }
-      });
+        // Inscription
+        const signupForm = document.getElementById('signupForm');
+        const signupMessage = document.getElementById('signupMessage');
 
-      // 🔹 Connexion
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("logEmail").value;
-        const pass = document.getElementById("logPassword").value;
-        try {
-          await signInWithEmailAndPassword(auth, email, pass);
-          alert("✅ Connexion réussie !");
-          window.location.href = "courses/index.html";
-        } catch (err) {
-          alert("⚠️ Erreur : " + err.message);
-        }
-      });
-    });
-  </script>
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    signupMessage.style.color = 'green';
+                    signupMessage.textContent = "Inscription réussie ! Vous pouvez vous connecter.";
+                    signupForm.reset();
+                })
+                .catch(error => {
+                    signupMessage.style.color = 'red';
+                    signupMessage.textContent = error.message;
+                });
+        });
+    </script>
 </body>
 </html>
