@@ -1,0 +1,96 @@
+/* === Style sombre et profond avec teinte marron === */
+body {
+  font-family: "Times New Roman", serif;
+  background-color: #1a1410; /* marron très sombre */
+  color: #e5d6c6; /* beige doux */
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+header {
+  text-align: center;
+  background: #2b211b;
+  padding: 25px;
+  border-bottom: 2px solid #4b3a2d;
+}
+
+header h1 {
+  color: #d6bfa9;
+  font-size: 2.5em;
+  letter-spacing: 1px;
+}
+
+nav {
+  margin-top: 10px;
+}
+
+nav a {
+  color: #d6bfa9;
+  margin: 0 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #f0c997;
+}
+
+main {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+section {
+  margin-bottom: 50px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #2b211b;
+  border-top: 2px solid #4b3a2d;
+  color: #b79c83;
+}
+
+/* === Style pour les blocs LaTeX === */
+.math {
+  text-align: center;
+  margin: 15px 0;
+  font-size: 1.2em;
+}
+
+/* === Style du formulaire de contact === */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: auto;
+}
+
+input, textarea, button {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-family: "Times New Roman", serif;
+  font-size: 1em;
+  border: 1px solid #4b3a2d;
+  border-radius: 4px;
+  background: #2b211b;
+  color: #e5d6c6;
+}
+
+button {
+  background: #4b3a2d;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #6a4e3a;
+}
+
+
+/* Added by assistant: header and auth message styles */
+.site-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#f8f9fa; border-bottom:1px solid #e9ecef; position:sticky; top:0; z-index:1000; }
+.nav-icons button { background:transparent; border:0; font-size:1.2rem; cursor:pointer; }
+.auth-message { max-width:900px; margin:10px auto; }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Citations – Alethia</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, getDoc, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    // Initialisation Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const quotesSection = document.getElementById("quotes-section");
+    const requestSection = document.getElementById("request-section");
+    const quotesContainer = document.getElementById("quotes-container");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("user-email").textContent = user.email;
+
+      // Vérifier autorisation
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists() && userSnap.data().authorized === true) {
+        quotesSection.style.display = "block";
+        requestSection.style.display = "none";
+        loadPublications();
+      } else {
+        quotesSection.style.display = "none";
+        requestSection.style.display = "block";
+      }
+    });
+
+    async function loadPublications() {
+      const pubCol = collection(db, "publications");
+      const q = query(pubCol, orderBy("date", "desc"));
+      const snapshot = await getDocs(q);
+      quotesContainer.innerHTML = "";
+
+      for (let docSnap of snapshot.docs) {
+        const pub = docSnap.data();
+        const article = document.createElement("article");
+        article.style.marginBottom = "40px";
+
+        let mediaHTML = "";
+        if(pub.mediaType === "image") {
+          const url = await getDownloadURL(ref(storage, pub.mediaPath));
+          mediaHTML = `<img src="${url}" style="max-width:100%; margin:10px 0;">`;
+        } else if(pub.mediaType === "video") {
+          const url = await getDownloadURL(ref(storage, pub.mediaPath));
+          mediaHTML = `<video controls style="max-width:100%; margin:10px 0;">
+                         <source src="${url}" type="video/mp4">
+                       </video>`;
+        }
+
+        article.innerHTML = `
+          <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
+            ${pub.text || ""}
+            ${mediaHTML}
+            <br>— ${pub.author || "Admin"} – ${pub.date || "Date non précisée"}
+          </blockquote>
+          <div class="comments" id="comments-${docSnap.id}">
+            <h4>Commentaires :</h4>
+          </div>
+        `;
+
+        quotesContainer.appendChild(article);
+
+        // Charger commentaires pour cette publication
+        loadComments(docSnap.id);
+      }
+    }
+
+    async function loadComments(pubId) {
+      const commentsCol = collection(db, `publications/${pubId}/comments`);
+      const snapshot = await getDocs(commentsCol);
+      const container = document.getElementById(`comments-${pubId}`);
+      snapshot.forEach((doc) => {
+        const c = doc.data();
+        const p = document.createElement("p");
+        p.textContent = `${c.author}: ${c.text} (${c.date})`;
+        container.appendChild(p);
+      });
+    }
+
+    // Envoyer demande d'autorisation
+    const form = document.getElementById("access-request-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const motif = document.getElementById("motif").value;
+      const nom = document.getElementById("nom").value;
+      const prenom = document.getElementById("prenom").value;
+      const user = auth.currentUser;
+
+      await addDoc(collection(db, "requests"), {
+        uid: user.uid,
+        email: user.email,
+        nom,
+        prenom,
+        motif,
+        date: new Date().toISOString()
+      });
+
+      alert("Votre demande a été envoyée. Vous recevrez une autorisation dès validation.");
+      form.reset();
+    });
+
+    window.logout = () => {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    };
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Citations & Réflexions</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="quotes.html" class="active">Citations</a>
+      <a href="courses.html">Cours</a>
+      <a href="contact.html">Contact</a>
+      <span id="user-section" style="float:right;">
+        Connecté en tant que <strong id="user-email"></strong> |
+        <a href="#" onclick="logout()">Déconnexion</a>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Section publications autorisées -->
+    <section id="quotes-section" style="display:none;">
+      <div id="quotes-container">
+        <p>Chargement des citations...</p>
+      </div>
+    </section>
+
+    <!-- Formulaire de demande d'accès -->
+    <section id="request-section" style="display:none; text-align:center;">
+      <h3>Demande d'autorisation</h3>
+      <p>Vous devez obtenir une autorisation pour accéder à cette section.</p>
+      <form id="access-request-form">
+        <input type="text" id="nom" placeholder="Nom" required><br>
+        <input type="text" id="prenom" placeholder="Prénom" required><br>
+        <textarea id="motif" placeholder="Expliquez votre motivation..." required></textarea><br>
+        <button type="submit">Envoyer la demande</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n</body>
+</html>
