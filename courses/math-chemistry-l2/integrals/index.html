@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intégrales — Alethia</title>
+  <link rel="stylesheet" href="../../../../style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1>Intégrales — L2 Math & Chimie</h1>
+    <nav>
+      <a href="../../../index.html">Cours</a>
+      <a href="td.html">TD</a>
+      <a href="rappel.html">Rappels</a>
+      <span id="user-section" style="float:right;">
+        <a href="../../../login.html" id="login-link">Login</a>
+        <span id="user-info" style="display:none;">
+          Connecté : <strong id="user-email"></strong> |
+          <a href="#" id="logout-link">Logout</a>
+        </span>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Contenu du cours</h2>
+      <p>Bienvenue dans le cours sur les intégrales pour L2 Math & Chimie.  
+      Sélectionnez une section ci-dessus pour accéder aux TD ou aux rappels.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+
+  <script type="module">
+    import { auth } from "../../../../firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const loginLink = document.getElementById("login-link");
+    const userInfo = document.getElementById("user-info");
+    const userEmail = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginLink.style.display = "none";
+        userInfo.style.display = "inline";
+        userEmail.textContent = user.email;
+      } else {
+        loginLink.style.display = "inline";
+        userInfo.style.display = "none";
+      }
+    });
+
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "../../../../login.html";
+      });
+    });
+  </script>
+<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n</body>
+</html>

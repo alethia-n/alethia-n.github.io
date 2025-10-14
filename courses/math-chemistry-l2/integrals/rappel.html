@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Rappels de cours : Intégration</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* === Style sombre et profond avec teinte marron === */
+    body {
+      font-family: "Times New Roman", serif;
+      background-color: #1a1410;
+      color: #e5d6c6;
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+    }
+
+    header {
+      text-align: center;
+      background: #2b211b;
+      padding: 25px;
+      border-bottom: 2px solid #4b3a2d;
+    }
+
+    header h1 {
+      color: #d6bfa9;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: #d6bfa9;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #f0c997;
+    }
+
+    main {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section {
+      margin-bottom: 50px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2b211b;
+      border-top: 2px solid #4b3a2d;
+      color: #b79c83;
+    }
+
+    .math {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 1.2em;
+    }
+
+    pre {
+      background: #2b211b;
+      padding: 10px;
+      border-radius: 6px;
+      color: #f5e6d0;
+      overflow-x: auto;
+    }
+
+    strong { color: #f0c997; }
+    em { color: #d6bfa9; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Rappels de cours – Techniques d’intégration</h1>
+    <nav>
+      <a href="#parties">Intégration par parties</a>
+      <a href="#chgmt">Changement de variable</a>
+      <a href="#frac">Fractions rationnelles</a>
+      <a href="#trigo">Intégrales trigonométriques</a>
+      <span id="user-section" style="float:right;">
+        Connecté en tant <strong id="user-email"></strong> |
+        <a href="../../../login.html" id="logout-link">Déconnexion</a>
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SECTION 1 : Intégration par parties -->
+    <section id="parties">
+      <h2>1. Intégration par parties</h2>
+      <p>
+        Cette méthode découle directement de la formule de dérivation du produit :
+        \((uv)' = u'v + uv'\).
+      </p>
+      <div class="math">
+        $$\int u\,dv = uv - \int v\,du$$
+      </div>
+      <p>
+        En posant \( du = u'(x)\,dx \) et \( dv = v'(x)\,dx \), la formule s’écrit :
+      </p>
+      <div class="math">
+        $$\int u(x)v'(x)\,dx = u(x)v(x) - \int u'(x)v(x)\,dx$$
+      </div>
+      <p>
+        <strong>Remarque :</strong> On choisit <em>u</em> pour qu’il devienne plus simple lorsqu’on le dérive,
+        et <em>dv</em> pour que son intégrale soit facile à calculer.
+      </p>
+
+      <h3>Exemple :</h3>
+      <p>Calculons \( I = \int \arctan(x)\,dx \).</p>
+      <p>Posons :
+        \(u = \arctan(x)\) ⇒ \(du = \frac{1}{1+x^2}\,dx\),  
+        \(dv = dx\) ⇒ \(v = x\)
+      </p>
+      <div class="math">
+        $$I = x\arctan(x) - \int \frac{x}{1+x^2}\,dx
+        = x\arctan(x) - \frac{1}{2}\ln(1+x^2) + C$$
+      </div>
+    </section>
+
+    <!-- SECTION 2 : Changement de variable -->
+    <section id="chgmt">
+      <h2>2. Changement de variable</h2>
+      <p>
+        Cette méthode est utilisée lorsqu’une substitution simplifie l’expression sous le signe intégral.
+      </p>
+      <div class="math">
+        $$\int f(g(x))\,g'(x)\,dx = \int f(u)\,du \quad \text{avec } u=g(x)$$
+      </div>
+
+      <h3>Exemple :</h3>
+      <p>
+        Calculons \( I = \int \frac{dx}{x(1+\ln^2x)} \).
+      </p>
+      <p>
+        Posons \( u = \ln(x) \) ⇒ \( du = \frac{dx}{x} \).
+      </p>
+      <div class="math">
+        $$I = \int \frac{du}{1+u^2} = \arctan(u) + C = \arctan(\ln(x)) + C$$
+      </div>
+    </section>
+
+    <!-- SECTION 3 : Fractions rationnelles -->
+    <section id="frac">
+      <h2>3. Intégrales de fonctions rationnelles</h2>
+      <p>
+        Une fonction rationnelle est un quotient de deux polynômes :
+        \( R(x) = \frac{P(x)}{Q(x)} \).
+      </p>
+
+      <h3>Composantes irréductibles :</h3>
+      <ul>
+        <li>
+          Une composante <strong>irréductible de degré 1</strong> : facteur linéaire du type \((x - a)\).
+        </li>
+        <li>
+          Une composante <strong>irréductible de degré 2</strong> : polynôme quadratique sans racine réelle,
+          du type \((x^2 + px + q)\) avec \(\Delta < 0\).
+        </li>
+      </ul>
+
+      <p>
+        Toute fraction rationnelle peut être décomposée en somme d’éléments simples selon la nature de ces facteurs.
+      </p>
+
+      <h3>Cas où le degré du numérateur ≥ degré du dénominateur :</h3>
+      <p>
+        On effectue d’abord une <strong>division euclidienne</strong> :
+      </p>
+      <div class="math">
+        $$P(x) = Q(x)\,D(x) + R(x), \quad \deg(R) < \deg(Q)$$
+      </div>
+
+      <h3>Exemple :</h3>
+      <p>
+        Soit 
+        \[
+        \frac{x^3 + 2x^2 + 3x + 4}{x^2 + 1}.
+        \]
+        On effectue la division euclidienne :
+      </p>
+
+      <pre>
+Diviseur :   x² + 1
+Dividende :  x³ + 2x² + 3x + 4
+
+1re étape : (x³ + 2x² + 3x + 4) ÷ (x² + 1)
+→ Quotient partiel : x → on soustrait (x³ + x)
+
+Reste 1 : (2x² + 2x + 4)
+→ Quotient partiel suivant : +2 → on soustrait (2x² + 2)
+
+Reste final : 3x + 2
+      </pre>
+
+      <p>
+        Donc :
+        \[
+        \frac{x^3 + 2x^2 + 3x + 4}{x^2 + 1} = (x + 2) + \frac{3x + 2}{x^2 + 1}
+        \]
+      </p>
+
+      <h3>Exemple général :</h3>
+      <div class="math">
+        $$\frac{x^8 + 2x^2 + 3x + 4}{(x^2 + 1)^2(x+1)^2(x-2)}$$
+      </div>
+      <div class="math">
+        $$\frac{A}{x-2} + \frac{B}{x+1} + \frac{C}{(x+1)^2} + 
+          \frac{Dx + E}{x^2+1} + \frac{Fx + G}{
+\n<script src="/firebase-config.js"></script>\n<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n
