@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Alethia</title>
+  <link rel="stylesheet" href="style.css">
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { 
+      getAuth, onAuthStateChanged, signOut 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { 
+      getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const adminEmail = "nouredine.m22@gmail.com"; // seul ton compte peut accéder
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      if (user.email !== adminEmail) {
+        alert("⚠️ Accès refusé : cette page est réservée à l’administrateur.");
+        window.location.href = "index.html";
+        return;
+      }
+      document.getElementById("user-email").textContent = user.email;
+      loadQuotes();
+      loadRequests();
+    });
+
+    window.logout = () => {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      });
+    };
+
+    // Charger les citations
+    async function loadQuotes() {
+      const quotesCol = collection(db, "quotes");
+      const snapshot = await getDocs(quotesCol);
+      const container = document.getElementById("quotes-container");
+      container.innerHTML = "";
+      snapshot.forEach(docSnap => {
+        const q = docSnap.data();
+        const article = document.createElement("div");
+        article.innerHTML = `
+          <p><strong>${q.author}</strong> (${q.date || "date non précisée"})</p>
+          <p>${q.text}</p>
+          ${q.mediaUrl ? `<img src="${q.mediaUrl}" style="max-width:200px;">` : ""}
+          <button onclick="deleteQuote('${docSnap.id}')">Supprimer</button>
+        `;
+        container.appendChild(article);
+      });
+    }
+
+    async function deleteQuote(id) {
+      if (confirm("Supprimer cette citation ?")) {
+        await deleteDoc(doc(db, "quotes", id));
+        loadQuotes();
+      }
+    }
+
+    // Ajouter une citation
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("add-quote-form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const text = document.getElementById("quote-text").value;
+        const author = document.getElementById("quote-author").value;
+        const date = document.getElementById("quote-date").value;
+        const mediaFile = document.getElementById("quote-media").files[0];
+        let mediaUrl = "";
+
+        if (mediaFile) {
+          const storageRef = ref(storage, `quotes/${mediaFile.name}`);
+          await uploadBytes(storageRef, mediaFile);
+          mediaUrl = await getDownloadURL(storageRef);
+        }
+
+        await addDoc(collection(db, "quotes"), { text, author, date, mediaUrl });
+        form.reset();
+        loadQuotes();
+      });
+    });
+
+    // Charger les demandes d'accès
+    async function loadRequests() {
+      const reqCol = collection(db, "requests");
+      const snapshot = await getDocs(reqCol);
+      const container = document.getElementById("requests-container");
+      container.innerHTML = "";
+      snapshot.forEach(docSnap => {
+        const r = docSnap.data();
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <p>${r.nom} ${r.prenom} (${r.email}) – ${r.motif}</p>
+          <button onclick="authorizeUser('${docSnap.id}', '${r.uid}')">Autoriser</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function authorizeUser(docId, uid) {
+      const userRef = doc(db, "users", uid);
+      await updateDoc(userRef, { authorized: true });
+      await deleteDoc(doc(db, "requests", docId));
+      loadRequests();
+      alert("Utilisateur autorisé !");
+    }
+
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Admin – Gestion des citations</h1>
+    <span style="float:right;">
+      Connecté en tant que <strong id="user-email"></strong> |
+      <a href="#" onclick="logout()">Déconnexion</a>
+    </span>
+  </header>
+
+  <main>
+    <section>
+      <h2>Ajouter une citation / média</h2>
+      <form id="add-quote-form">
+        <input type="text" id="quote-text" placeholder="Texte de la citation" required><br>
+        <input type="text" id="quote-author" placeholder="Auteur" required><br>
+        <input type="date" id="quote-date"><br>
+        <input type="file" id="quote-media" accept="image/*,video/*"><br>
+        <button type="submit">Ajouter</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Liste des citations</h2>
+      <div id="quotes-container"></div>
+    </section>
+
+    <section>
+      <h2>Demandes d'accès</h2>
+      <div id="requests-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n</body>
+</html>
