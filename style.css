@@ -88,3 +88,9 @@ button {
 button:hover {
   background: #6a4e3a;
 }
+
+
+/* Added by assistant: header and auth message styles */
+.site-header { display:flex; align-items:center; gap:12px; padding:10px 14px; background:#f8f9fa; border-bottom:1px solid #e9ecef; position:sticky; top:0; z-index:1000; }
+.nav-icons button { background:transparent; border:0; font-size:1.2rem; cursor:pointer; }
+.auth-message { max-width:900px; margin:10px auto; }
