@@ -3,58 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page principale</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
-        button { padding: 10px 20px; cursor: pointer; margin-top: 20px; }
-    </style>
+    <title>Accueil</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>Bienvenue dans le cours de Math & Chimie</h1>
+        <nav>
+            <ul>
+                <li><a href="math-chemistry-l2/integrals/index.html">Intégrales</a></li>
+                <li><a href="#">Cours</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <h1>Bienvenue sur votre page principale</h1>
-    <p id="welcomeMessage"></p>
-    <button id="logoutBtn">Se déconnecter</button>
+    <main>
+        <section>
+            <h2>À propos du cours</h2>
+            <p>Ce site propose des rappels, TD et cours sur les mathématiques et la chimie pour L2.</p>
+        </section>
+    </main>
 
-    <script>
-        // Configuration Firebase (identique à login.html)
-        const firebaseConfig = {
-            apiKey: "VOTRE_API_KEY",
-            authDomain: "VOTRE_AUTH_DOMAIN",
-            projectId: "VOTRE_PROJECT_ID",
-            storageBucket: "VOTRE_STORAGE_BUCKET",
-            messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
-            appId: "VOTRE_APP_ID"
-        };
-
-        // Initialisation Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-        const welcomeMessage = document.getElementById('welcomeMessage');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        // Vérifier si l'utilisateur est connecté
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                welcomeMessage.textContent = `Bonjour, ${user.email} !`;
-            } else {
-                // Si non connecté, rediriger vers login
-                window.location.href = "login.html";
-            }
-        });
-
-        // Déconnexion
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut().then(() => {
-                window.location.href = "login.html";
-            }).catch(error => {
-                alert("Erreur lors de la déconnexion : " + error.message);
-            });
-        });
-    </script>
-
+    <footer>
+        <p>&copy; 2025 - Cours Math & Chimie L2</p>
+    </footer>
 </body>
 </html>
