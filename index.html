@@ -8,11 +8,47 @@
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    /* Style pour les icônes Home et Back */
+    .nav-icons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .nav-icons img {
+      width: 30px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .nav-icons img:hover {
+      transform: scale(1.2);
+    }
+    /* Menu utilisateur */
+    #user-section a {
+      margin-left: 10px;
+      text-decoration: none;
+      color: #007bff;
+    }
+    #user-section a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 
 <body>
   <header>
     <h1>Alethia</h1>
+
+    <!-- 🔹 Icônes Home et Back -->
+    <div class="nav-icons">
+      <a href="index.html" title="Home">
+        <img src="icons/home.svg" alt="Home">
+      </a>
+      <a href="javascript:history.back()" title="Back">
+        <img src="icons/back.svg" alt="Back">
+      </a>
+    </div>
+
     <nav>
       <a href="index.html" class="active">Home</a>
       <a href="courses/index.html">Courses</a>
@@ -21,7 +57,7 @@
       <span id="user-section" style="float:right;">
         <a href="login.html" id="login-link">Login</a>
         <span id="user-info" style="display:none;">
-          Connecté : <strong id="user-email"></strong> |
+          Connected: <strong id="user-email"></strong> |
           <a href="#" id="logout-link">Logout</a>
         </span>
       </span>
