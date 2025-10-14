@@ -5,16 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cours 02 — Indisponible | Alethia</title>
   <link rel="stylesheet" href="../../../../style.css">
+  <style>
+    .nav-icons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .nav-icons img {
+      width: 30px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .nav-icons img:hover {
+      transform: scale(1.2);
+    }
+    #access-message {
+      padding: 20px;
+      background-color: #ffefef;
+      border: 1px solid #ff9999;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-weight: bold;
+      color: #cc0000;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Cours 02 — Indisponible</h1>
+
+    <!-- 🔹 Icônes Home et Back -->
+    <div class="nav-icons">
+      <a href="../../../../index.html" title="Home">
+        <img src="../../../../icons/home.svg" alt="Home">
+      </a>
+      <a href="javascript:history.back()" title="Back">
+        <img src="../../../../icons/back.svg" alt="Back">
+      </a>
+    </div>
+
     <nav>
       <a href="../../../index.html">Cours</a>
       <span id="user-section" style="float:right;">
-        <a href="../../../login.html" id="login-link">Login</a>
+        <a href="../../../../login.html" id="login-link">Login</a>
         <span id="user-info" style="display:none;">
-          Connecté : <strong id="user-email"></strong> |
+          Connected: <strong id="user-email"></strong> |
           <a href="#" id="logout-link">Logout</a>
         </span>
       </span>
@@ -22,8 +57,14 @@
   </header>
 
   <main>
-    <p>Le contenu de ce cours n’est pas encore disponible.  
-    Il sera mis en ligne prochainement.</p>
+    <!-- Message d'accès ou contenu -->
+    <div id="content">
+      <p>Le contenu de ce cours n’est pas encore disponible.  
+      Il sera mis en ligne prochainement.</p>
+    </div>
+    <div id="access-message" style="display:none;">
+      Pour voir la section cours, vous devez être connecté.
+    </div>
   </main>
 
   <footer>
@@ -38,15 +79,23 @@
     const userInfo = document.getElementById("user-info");
     const userEmail = document.getElementById("user-email");
     const logoutLink = document.getElementById("logout-link");
+    const content = document.getElementById("content");
+    const accessMessage = document.getElementById("access-message");
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Utilisateur connecté : afficher le contenu
         loginLink.style.display = "none";
         userInfo.style.display = "inline";
         userEmail.textContent = user.email;
+        content.style.display = "block";
+        accessMessage.style.display = "none";
       } else {
+        // Non connecté : afficher le message
         loginLink.style.display = "inline";
         userInfo.style.display = "none";
+        content.style.display = "none";
+        accessMessage.style.display = "block";
       }
     });
 
