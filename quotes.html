@@ -4,35 +4,117 @@
   <meta charset="UTF-8">
   <title>Citations – Alethia</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 💬 Style du chat flottant */
+    #chat-box {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      background: #2b211b;
+      border: 1px solid #4b3a2d;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+    }
+    #chat-header {
+      background: #4b3a2d;
+      color: #e5d6c6;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    #chat-messages p {
+      margin: 5px 0;
+      padding: 5px 8px;
+      background: #3a2c24;
+      border-radius: 5px;
+      font-size: 0.9em;
+    }
+    #chat-form {
+      display: flex;
+      border-top: 1px solid #4b3a2d;
+    }
+    #chat-form input {
+      flex: 1;
+      border: none;
+      padding: 8px;
+      background: #2b211b;
+      color: #e5d6c6;
+    }
+    #chat-form button {
+      background: #4b3a2d;
+      border: none;
+      color: #e5d6c6;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    #chat-form button:hover {
+      background: #6a4e3a;
+    }
+  </style>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { firebaseConfig } from "./firebase-config.js";
 
+    // === Initialisation Firebase ===
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    const db = getFirestore(app);
 
-    const loginSection = document.getElementById("login-section");
-    const quotesSection = document.getElementById("quotes-section");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
 
-    document.getElementById("login-btn").addEventListener("click", async () => {
-      await signInWithPopup(auth, provider);
-    });
-
+    // === Authentification requise ===
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loginSection.style.display = "none";
-        quotesSection.style.display = "block";
-        document.getElementById("user-email").textContent = user.email;
-      } else {
-        loginSection.style.display = "block";
-        quotesSection.style.display = "none";
+      if (!user) {
+        alert("Veuillez vous connecter pour accéder au chat des citations.");
+        window.location.href = "login.html";
+        return;
       }
-    });
 
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      await signOut(auth);
+      // Écoute en temps réel des messages
+      const messagesRef = collection(db, "messages");
+      const q = query(messagesRef, orderBy("timestamp", "asc"));
+      onSnapshot(q, (snapshot) => {
+        chatMessages.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const msg = doc.data();
+          const p = document.createElement("p");
+          p.textContent = `${msg.email}: ${msg.text}`;
+          chatMessages.appendChild(p);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      });
+
+      // Envoi d’un message
+      chatForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (chatInput.value.trim() === "") return;
+
+        await addDoc(messagesRef, {
+          uid: user.uid,
+          email: user.email,
+          text: chatInput.value.trim(),
+          timestamp: serverTimestamp()
+        });
+
+        chatInput.value = "";
+      });
     });
   </script>
 </head>
@@ -47,60 +129,24 @@
   </header>
 
   <main>
-    <!-- Section connexion -->
-    <section id="login-section" style="text-align:center;">
-      <p>Pour accéder aux citations et au chat, veuillez vous connecter :</p>
-      <button id="login-btn">Se connecter avec Google</button>
-    </section>
-
-    <!-- Section citations -->
-    <section id="quotes-section" style="display:none;">
-      <p>Connecté en tant que <strong id="user-email"></strong> <button id="logout-btn">Se déconnecter</button></p>
-
-      <article>
-        <blockquote>
-          « There is a crack in everything, that's how the light gets in. »  
-          — Leonard Cohen
-        </blockquote>
-        <div class="comment-box">
-          <textarea placeholder="Laisser un commentaire..."></textarea>
-          <button>Envoyer</button>
-        </div>
-      </article>
-
-      <article>
-        <blockquote>
-          « Sometimes, the smallest step in the right direction ends up being the biggest step of your life. »
-        </blockquote>
-        <div class="comment-box">
-          <textarea placeholder="Laisser un commentaire..."></textarea>
-          <button>Envoyer</button>
-        </div>
-      </article>
+    <section>
+      <h2>Réflexions et pensées partagées</h2>
+      <p>Bienvenue dans l’espace des citations. Connectez-vous pour participer au chat et partager vos pensées.</p>
     </section>
   </main>
 
-  <!-- Icône chat -->
-  <div id="chat-icon" onclick="toggleChat()">💬</div>
-
-  <!-- Fenêtre de chat -->
-  <div id="chat-window">
-    <div id="chat-header">Chat Alethia <button onclick="toggleChat()">×</button></div>
+  <!-- 💬 Chat flottant -->
+  <div id="chat-box">
+    <div id="chat-header">Chat – Alethia</div>
     <div id="chat-messages"></div>
-    <input type="text" id="chat-input" placeholder="Écrivez un message...">
+    <form id="chat-form">
+      <input type="text" id="chat-input" placeholder="Écrire un message..." autocomplete="off" />
+      <button type="submit">Envoyer</button>
+    </form>
   </div>
 
   <footer>
-    <p>© 2025 Alethia</p>
+    <p>© 2019 Alethia</p>
   </footer>
-
-  <script>
-    const chatIcon = document.getElementById("chat-icon");
-    const chatWindow = document.getElementById("chat-window");
-
-    function toggleChat() {
-      chatWindow.style.display = (chatWindow.style.display === "block") ? "none" : "block";
-    }
-  </script>
 </body>
 </html>
