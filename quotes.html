@@ -2,167 +2,200 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Citations – Alethia</title>
+  <title>Quotes – Alethia</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { auth, db, storage } from "./firebase-config.js";
+    import { 
+      onAuthStateChanged, signOut 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { 
+      collection, getDocs, addDoc, query, orderBy, onSnapshot, doc, getDoc 
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    // Initialisation Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+    // ======= Gestion Menu Login / User =======
+    const loginLink = document.getElementById("login-link");
+    const userInfo = document.getElementById("user-info");
+    const userEmail = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const quotesContainer = document.getElementById("quotes-container");
-      const chatBtn = document.getElementById("chat-btn");
-      const chatWindow = document.getElementById("chat-window");
-      const chatForm = document.getElementById("chat-form");
-      const chatInput = document.getElementById("chat-input");
-      const chatMessages = document.getElementById("chat-messages");
-
-      let currentUserEmail = "";
-
-      // Vérifier si l’utilisateur est connecté
-      onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-          window.location.href = "login.html";
-          return;
-        }
-
-        currentUserEmail = user.email;
-        document.getElementById("user-email").textContent = currentUserEmail;
-
-        // Charger les publications (quotes)
-        await loadQuotes();
-      });
-
-      async function loadQuotes() {
-        const pubCol = collection(db, "publications");
-        const q = query(pubCol, orderBy("date", "desc"));
-        const snapshot = await getDocs(q);
-        quotesContainer.innerHTML = "";
-
-        snapshot.forEach(docSnap => {
-          const pub = docSnap.data();
-          const article = document.createElement("article");
-          article.style.marginBottom = "40px";
-
-          let mediaHTML = "";
-          if(pub.mediaType === "image") {
-            mediaHTML = `<img src="${pub.mediaPath}" style="max-width:100%; margin:10px 0;">`;
-          } else if(pub.mediaType === "video") {
-            mediaHTML = `<video controls style="max-width:100%; margin:10px 0;">
-                           <source src="${pub.mediaPath}" type="video/mp4">
-                         </video>`;
-          }
-
-          article.innerHTML = `
-            <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
-              ${pub.text || ""}
-              ${mediaHTML}
-              <br>— ${pub.author || "Admin"} – ${pub.date || "Date non précisée"}
-            </blockquote>
-          `;
-          quotesContainer.appendChild(article);
-        });
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        loginLink.style.display = "inline";     
+        userInfo.style.display = "none";        
+        quotesSection.style.display = "none";
+        requestSection.style.display = "none";
+        chatButton.style.display = "none";
+        return;
       }
 
-      // Afficher/Masquer le chat
-      chatBtn.addEventListener("click", () => {
-        chatWindow.style.display = chatWindow.style.display === "block" ? "none" : "block";
-      });
+      loginLink.style.display = "none";
+      userInfo.style.display = "inline";
+      userEmail.textContent = user.email;
 
-      // Envoyer un message
-      chatForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const messageText = chatInput.value.trim();
-        if (!messageText) return;
+      // Vérifier autorisation pour accéder aux quotes
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
 
-        await addDoc(collection(db, "chats"), {
-          sender: currentUserEmail,
-          receiver: "nouredine.m22@gmail.com",
-          message: messageText,
-          timestamp: new Date().toISOString()
-        });
-
-        chatInput.value = "";
-        loadChatMessages();
-      });
-
-      // Charger les messages du chat
-      async function loadChatMessages() {
-        chatMessages.innerHTML = "";
-        const chatCol = collection(db, "chats");
-        const q = query(chatCol, orderBy("timestamp", "asc"));
-        const snapshot = await getDocs(q);
-
-        snapshot.forEach(docSnap => {
-          const msg = docSnap.data();
-          if(msg.sender === currentUserEmail || msg.receiver === currentUserEmail) {
-            const p = document.createElement("p");
-            p.innerHTML = `<strong>${msg.sender}:</strong> ${msg.message}`;
-            chatMessages.appendChild(p);
-          }
-        });
-
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+      if (userSnap.exists() && userSnap.data().authorized === true) {
+        quotesSection.style.display = "block";
+        requestSection.style.display = "none";
+        loadQuotes();
+        chatButton.style.display = "inline";
+      } else {
+        quotesSection.style.display = "none";
+        requestSection.style.display = "block";
+        chatButton.style.display = "none";
       }
-
-      // Rafraîchir le chat toutes les 3 secondes
-      setInterval(loadChatMessages, 3000);
     });
 
-    // Déconnexion
-    window.logout = () => {
-      signOut(auth).then(() => window.location.href="login.html");
-    };
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => {
+        window.location.href = "quotes.html";
+      });
+    });
+
+    // ======= Sections =======
+    const quotesSection = document.getElementById("quotes-section");
+    const requestSection = document.getElementById("request-section");
+    const quotesContainer = document.getElementById("quotes-container");
+
+    // ======= Charger les citations =======
+    async function loadQuotes() {
+      const pubCol = collection(db, "publications");
+      const q = query(pubCol, orderBy("date", "desc"));
+      const snapshot = await getDocs(q);
+      quotesContainer.innerHTML = "";
+
+      for (let docSnap of snapshot.docs) {
+        const pub = docSnap.data();
+        const article = document.createElement("article");
+        article.style.marginBottom = "40px";
+
+        let mediaHTML = "";
+        if(pub.mediaType === "image") {
+          const url = await getDownloadURL(ref(storage, pub.mediaPath));
+          mediaHTML = `<img src="${url}" style="max-width:100%; margin:10px 0;">`;
+        } else if(pub.mediaType === "video") {
+          const url = await getDownloadURL(ref(storage, pub.mediaPath));
+          mediaHTML = `<video controls style="max-width:100%; margin:10px 0;">
+                         <source src="${url}" type="video/mp4">
+                       </video>`;
+        }
+
+        article.innerHTML = `
+          <blockquote style="font-style: italic; border-left: 3px solid #6a4e3a; padding-left: 15px;">
+            ${pub.text || ""}
+            ${mediaHTML}
+            <br>— ${pub.author || "Admin"} – ${pub.date || "Date non précisée"}
+          </blockquote>
+          <div class="comments" id="comments-${docSnap.id}">
+            <h4>Commentaires :</h4>
+          </div>
+        `;
+        quotesContainer.appendChild(article);
+
+        // Charger commentaires
+        loadComments(docSnap.id);
+      }
+    }
+
+    async function loadComments(pubId) {
+      const commentsCol = collection(db, `publications/${pubId}/comments`);
+      const snapshot = await getDocs(commentsCol);
+      const container = document.getElementById(`comments-${pubId}`);
+      snapshot.forEach((doc) => {
+        const c = doc.data();
+        const p = document.createElement("p");
+        p.textContent = `${c.author}: ${c.text} (${c.date})`;
+        container.appendChild(p);
+      });
+    }
+
+    // ======= Formulaire demande d'accès =======
+    const form = document.getElementById("access-request-form");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const motif = document.getElementById("motif").value;
+      const nom = document.getElementById("nom").value;
+      const prenom = document.getElementById("prenom").value;
+      const user = auth.currentUser;
+
+      await addDoc(collection(db, "requests"), {
+        uid: user.uid,
+        email: user.email,
+        nom,
+        prenom,
+        motif,
+        date: new Date().toISOString()
+      });
+
+      alert("Votre demande a été envoyée. Vous recevrez une autorisation dès validation.");
+      form.reset();
+    });
+
+    // ======= Chat bouton =======
+    const chatButton = document.createElement("button");
+    chatButton.textContent = "💬 Chat";
+    chatButton.style.position = "fixed";
+    chatButton.style.bottom = "20px";
+    chatButton.style.right = "20px";
+    chatButton.style.padding = "10px 15px";
+    chatButton.style.borderRadius = "50%";
+    chatButton.style.fontSize = "1.5rem";
+    chatButton.style.background = "#6a4e3a";
+    chatButton.style.color = "#fff";
+    chatButton.style.border = "none";
+    chatButton.style.cursor = "pointer";
+    chatButton.style.display = "none";
+    document.body.appendChild(chatButton);
+
+    import("./scripts/chat.js").then(module => module.initChat(chatButton));
   </script>
 </head>
-
 <body>
   <header>
     <h1>Citations & Réflexions</h1>
     <nav>
-      <a href="index.html">Accueil</a>
+      <a href="index.html">Home</a>
       <a href="quotes.html" class="active">Quotes</a>
       <a href="contact.html">Contact</a>
       <span id="user-section" style="float:right;">
-        Connecté en tant que <strong id="user-email"></strong> |
-        <a href="#" onclick="logout()">Déconnexion</a>
+        <a href="login.html" id="login-link">Login</a>
+        <span id="user-info" style="display:none;">
+          Connecté : <strong id="user-email"></strong> |
+          <a href="#" id="logout-link">Logout</a>
+        </span>
       </span>
     </nav>
   </header>
 
   <main>
-    <section id="quotes-section">
+    <!-- Publications -->
+    <section id="quotes-section" style="display:none;">
       <div id="quotes-container">
         <p>Chargement des citations...</p>
       </div>
     </section>
+
+    <!-- Demande d'autorisation -->
+    <section id="request-section" style="display:none; text-align:center;">
+      <h3>Demande d'autorisation</h3>
+      <p>Vous devez obtenir une autorisation pour accéder à cette section.</p>
+      <form id="access-request-form">
+        <input type="text" id="nom" placeholder="Nom" required><br>
+        <input type="text" id="prenom" placeholder="Prénom" required><br>
+        <textarea id="motif" placeholder="Expliquez votre motivation..." required></textarea><br>
+        <button type="submit">Envoyer la demande</button>
+      </form>
+    </section>
   </main>
 
-  <!-- Bouton et fenêtre de chat -->
-  <button id="chat-btn" style="position:fixed; bottom:20px; right:20px; padding:10px 15px; background:#6a4e3a; color:#fff; border:none; border-radius:5px; cursor:pointer;">
-    Chat
-  </button>
-
-  <div id="chat-window" style="display:none; position:fixed; bottom:70px; right:20px; width:300px; max-height:400px; background:#2b211b; border:2px solid #4b3a2d; border-radius:5px; padding:10px; overflow:auto; color:#e5d6c6;">
-    <div id="chat-messages" style="max-height:300px; overflow-y:auto; margin-bottom:10px;"></div>
-    <form id="chat-form">
-      <input id="chat-input" type="text" placeholder="Écrire un message..." style="width:100%; padding:5px; margin-bottom:5px; background:#1a1410; color:#e5d6c6; border:1px solid #4b3a2d; border-radius:3px;">
-      <button type="submit" style="width:100%; background:#4b3a2d; color:#fff; border:none; padding:5px; border-radius:3px; cursor:pointer;">Envoyer</button>
-    </form>
-  </div>
-
   <footer>
-    <p>© 2025 Alethia</p>
+    <p>© 2019 Alethia</p>
   </footer>
 </body>
 </html>
