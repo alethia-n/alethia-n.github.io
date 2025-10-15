@@ -4,175 +4,39 @@
   <meta charset="UTF-8">
   <title>Connexion – Alethia</title>
   <link rel="stylesheet" href="style.css">
-
-  <style>
-    /* Centrage du formulaire */
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 80vh;
-    }
-
-    form {
-      background: #2b211b;
-      padding: 30px;
-      border-radius: 8px;
-      border: 1px solid #4b3a2d;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-    }
-
-    h2 {
-      color: #d6bfa9;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 10px;
-      background: #1a1410;
-      color: #e5d6c6;
-      border: 1px solid #4b3a2d;
-      border-radius: 4px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #4b3a2d;
-      color: #e5d6c6;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #6a4e3a;
-    }
-
-    p {
-      color: #b79c83;
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-
-    a {
-      color: #f0c997;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { auth } from "./firebase-config.js";
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    window.register = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Inscription réussie !");
+        window.location.href = "quotes.html";
+      } catch(e) { alert(e.message); }
+    }
 
-    // 🔹 Redirige si déjà connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) window.location.href = "quotes.html";
-    });
-
-    // 🔹 Connexion
-    document.addEventListener("DOMContentLoaded", () => {
-      const loginForm = document.getElementById("login-form");
-      const registerForm = document.getElementById("register-form");
-      const toggleLink = document.getElementById("toggle-form");
-
-      toggleLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        loginForm.classList.toggle("hidden");
-        registerForm.classList.toggle("hidden");
-      });
-
-      // Connexion existante
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.location.href = "quotes.html";
-        } catch (error) {
-          alert("Erreur de connexion : " + error.message);
-        }
-      });
-
-      // Création de compte
-      registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("register-email").value;
-        const password = document.getElementById("register-password").value;
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          alert("Compte créé avec succès !");
-          window.location.href = "quotes.html";
-        } catch (error) {
-          alert("Erreur d’inscription : " + error.message);
-        }
-      });
-    });
+    window.login = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "quotes.html";
+      } catch(e) { alert(e.message); }
+    }
   </script>
 </head>
-
 <body>
-  <header>
-    <h1>Alethia</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="quotes.html">Citations</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
-
+  <header><h1>Connexion / Inscription</h1></header>
   <main>
-    <!-- 🔹 Formulaire de connexion -->
-    <form id="login-form">
-      <h2>Connexion</h2>
-      <input type="email" id="login-email" placeholder="Email" required />
-      <input type="password" id="login-password" placeholder="Mot de passe" required />
-      <button type="submit">Se connecter</button>
-      <p>Pas encore de compte ? <a href="#" id="toggle-form">Créer un compte</a></p>
-    </form>
-
-    <!-- 🔹 Formulaire d’inscription -->
-    <form id="register-form" class="hidden" style="display:none;">
-      <h2>Créer un compte</h2>
-      <input type="email" id="register-email" placeholder="Email" required />
-      <input type="password" id="register-password" placeholder="Mot de passe" required />
-      <button type="submit">S’inscrire</button>
-      <p>Déjà un compte ? <a href="#" id="toggle-form">Se connecter</a></p>
-    </form>
+    <section>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Mot de passe" required>
+      <button onclick="login()">Se connecter</button>
+      <button onclick="register()">S’inscrire</button>
+    </section>
   </main>
-
-  <footer>
-    <p>© 2025 Alethia</p>
-  </footer>
-
-  <script>
-    // Petite astuce pour alterner l’affichage
-    const toggleForm = document.getElementById("toggle-form");
-    toggleForm?.addEventListener("click", () => {
-      document.getElementById("login-form").classList.toggle("hidden");
-      document.getElementById("register-form").classList.toggle("hidden");
-    });
-  </script>
-
-  <style>
-    .hidden { display: none; }
-  </style>
 </body>
 </html>
