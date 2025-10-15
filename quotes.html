@@ -2,122 +2,144 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Citations – Alethia</title>
+  <title>Citations — Alethia</title>
   <link rel="stylesheet" href="style.css">
+
   <style>
-    /* 💬 Style du chat flottant */
-    #chat-box {
+    /* === Chat flottant === */
+    #chat-icon {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 300px;
-      background: #2b211b;
-      border: 1px solid #4b3a2d;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #000;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 9999;
-    }
-    #chat-header {
+      bottom: 25px;
+      right: 25px;
       background: #4b3a2d;
       color: #e5d6c6;
-      padding: 10px;
-      text-align: center;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      font-weight: bold;
+      box-shadow: 0 0 10px #000;
+      z-index: 1000;
+    }
+    #chat-box {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 25px;
+      width: 320px;
+      max-height: 400px;
+      background: #2b211b;
+      border: 1px solid #4b3a2d;
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 1001;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
     #chat-messages {
-      flex: 1;
       padding: 10px;
+      height: 300px;
       overflow-y: auto;
-      max-height: 200px;
+      color: #e5d6c6;
     }
-    #chat-messages p {
-      margin: 5px 0;
-      padding: 5px 8px;
-      background: #3a2c24;
-      border-radius: 5px;
-      font-size: 0.9em;
-    }
-    #chat-form {
+    #chat-input {
       display: flex;
       border-top: 1px solid #4b3a2d;
     }
-    #chat-form input {
+    #chat-input input {
       flex: 1;
+      padding: 10px;
       border: none;
-      padding: 8px;
-      background: #2b211b;
+      background: #1a1410;
       color: #e5d6c6;
     }
-    #chat-form button {
+    #chat-input button {
+      padding: 10px;
       background: #4b3a2d;
       border: none;
       color: #e5d6c6;
-      padding: 8px 12px;
       cursor: pointer;
     }
-    #chat-form button:hover {
+    #chat-input button:hover {
       background: #6a4e3a;
+    }
+    .message {
+      margin-bottom: 8px;
+    }
+    .message strong {
+      color: #f0c997;
     }
   </style>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { firebaseConfig } from "./firebase-config.js";
+    import { auth, db } from "./firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // === Initialisation Firebase ===
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    const quotesContainer = document.getElementById("quotes-container");
+    const userEmailElem = document.getElementById("user-email");
+    const logoutLink = document.getElementById("logout-link");
 
-    const chatMessages = document.getElementById("chat-messages");
-    const chatForm = document.getElementById("chat-form");
-    const chatInput = document.getElementById("chat-input");
-
-    // === Authentification requise ===
+    // Vérification de connexion
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        alert("Veuillez vous connecter pour accéder au chat des citations.");
         window.location.href = "login.html";
         return;
       }
+      userEmailElem.textContent = user.email;
+    });
 
-      // Écoute en temps réel des messages
-      const messagesRef = collection(db, "messages");
-      const q = query(messagesRef, orderBy("timestamp", "asc"));
-      onSnapshot(q, (snapshot) => {
-        chatMessages.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const msg = doc.data();
-          const p = document.createElement("p");
-          p.textContent = `${msg.email}: ${msg.text}`;
-          chatMessages.appendChild(p);
+    // Déconnexion
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      signOut(auth).then(() => window.location.href = "login.html");
+    });
+
+    /* === CHAT FIREBASE === */
+    const chatIcon = document.getElementById("chat-icon");
+    const chatBox = document.getElementById("chat-box");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-message");
+    const chatSend = document.getElementById("chat-send");
+
+    chatIcon.addEventListener("click", () => {
+      chatBox.style.display = chatBox.style.display === "none" ? "block" : "none";
+    });
+
+    let userEmail = "";
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userEmail = user.email;
+        const q = query(collection(db, "chat"), orderBy("timestamp", "asc"));
+        onSnapshot(q, (snapshot) => {
+          chatMessages.innerHTML = "";
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const msg = document.createElement("div");
+            msg.classList.add("message");
+            msg.innerHTML = `<strong>${data.sender}:</strong> ${data.text}`;
+            chatMessages.appendChild(msg);
+          });
+          chatMessages.scrollTop = chatMessages.scrollHeight;
         });
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    });
+
+    chatSend.addEventListener("click", async () => {
+      const text = chatInput.value.trim();
+      if (text === "" || !userEmail) return;
+      await addDoc(collection(db, "chat"), {
+        sender: userEmail,
+        text,
+        timestamp: serverTimestamp()
       });
-
-      // Envoi d’un message
-      chatForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        if (chatInput.value.trim() === "") return;
-
-        await addDoc(messagesRef, {
-          uid: user.uid,
-          email: user.email,
-          text: chatInput.value.trim(),
-          timestamp: serverTimestamp()
-        });
-
-        chatInput.value = "";
-      });
+      chatInput.value = "";
     });
   </script>
 </head>
+
 <body>
   <header>
     <h1>Citations & Réflexions</h1>
@@ -125,28 +147,49 @@
       <a href="index.html">Home</a>
       <a href="quotes.html" class="active">Quotes</a>
       <a href="contact.html">Contact</a>
+      <span id="user-section" style="float:right;">
+        Connecté : <strong id="user-email"></strong> |
+        <a href="#" id="logout-link">Déconnexion</a>
+      </span>
     </nav>
   </header>
 
   <main>
-    <section>
-      <h2>Réflexions et pensées partagées</h2>
-      <p>Bienvenue dans l’espace des citations. Connectez-vous pour participer au chat et partager vos pensées.</p>
+    <section id="quotes-container">
+      <article>
+        <blockquote>
+          “There is a crack in everything, that’s how the light gets in.”  
+          <br>— Leonard Cohen
+        </blockquote>
+        <div class="comment-section">
+          <p><em>Connectez-vous pour commenter cette citation.</em></p>
+        </div>
+      </article>
+
+      <article>
+        <blockquote>
+          “We are the universe experiencing itself.”  
+          <br>— Alan Watts
+        </blockquote>
+        <div class="comment-section">
+          <p><em>Connectez-vous pour commenter cette citation.</em></p>
+        </div>
+      </article>
     </section>
   </main>
-
-  <!-- 💬 Chat flottant -->
-  <div id="chat-box">
-    <div id="chat-header">Chat – Alethia</div>
-    <div id="chat-messages"></div>
-    <form id="chat-form">
-      <input type="text" id="chat-input" placeholder="Écrire un message..." autocomplete="off" />
-      <button type="submit">Envoyer</button>
-    </form>
-  </div>
 
   <footer>
     <p>© 2019 Alethia</p>
   </footer>
+
+  <!-- 🔹 Chat flottant -->
+  <div id="chat-icon">💬</div>
+  <div id="chat-box">
+    <div id="chat-messages"></div>
+    <div id="chat-input">
+      <input type="text" id="chat-message" placeholder="Écrire un message...">
+      <button id="chat-send">➤</button>
+    </div>
+  </div>
 </body>
 </html>
