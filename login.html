@@ -1,42 +1,72 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Connexion – Alethia</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module">
-    import { auth } from "./firebase-config.js";
-    import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { auth, db } from "./firebase-config.js";
+import { collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    window.register = async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Inscription réussie !");
-        window.location.href = "quotes.html";
-      } catch(e) { alert(e.message); }
-    }
+const chatButton = document.createElement("button");
+chatButton.textContent = "💬 Chat";
+chatButton.style.position = "fixed";
+chatButton.style.bottom = "20px";
+chatButton.style.right = "20px";
+chatButton.style.padding = "10px 15px";
+chatButton.style.borderRadius = "50%";
+chatButton.style.fontSize = "1.5rem";
+chatButton.style.background = "#6a4e3a";
+chatButton.style.color = "#fff";
+chatButton.style.border = "none";
+chatButton.style.cursor = "pointer";
+document.body.appendChild(chatButton);
 
-    window.login = async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = "quotes.html";
-      } catch(e) { alert(e.message); }
+const chatBox = document.createElement("div");
+chatBox.style.position = "fixed";
+chatBox.style.bottom = "70px";
+chatBox.style.right = "20px";
+chatBox.style.width = "300px";
+chatBox.style.height = "400px";
+chatBox.style.background = "#2b211b";
+chatBox.style.color = "#e5d6c6";
+chatBox.style.border = "2px solid #4b3a2d";
+chatBox.style.display = "none";
+chatBox.style.flexDirection = "column";
+chatBox.style.padding = "10px";
+chatBox.style.overflowY = "auto";
+document.body.appendChild(chatBox);
+
+chatButton.addEventListener("click", () => {
+  chatBox.style.display = chatBox.style.display === "none" ? "flex" : "none";
+});
+
+// Vérifier utilisateur
+auth.onAuthStateChanged(user => {
+  if (!user) { chatBox.style.display = "none"; return; }
+
+  const chatCol = collection(db, "chats");
+  const q = query(chatCol, orderBy("timestamp"));
+  onSnapshot(q, snapshot => {
+    chatBox.innerHTML = "";
+    snapshot.forEach(doc => {
+      const msg = doc.data();
+      if (msg.sender === user.email || msg.receiver === user.email || msg.receiver === "nouredine.m22@gmail.com") {
+        const p = document.createElement("p");
+        p.textContent = `${msg.sender}: ${msg.text}`;
+        chatBox.appendChild(p);
+      }
+    });
+  });
+
+  // Formulaire d’envoi
+  const input = document.createElement("input");
+  input.type = "text"; input.placeholder = "Votre message...";
+  input.style.marginTop = "auto";
+  chatBox.appendChild(input);
+
+  input.addEventListener("keypress", async (e) => {
+    if(e.key === "Enter" && input.value.trim() !== "") {
+      await addDoc(chatCol, {
+        sender: user.email,
+        receiver: "nouredine.m22@gmail.com",
+        text: input.value,
+        timestamp: new Date()
+      });
+      input.value = "";
     }
-  </script>
-</head>
-<body>
-  <header><h1>Connexion / Inscription</h1></header>
-  <main>
-    <section>
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Mot de passe" required>
-      <button onclick="login()">Se connecter</button>
-      <button onclick="register()">S’inscrire</button>
-    </section>
-  </main>
-</body>
-</html>
+  });
+});
