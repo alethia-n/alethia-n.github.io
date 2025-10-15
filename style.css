@@ -1,8 +1,8 @@
 /* === Style sombre et profond avec teinte marron === */
 body {
   font-family: "Times New Roman", serif;
-  background-color: #1a1410; /* marron très sombre */
-  color: #e5d6c6; /* beige doux */
+  background-color: #1a1410;
+  color: #e5d6c6;
   margin: 0;
   padding: 0;
   line-height: 1.7;
@@ -32,7 +32,7 @@ nav a {
   font-weight: bold;
 }
 
-nav a:hover, nav a.active {
+nav a:hover {
   color: #f0c997;
 }
 
@@ -54,17 +54,7 @@ footer {
   color: #b79c83;
 }
 
-/* === Style pour les blocs LaTeX / citations === */
-.math, blockquote {
-  text-align: center;
-  margin: 15px 0;
-  font-size: 1.2em;
-  border-left: 3px solid #6a4e3a;
-  padding-left: 15px;
-  font-style: italic;
-}
-
-/* === Style formulaire et login === */
+/* === Style formulaire === */
 form {
   display: flex;
   flex-direction: column;
@@ -90,47 +80,4 @@ button {
 
 button:hover {
   background: #6a4e3a;
-}
-
-/* === Chat flottant === */
-#chat-icon {
-  transition: transform 0.2s;
-}
-
-#chat-icon:hover {
-  transform: scale(1.2);
-}
-
-#chat-box {
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-}
-
-#chat-messages p {
-  margin: 5px 0;
-}
-
-#chat-messages .msg-sender {
-  text-align: right;
-  color: #f0c997;
-}
-
-#chat-messages .msg-receiver {
-  text-align: left;
-  color: #d6bfa9;
-}
-
-/* === Scrollbar personnalisée === */
-#chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-#chat-messages::-webkit-scrollbar-track {
-  background: #2b211b;
-}
-
-#chat-messages::-webkit-scrollbar-thumb {
-  background-color: #6a4e3a;
-  border-radius: 3px;
 }
