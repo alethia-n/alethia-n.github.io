@@ -2,160 +2,84 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion – Alethia</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    /* === Style du formulaire de connexion === */
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 80vh;
-    }
-
-    .auth-container {
-      background: #2b211b;
-      border: 1px solid #4b3a2d;
-      border-radius: 10px;
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    .auth-container h2 {
-      text-align: center;
-      color: #d6bfa9;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 10px;
-      font-family: "Times New Roman", serif;
-      font-size: 1em;
-      border: 1px solid #4b3a2d;
-      border-radius: 4px;
-      background: #1a1410;
-      color: #e5d6c6;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #4b3a2d;
-      border: none;
-      border-radius: 4px;
-      color: #e5d6c6;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #6a4e3a;
-    }
-
-    .switch {
-      text-align: center;
-      margin-top: 15px;
-      color: #b79c83;
-    }
-
-    .switch a {
-      color: #f0c997;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .switch a:hover {
-      text-decoration: underline;
-    }
-
-    .error-message {
-      color: #ff9b9b;
-      text-align: center;
-      font-size: 0.9em;
-      margin-bottom: 10px;
-    }
-  </style>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { firebaseConfig } from "./firebase-config.js";
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const form = document.getElementById("auth-form");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const errorBox = document.getElementById("error-message");
-    const toggleLink = document.getElementById("toggle-mode");
-
-    let isLoginMode = true; // Mode par défaut : connexion
-
-    toggleLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      isLoginMode = !isLoginMode;
-      document.getElementById("form-title").textContent = isLoginMode ? "Connexion" : "Créer un compte";
-      document.getElementById("submit-btn").textContent = isLoginMode ? "Se connecter" : "S’inscrire";
-      toggleLink.textContent = isLoginMode ? "Créer un compte" : "Déjà inscrit ? Se connecter";
-      errorBox.textContent = "";
-    });
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      try {
-        if (isLoginMode) {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
-        }
-        window.location.href = "quotes.html";
-      } catch (error) {
-        console.error("Erreur Firebase:", error);
-        if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found")
-          errorBox.textContent = "Identifiants incorrects.";
-        else if (error.code === "auth/email-already-in-use")
-          errorBox.textContent = "Cette adresse est déjà utilisée.";
-        else if (error.code === "auth/weak-password")
-          errorBox.textContent = "Mot de passe trop faible (min. 6 caractères).";
-        else
-          errorBox.textContent = "Une erreur est survenue. Réessayez.";
-      }
-    });
-  </script>
 </head>
 
 <body>
   <header>
     <h1>Alethia</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="courses/index.html">Courses</a>
+      <a href="quotes.html">Quotes</a>
+    </nav>
   </header>
 
   <main>
-    <div class="auth-container">
-      <h2 id="form-title">Connexion</h2>
-      <p id="error-message" class="error-message"></p>
-      <form id="auth-form">
+    <section>
+      <h2>Connexion / Inscription</h2>
+      <p>
+        Connectez-vous pour accéder à l’espace <strong>Quotes</strong> et au chat privé.
+      </p>
+
+      <form id="login-form">
         <input type="email" id="email" placeholder="Adresse e-mail" required>
         <input type="password" id="password" placeholder="Mot de passe" required>
-        <button id="submit-btn" type="submit">Se connecter</button>
+        <button type="submit">Se connecter</button>
       </form>
-      <div class="switch">
-        <a href="#" id="toggle-mode">Créer un compte</a>
-      </div>
-    </div>
+
+      <button id="signup-btn">Créer un compte</button>
+
+      <p id="message" style="text-align:center; margin-top:15px;"></p>
+    </section>
   </main>
 
   <footer>
-    <p>© 2019 Alethia</p>
+    <p>© 2025 Alethia</p>
   </footer>
+
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import {
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const loginForm = document.getElementById("login-form");
+    const signupBtn = document.getElementById("signup-btn");
+    const message = document.getElementById("message");
+
+    // Connexion
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        message.textContent = "✅ Connexion réussie ! Redirection...";
+        setTimeout(() => (window.location.href = "quotes.html"), 1000);
+      } catch (error) {
+        message.textContent = "❌ Erreur : " + error.message;
+      }
+    });
+
+    // Création de compte
+    signupBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!email || !password) {
+        message.textContent = "⚠️ Entrez un e-mail et un mot de passe.";
+        return;
+      }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        message.textContent = "✅ Compte créé avec succès !";
+      } catch (error) {
+        message.textContent = "❌ Erreur : " + error.message;
+      }
+    });
+  </script>
 </body>
 </html>
