@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat – Alethia</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { firebaseConfig } from "./firebase-config.js";
+
+    // === Initialisation Firebase ===
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const messagesContainer = document.getElementById("messages");
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message-input");
+    const userEmailEl = document.getElementById("user-email");
+
+    let userId = null;
+    let isAdmin = false;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      userId = user.uid;
+      userEmailEl.textContent = user.email;
+      isAdmin = (user.email === "nouredine.m22@gmail.com");
+
+      // Détermine quel chat afficher :
+      // Si c’est l’admin, il doit choisir avec qui chatter
+      if (isAdmin) {
+        document.getElementById("admin-warning").style.display = "block";
+      } else {
+        loadMessages(userId);
+      }
+    });
+
+    // 🔹 Charger les messages pour un utilisateur donné
+    function loadMessages(chatId) {
+      const q = query(collection(db, `chats/${chatId}/messages`), orderBy("timestamp", "asc"));
+      onSnapshot(q, (snapshot) => {
+        messagesContainer.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const msg = doc.data();
+          const div = document.createElement("div");
+          div.className = msg.senderEmail === "nouredine.m22@gmail.com" ? "message admin" : "message user";
+          div.textContent = `${msg.senderEmail}: ${msg.text}`;
+          messagesContainer.appendChild(div);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      });
+    }
+
+    // 🔹 Envoi d’un message
+    messageForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      const chatTarget = isAdmin
+        ? prompt("🗣️ Entrez l'ID de l'utilisateur à qui vous voulez répondre :")
+        : userId;
+
+      if (!chatTarget) return;
+
+      await addDoc(collection(db, `chats/${chatTarget}/messages`), {
+        text,
+        senderEmail: auth.currentUser.email,
+        timestamp: new Date()
+      });
+
+      messageInput.value = "";
+    });
+  </script>
+
+  <style>
+    /* === STYLE DU CHAT === */
+    #chat-container {
+      background: #2b211b;
+      border: 2px solid #4b3a2d;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 700px;
+      margin: 40px auto;
+    }
+
+    #messages {
+      background: #1a1410;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #4b3a2d;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      margin: 6px 0;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .message.user {
+      background: #3c2f25;
+      text-align: right;
+    }
+
+    .message.admin {
+      background: #4b3a2d;
+      text-align: left;
+    }
+
+    #message-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    #message-input {
+      flex: 1;
+    }
+
+    #admin-warning {
+      background: #4b3a2d;
+      color: #f9e4d1;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Chat Privé – Alethia</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="quotes.html">Quotes</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <p style="text-align:right; margin:5px 20px;">
+      Connecté en tant que <strong id="user-email"></strong>
+    </p>
+  </header>
+
+  <main>
+    <div id="chat-container">
+      <div id="admin-warning">
+        🧑‍💼 Vous êtes connecté en tant qu’administrateur.<br>
+        Entrez l’ID utilisateur dans la boîte de dialogue pour répondre à quelqu’un.
+      </div>
+
+      <div id="messages">
+        <p>Chargement du chat...</p>
+      </div>
+
+      <form id="message-form">
+        <input type="text" id="message-input" placeholder="Écrivez votre message..." required>
+        <button type="submit">Envoyer</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2019 Alethia</p>
+  </footer>
+</body>
+</html>
