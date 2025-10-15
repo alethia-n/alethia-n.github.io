@@ -2,191 +2,86 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Citations – Alethia</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* 🔹 Bouton du chat */
-    #chat-icon {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background-color: #4b3a2d;
-      color: #e5d6c6;
-      border: none;
-      border-radius: 50%;
-      width: 55px;
-      height: 55px;
-      font-size: 24px;
-      cursor: pointer;
-      display: none; /* masqué par défaut */
-      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-      transition: transform 0.2s;
-    }
-    #chat-icon:hover {
-      transform: scale(1.1);
-      background-color: #6a4e3a;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alethia – Quotes</title>
+  <link rel="stylesheet" href="../style.css">
 
-    /* 🔹 Fenêtre du chat */
-    #chat-box {
-      position: fixed;
-      bottom: 90px;
-      right: 25px;
-      width: 320px;
-      height: 420px;
-      background: #2b211b;
-      border: 1px solid #4b3a2d;
-      border-radius: 10px;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.5);
-    }
-
-    #chat-messages {
-      flex: 1;
-      padding: 10px;
-      overflow-y: auto;
-    }
-
-    #chat-messages p {
-      background: #4b3a2d;
-      padding: 8px;
-      border-radius: 6px;
-      margin: 5px 0;
-    }
-
-    #chat-input {
-      display: flex;
-      border-top: 1px solid #4b3a2d;
-    }
-
-    #chat-input input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: #2b211b;
-      color: #e5d6c6;
-    }
-
-    #chat-input button {
-      background: #4b3a2d;
-      border: none;
-      color: #e5d6c6;
-      cursor: pointer;
-      padding: 10px 15px;
-    }
-
-    #chat-input button:hover {
-      background: #6a4e3a;
-    }
-  </style>
+  <!-- MathJax (optionnel pour certaines citations scientifiques) -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
   <header>
-    <h1>Citations & Réflexions</h1>
+    <h1>Alethia – Quotes</h1>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="quotes.html" class="active">Quotes</a>
-      <a href="contact.html">Contact</a>
+      <a href="../index.html">Home</a>
+      <a href="../courses/index.html">Courses</a>
+      <a href="#">Quotes</a>
+      <a href="../contact.html">Contact</a>
     </nav>
   </header>
 
   <main>
-    <section id="quotes-section" style="display:none;">
-      <h2>Quotes</h2>
-      <div id="quotes-container">
-        <p>Chargement des citations...</p>
-      </div>
-    </section>
+    <section>
+      <h2>Reflections and Quotes</h2>
+      <p>“There is a crack in everything — that’s how the light gets in.”  
+        <em>— Leonard Cohen</em></p>
 
-    <section id="login-warning" style="text-align:center; display:none;">
-      <p>⚠️ Pour voir la section quotes, vous devez être connecté.</p>
-      <a href="login.html"><button>Se connecter</button></a>
+      <p>“To live without hope is to cease to live.”  
+        <em>— Fyodor Dostoevsky</em></p>
+
+      <p>“The only journey is the one within.”  
+        <em>— Rainer Maria Rilke</em></p>
+
+      <p>“Truth is not something outside to be discovered, it is something inside to be realized.”  
+        <em>— Osho</em></p>
+
+      <p>“What we call chaos is just patterns we haven’t recognized.”  
+        <em>— Chuck Palahniuk</em></p>
     </section>
   </main>
 
-  <!-- 🔹 Bouton et boîte de chat -->
-  <button id="chat-icon">💬</button>
-  <div id="chat-box">
-    <div id="chat-messages"></div>
-    <div id="chat-input">
-      <input type="text" id="chat-text" placeholder="Écrivez un message...">
-      <button id="send-chat">➤</button>
-    </div>
-  </div>
-
   <footer>
-    <p>© 2025 Alethia</p>
+    <p>© 2025 Alethia – All rights reserved.</p>
   </footer>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { firebaseConfig } from "./firebase-config.js";
+  <!-- 🟤 Icône flottante du chat (affichée uniquement si connecté) -->
+  <div id="chat-icon" title="Chat with Alethia" style="
+      position: fixed; bottom: 25px; right: 25px;
+      background: #4b3a2d; color: #e5d6c6;
+      width: 55px; height: 55px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.5em; box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      display: none;
+  ">💬</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  <!-- 🟤 Fenêtre du chat -->
+  <div id="chat-box" style="
+      position: fixed; bottom: 90px; right: 25px;
+      width: 320px; height: 400px;
+      background: #2b211b; border: 1px solid #4b3a2d;
+      border-radius: 8px; display: none; flex-direction: column;
+  ">
+    <div style="background:#4b3a2d; padding:10px; text-align:center; color:#e5d6c6;">
+      Chat privé avec Alethia
+    </div>
 
-    const quotesSection = document.getElementById("quotes-section");
-    const loginWarning = document.getElementById("login-warning");
-    const chatIcon = document.getElementById("chat-icon");
-    const chatBox = document.getElementById("chat-box");
-    const messagesDiv = document.getElementById("chat-messages");
-    const sendBtn = document.getElementById("send-chat");
-    const textInput = document.getElementById("chat-text");
+    <div id="messages" style="
+        flex:1; overflow-y:auto; padding:10px; color:#e5d6c6;
+        display:flex; flex-direction:column; gap:6px;
+    "></div>
 
-    let userEmail = "";
+    <form id="chat-form" style="display:flex; border-top:1px solid #4b3a2d;">
+      <input id="chat-input" type="text" placeholder="Écrire un message..."
+             style="flex:1; background:#1a1410; border:none; color:#e5d6c6; padding:10px;">
+      <button type="submit" style="background:#4b3a2d; border:none; color:#e5d6c6; padding:10px 15px; cursor:pointer;">➤</button>
+    </form>
+  </div>
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userEmail = user.email;
-        quotesSection.style.display = "block";
-        loginWarning.style.display = "none";
-        chatIcon.style.display = "block";
-        initChat();
-      } else {
-        quotesSection.style.display = "none";
-        loginWarning.style.display = "block";
-        chatIcon.style.display = "none";
-        chatBox.style.display = "none";
-      }
-    });
-
-    // 🔹 Ouverture/Fermeture du chat
-    chatIcon.addEventListener("click", () => {
-      chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
-    });
-
-    // 🔹 Initialisation du chat (écoute des messages)
-    function initChat() {
-      const q = query(collection(db, "chats"), orderBy("timestamp"));
-      onSnapshot(q, (snapshot) => {
-        messagesDiv.innerHTML = "";
-        snapshot.forEach((doc) => {
-          const msg = doc.data();
-          const p = document.createElement("p");
-          p.textContent = `${msg.user}: ${msg.text}`;
-          messagesDiv.appendChild(p);
-        });
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      });
-    }
-
-    // 🔹 Envoi de message
-    sendBtn.addEventListener("click", async () => {
-      const text = textInput.value.trim();
-      if (!text) return;
-      await addDoc(collection(db, "chats"), {
-        user: userEmail,
-        text: text,
-        timestamp: serverTimestamp()
-      });
-      textInput.value = "";
-    });
-  </script>
+  <!-- 🧠 Scripts Firebase -->
+  <script type="module" src="../firebase-config.js"></script>
+  <script type="module" src="../scripts/chat.js"></script>
 </body>
 </html>
