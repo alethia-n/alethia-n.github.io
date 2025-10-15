@@ -3,85 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alethia – Quotes</title>
-  <link rel="stylesheet" href="../style.css">
+  <title>Quotes – Alethia</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* === Style de la bulle de chat === */
+    #chat-icon {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #4b3a2d;
+      color: #e5d6c6;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8em;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
 
-  <!-- MathJax (optionnel pour certaines citations scientifiques) -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    #chat-icon:hover {
+      background-color: #6a4e3a;
+      transform: scale(1.1);
+    }
+
+    /* Bloc de citation */
+    .quote {
+      background: #2b211b;
+      border-left: 4px solid #4b3a2d;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+    }
+
+    .quote-author {
+      text-align: right;
+      font-style: italic;
+      color: #cdb89f;
+    }
+
+    #logout-btn {
+      display: block;
+      margin: 30px auto;
+      background: #4b3a2d;
+      color: #e5d6c6;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #logout-btn:hover {
+      background: #6a4e3a;
+    }
+  </style>
 </head>
 
 <body>
   <header>
-    <h1>Alethia – Quotes</h1>
+    <h1>Alethia</h1>
     <nav>
-      <a href="../index.html">Home</a>
-      <a href="../courses/index.html">Courses</a>
-      <a href="#">Quotes</a>
-      <a href="../contact.html">Contact</a>
+      <a href="index.html">Home</a>
+      <a href="courses/index.html">Courses</a>
+      <a href="quotes.html" class="active">Quotes</a>
     </nav>
   </header>
 
   <main>
-    <section>
-      <h2>Reflections and Quotes</h2>
-      <p>“There is a crack in everything — that’s how the light gets in.”  
-        <em>— Leonard Cohen</em></p>
+    <section id="quotes-section">
+      <h2>Quotes inspirantes</h2>
+      <p>Bienvenue dans l’espace des citations, réservé aux membres connectés.</p>
 
-      <p>“To live without hope is to cease to live.”  
-        <em>— Fyodor Dostoevsky</em></p>
+      <!-- Quelques exemples de citations -->
+      <div class="quote">
+        <p>“There is a crack in everything, that's how the light gets in.”</p>
+        <div class="quote-author">— Leonard Cohen</div>
+      </div>
 
-      <p>“The only journey is the one within.”  
-        <em>— Rainer Maria Rilke</em></p>
+      <div class="quote">
+        <p>“You don’t have to see the whole staircase, just take the first step.”</p>
+        <div class="quote-author">— Martin Luther King Jr.</div>
+      </div>
 
-      <p>“Truth is not something outside to be discovered, it is something inside to be realized.”  
-        <em>— Osho</em></p>
+      <div class="quote">
+        <p>“Life is what happens when you’re busy making other plans.”</p>
+        <div class="quote-author">— John Lennon</div>
+      </div>
 
-      <p>“What we call chaos is just patterns we haven’t recognized.”  
-        <em>— Chuck Palahniuk</em></p>
+      <button id="logout-btn">Se déconnecter</button>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Alethia – All rights reserved.</p>
+    <p>© 2025 Alethia</p>
   </footer>
 
-  <!-- 🟤 Icône flottante du chat (affichée uniquement si connecté) -->
-  <div id="chat-icon" title="Chat with Alethia" style="
-      position: fixed; bottom: 25px; right: 25px;
-      background: #4b3a2d; color: #e5d6c6;
-      width: 55px; height: 55px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 1.5em; box-shadow: 0 0 8px rgba(0,0,0,0.5);
-      display: none;
-  ">💬</div>
+  <!-- Icône du chat -->
+  <div id="chat-icon" title="Chat privé 💬">💬</div>
 
-  <!-- 🟤 Fenêtre du chat -->
-  <div id="chat-box" style="
-      position: fixed; bottom: 90px; right: 25px;
-      width: 320px; height: 400px;
-      background: #2b211b; border: 1px solid #4b3a2d;
-      border-radius: 8px; display: none; flex-direction: column;
-  ">
-    <div style="background:#4b3a2d; padding:10px; text-align:center; color:#e5d6c6;">
-      Chat privé avec Alethia
-    </div>
+  <script type="module">
+    import { auth } from "./firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    <div id="messages" style="
-        flex:1; overflow-y:auto; padding:10px; color:#e5d6c6;
-        display:flex; flex-direction:column; gap:6px;
-    "></div>
+    const chatIcon = document.getElementById("chat-icon");
+    const logoutBtn = document.getElementById("logout-btn");
 
-    <form id="chat-form" style="display:flex; border-top:1px solid #4b3a2d;">
-      <input id="chat-input" type="text" placeholder="Écrire un message..."
-             style="flex:1; background:#1a1410; border:none; color:#e5d6c6; padding:10px;">
-      <button type="submit" style="background:#4b3a2d; border:none; color:#e5d6c6; padding:10px 15px; cursor:pointer;">➤</button>
-    </form>
-  </div>
+    // Vérifie si l'utilisateur est connecté
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("✅ Utilisateur connecté :", user.email);
+        chatIcon.style.display = "flex"; // Affiche le bouton chat
+      } else {
+        // Redirige vers la page de login si non connecté
+        window.location.href = "login.html";
+      }
+    });
 
-  <!-- 🧠 Scripts Firebase -->
-  <script type="module" src="../firebase-config.js"></script>
-  <script type="module" src="../scripts/chat.js"></script>
+    // Bouton de déconnexion
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+
+    // Clic sur le bouton de chat → ouvre le chat
+    chatIcon.addEventListener("click", () => {
+      window.location.href = "chat.html";
+    });
+  </script>
 </body>
 </html>
