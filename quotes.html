@@ -2,29 +2,47 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotes – Alethia</title>
   <link rel="stylesheet" href="style.css">
 
   <script type="module">
     import { auth, db, storage } from "./firebase-config.js";
-    import { 
-      onAuthStateChanged, signOut 
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { 
-      collection, getDocs, addDoc, query, orderBy, onSnapshot, doc, getDoc 
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { collection, getDocs, addDoc, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     import { getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    // ======= Gestion Menu Login / User =======
+    // ======= Sections =======
+    const quotesSection = document.getElementById("quotes-section");
+    const requestSection = document.getElementById("request-section");
+    const quotesContainer = document.getElementById("quotes-container");
+
+    // ======= Menu login / user =======
     const loginLink = document.getElementById("login-link");
     const userInfo = document.getElementById("user-info");
     const userEmail = document.getElementById("user-email");
     const logoutLink = document.getElementById("logout-link");
 
+    const chatButton = document.createElement("button");
+    chatButton.textContent = "💬 Chat";
+    chatButton.style.position = "fixed";
+    chatButton.style.bottom = "20px";
+    chatButton.style.right = "20px";
+    chatButton.style.padding = "10px 15px";
+    chatButton.style.borderRadius = "50%";
+    chatButton.style.fontSize = "1.5rem";
+    chatButton.style.background = "#6a4e3a";
+    chatButton.style.color = "#fff";
+    chatButton.style.border = "none";
+    chatButton.style.cursor = "pointer";
+    chatButton.style.display = "none";
+    document.body.appendChild(chatButton);
+
+    // ======= Gestion connexion et affichage sections =======
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        loginLink.style.display = "inline";     
-        userInfo.style.display = "none";        
+        loginLink.style.display = "inline";
+        userInfo.style.display = "none";
         quotesSection.style.display = "none";
         requestSection.style.display = "none";
         chatButton.style.display = "none";
@@ -35,15 +53,16 @@
       userInfo.style.display = "inline";
       userEmail.textContent = user.email;
 
-      // Vérifier autorisation pour accéder aux quotes
+      // Vérification autorisation pour quotes
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists() && userSnap.data().authorized === true) {
         quotesSection.style.display = "block";
         requestSection.style.display = "none";
-        loadQuotes();
         chatButton.style.display = "inline";
+        loadQuotes();
+        import("./scripts/chat.js").then(module => module.initChat(chatButton));
       } else {
         quotesSection.style.display = "none";
         requestSection.style.display = "block";
@@ -51,17 +70,11 @@
       }
     });
 
+    // ======= Logout =======
     logoutLink.addEventListener("click", (e) => {
       e.preventDefault();
-      signOut(auth).then(() => {
-        window.location.href = "quotes.html";
-      });
+      signOut(auth).then(() => window.location.href = "quotes.html");
     });
-
-    // ======= Sections =======
-    const quotesSection = document.getElementById("quotes-section");
-    const requestSection = document.getElementById("request-section");
-    const quotesContainer = document.getElementById("quotes-container");
 
     // ======= Charger les citations =======
     async function loadQuotes() {
@@ -137,23 +150,6 @@
       form.reset();
     });
 
-    // ======= Chat bouton =======
-    const chatButton = document.createElement("button");
-    chatButton.textContent = "💬 Chat";
-    chatButton.style.position = "fixed";
-    chatButton.style.bottom = "20px";
-    chatButton.style.right = "20px";
-    chatButton.style.padding = "10px 15px";
-    chatButton.style.borderRadius = "50%";
-    chatButton.style.fontSize = "1.5rem";
-    chatButton.style.background = "#6a4e3a";
-    chatButton.style.color = "#fff";
-    chatButton.style.border = "none";
-    chatButton.style.cursor = "pointer";
-    chatButton.style.display = "none";
-    document.body.appendChild(chatButton);
-
-    import("./scripts/chat.js").then(module => module.initChat(chatButton));
   </script>
 </head>
 <body>
@@ -174,14 +170,12 @@
   </header>
 
   <main>
-    <!-- Publications -->
     <section id="quotes-section" style="display:none;">
       <div id="quotes-container">
         <p>Chargement des citations...</p>
       </div>
     </section>
 
-    <!-- Demande d'autorisation -->
     <section id="request-section" style="display:none; text-align:center;">
       <h3>Demande d'autorisation</h3>
       <p>Vous devez obtenir une autorisation pour accéder à cette section.</p>
@@ -195,7 +189,7 @@
   </main>
 
   <footer>
-    <p>© 2019 Alethia</p>
+    <p>© 2025 Alethia</p>
   </footer>
 </body>
 </html>
