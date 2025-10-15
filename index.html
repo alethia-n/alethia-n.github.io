@@ -1,94 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alethia - Home</title>
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- MathJax pour les formules mathématiques -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async 
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
-  <style>
-    /* --- Styles pour les icônes Home et Back --- */
-    .nav-icons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .nav-icons img {
-      width: 28px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .nav-icons img:hover {
-      transform: scale(1.2);
-    }
-
-    /* --- Menu principal --- */
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      margin-top: 10px;
-    }
-    nav a {
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    nav a:hover,
-    nav a.active {
-      color: #007bff;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.9em;
-      color: #666;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Alethia – Accueil</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <header>
     <h1>Alethia</h1>
-
-    <!-- 🔹 Icônes Home & Back -->
-    <div class="nav-icons">
-      <a href="index.html" title="Home">
-        <img src="icons/home.svg" alt="Home">
-      </a>
-      <a href="javascript:history.back()" title="Back">
-        <img src="icons/back.svg" alt="Back">
-      </a>
-    </div>
-
-    <!-- 🔹 Menu principal simplifié -->
     <nav>
       <a href="index.html" class="active">Home</a>
-      <a href="courses/index.html">Courses</a>
       <a href="quotes.html">Quotes</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <main>
-    <section style="max-width:800px; margin:auto; text-align:justify;">
-      <h2>Spirit of the Site</h2>
+    <section>
+      <h2>L’esprit du site</h2>
       <p>
-        The name <strong>Alethia</strong> derives from the Ancient Greek 
-        <em>ἀλήθεια</em>, meaning “unveiled truth.”  
-        This site stands as an inner sanctuary — a space where I unfold my reflections,
-        the intuitions that traverse my mind, and the words that stir my soul.
+        Le nom <strong>Alethia</strong> vient du grec ancien <em>ἀλήθεια</em>, signifiant “vérité dévoilée”.
+        Ce lieu est un espace de réflexion, de lucidité, et de quête intérieure — un sanctuaire de mots,
+        d’idées et d’intuitions.
       </p>
     </section>
   </main>
