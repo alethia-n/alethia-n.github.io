@@ -1,69 +1,86 @@
-// scripts/chat.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { firebaseConfig } from "../firebase-config.js";
+// ===============================
+// 🔐 Chat privé Firebase sécurisé
+// ===============================
 
-// === Initialisation Firebase ===
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Importation des modules Firebase
+import {
+  getFirestore, collection, addDoc, query, where, orderBy, onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// === Sélection des éléments du DOM ===
-const messagesDiv = document.getElementById("messages");
-const form = document.getElementById("chat-form");
+import {
+  getAuth, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+import { db } from "./firebase-config.js";
+
+// =====================================
+// 🔹 Initialisation et vérification Auth
+// =====================================
+
+const auth = getAuth();
+const chatContainer = document.getElementById("chat-container");
+const messagesDiv = document.getElementById("chat-messages");
+const chatForm = document.getElementById("chat-form");
 const input = document.getElementById("chat-input");
-const logoutLink = document.getElementById("logout-link");
 
-// === Vérification de la connexion ===
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  // Charger les messages privés entre l'utilisateur et l'admin
-  loadPrivateChat(user);
-});
-
-// === Fonction pour charger les messages ===
+// ===============================
+// 🧠 Fonction pour charger le chat
+// ===============================
 function loadPrivateChat(user) {
-  const chatRef = collection(db, "private_chats", user.uid, "messages");
-  const q = query(chatRef, orderBy("timestamp", "asc"));
+  // Création de la requête : conversation entre l'utilisateur et toi (admin)
+  const chatRef = collection(db, "chats");
+  const q = query(
+    chatRef,
+    where("sender", "in", [user.email, "nouredine.m22@gmail.com"]),
+    where("receiver", "in", [user.email, "nouredine.m22@gmail.com"]),
+    orderBy("timestamp", "asc")
+  );
 
+  // 🔁 Écoute en temps réel des messages
   onSnapshot(q, (snapshot) => {
     messagesDiv.innerHTML = "";
     snapshot.forEach((doc) => {
       const msg = doc.data();
-      const p = document.createElement("p");
-      p.textContent = msg.sender === user.email ? `You: ${msg.text}` : `Admin: ${msg.text}`;
-      p.classList.add(msg.sender === user.email ? "sent" : "received");
-      messagesDiv.appendChild(p);
+      const message = document.createElement("div");
+      message.classList.add("chat-message");
+      message.classList.add(msg.sender === user.email ? "sent" : "received");
+      message.textContent =
+        msg.sender === user.email ? `You: ${msg.text}` : `Admin: ${msg.text}`;
+      messagesDiv.appendChild(message);
     });
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   });
 
-  // === Envoi d’un message ===
-  form.addEventListener("submit", async (e) => {
+  // 📨 Envoi d’un message
+  chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = input.value.trim();
     if (text === "") return;
 
-    await addDoc(collection(db, "private_chats", user.uid, "messages"), {
-      sender: user.email,
-      text,
-      timestamp: new Date()
-    });
-
-    input.value = "";
+    try {
+      await addDoc(chatRef, {
+        sender: user.email,
+        receiver: "nouredine.m22@gmail.com",
+        text,
+        timestamp: new Date()
+      });
+      input.value = "";
+    } catch (err) {
+      console.error("Erreur lors de l’envoi du message :", err);
+      alert("⚠️ Impossible d’envoyer le message.");
+    }
   });
 }
 
-// === Déconnexion ===
-logoutLink.addEventListener("click", (e) => {
-  e.preventDefault();
-  signOut(auth).then(() => {
-    window.location.href = "index.html";
-  });
+// ============================================
+// 🚀 Activation du chat uniquement si connecté
+// ============================================
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    chatContainer.style.display = "block";
+    loadPrivateChat(user);
+  } else {
+    // Si non connecté → masqué
+    chatContainer.style.display = "none";
+  }
 });
-
