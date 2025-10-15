@@ -5,32 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alethia - Home</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- MathJax pour les formules mathématiques -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
+  <script id="MathJax-script" async 
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <style>
-    /* Style pour les icônes Home et Back */
+    /* --- Styles pour les icônes Home et Back --- */
     .nav-icons {
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
     }
     .nav-icons img {
-      width: 30px;
+      width: 28px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
     .nav-icons img:hover {
       transform: scale(1.2);
     }
-    /* Menu utilisateur */
-    #user-section a {
-      margin-left: 10px;
+
+    /* --- Menu principal --- */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 10px;
+    }
+    nav a {
       text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    nav a:hover,
+    nav a.active {
       color: #007bff;
     }
-    #user-section a:hover {
-      text-decoration: underline;
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
     }
   </style>
 </head>
@@ -39,7 +63,7 @@
   <header>
     <h1>Alethia</h1>
 
-    <!-- 🔹 Icônes Home et Back -->
+    <!-- 🔹 Icônes Home & Back -->
     <div class="nav-icons">
       <a href="index.html" title="Home">
         <img src="icons/home.svg" alt="Home">
@@ -49,27 +73,20 @@
       </a>
     </div>
 
+    <!-- 🔹 Menu principal simplifié -->
     <nav>
       <a href="index.html" class="active">Home</a>
       <a href="courses/index.html">Courses</a>
       <a href="quotes.html">Quotes</a>
-      <a href="contact.html">Contact</a>
-      <span id="user-section" style="float:right;">
-        <a href="login.html" id="login-link">Login</a>
-        <span id="user-info" style="display:none;">
-          Connected: <strong id="user-email"></strong> |
-          <a href="#" id="logout-link">Logout</a>
-        </span>
-      </span>
     </nav>
   </header>
 
   <main>
-    <section>
+    <section style="max-width:800px; margin:auto; text-align:justify;">
       <h2>Spirit of the Site</h2>
       <p>
-        The name <strong>Alethia</strong> derives from the Ancient Greek <em>ἀλήθεια</em>,
-        meaning “unveiled truth.”  
+        The name <strong>Alethia</strong> derives from the Ancient Greek 
+        <em>ἀλήθεια</em>, meaning “unveiled truth.”  
         This site stands as an inner sanctuary — a space where I unfold my reflections,
         the intuitions that traverse my mind, and the words that stir my soul.
       </p>
@@ -77,47 +94,7 @@
   </main>
 
   <footer>
-    <p>© 2019 Alethia</p>
-    <div id="comments">
-      <script src="https://utteranc.es/client.js"
-        repo="VOTRE_GITHUB_USERNAME/alethia-n.github.io"
-        issue-term="pathname"
-        theme="github-dark"
-        crossorigin="anonymous"
-        async>
-      </script>
-    </div>
+    <p>© 2025 Alethia</p>
   </footer>
-
-  <!-- 🔹 Firebase Auth : gestion du statut utilisateur -->
-  <script type="module">
-    import { auth } from "./firebase-config.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-    const loginLink = document.getElementById("login-link");
-    const userInfo = document.getElementById("user-info");
-    const userEmail = document.getElementById("user-email");
-    const logoutLink = document.getElementById("logout-link");
-
-    // Vérifie si l’utilisateur est connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loginLink.style.display = "none";
-        userInfo.style.display = "inline";
-        userEmail.textContent = user.email;
-      } else {
-        loginLink.style.display = "inline";
-        userInfo.style.display = "none";
-      }
-    });
-
-    // Déconnexion
-    logoutLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
-      });
-    });
-  </script>
-<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n</body>
+</body>
 </html>
