@@ -24,8 +24,7 @@ export function initChat(chatButton) {
 
   chatBox.innerHTML = `
     <div id="chat-messages" style="flex:1; overflow-y:auto; margin-bottom:10px;"></div>
-    <input type="text" id="chat-input" placeholder="Tapez votre message..." 
-           style="padding:5px; border-radius:4px; border:1px solid #4b3a2d; background:#1a1410; color:#e5d6c6;">
+    <input type="text" id="chat-input" placeholder="Tapez votre message..." style="padding:5px; border-radius:4px; border:1px solid #4b3a2d; background:#1a1410; color:#e5d6c6;">
     <button id="chat-send" style="margin-top:5px;">Envoyer</button>
   `;
 
@@ -44,12 +43,11 @@ export function initChat(chatButton) {
 
     const userEmail = user.email;
     const chatsRef = collection(db, "chats");
-    const messagesContainer = document.getElementById("chat-messages");
     const input = document.getElementById("chat-input");
     const sendBtn = document.getElementById("chat-send");
+    const messagesContainer = document.getElementById("chat-messages");
 
-    // Envoi message
-    const sendMessage = async () => {
+    sendBtn.addEventListener("click", async () => {
       const text = input.value.trim();
       if (!text) return;
 
@@ -59,15 +57,10 @@ export function initChat(chatButton) {
         message: text,
         timestamp: new Date()
       });
-      input.value = "";
-    };
 
-    sendBtn.addEventListener("click", sendMessage);
-    input.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendMessage();
+      input.value = "";
     });
 
-    // Affichage en temps réel
     const q = query(chatsRef, orderBy("timestamp", "asc"));
     onSnapshot(q, (snapshot) => {
       messagesContainer.innerHTML = "";
@@ -77,9 +70,6 @@ export function initChat(chatButton) {
             (msg.sender === adminEmail && msg.receiver === userEmail)) {
           const p = document.createElement("p");
           p.textContent = `${msg.sender === userEmail ? "Vous" : "Admin"}: ${msg.message}`;
-          p.style.margin = "5px 0";
-          p.style.textAlign = msg.sender === userEmail ? "right" : "left";
-          p.style.color = msg.sender === userEmail ? "#f0c997" : "#d6bfa9";
           messagesContainer.appendChild(p);
         }
       });
