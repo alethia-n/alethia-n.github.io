@@ -1,69 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cours L2 — Alethia</title>
+  <title>Cours</title>
   <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-  <header>
-    <h1>Cours de Mathématiques & Chimie L2</h1>
-    <nav>
-      <a href="../index.html">Accueil</a>
-      <span id="user-section" style="float:right;">
-        <a href="../login.html" id="login-link">Login</a>
-        <span id="user-info" style="display:none;">
-          Connecté : <strong id="user-email"></strong> |
-          <a href="#" id="logout-link">Logout</a>
-        </span>
-      </span>
-    </nav>
-  </header>
-
-  <main style="max-width: 800px; margin: auto;">
-    <h2>Liste des cours</h2>
-    <ul>
-      <li><a href="math-chemistry-l2/integrals/index.html">Intégrales</a></li>
-      <li><a href="math-chemistry-l2/cours-02-indisponible/index.html">Cours 02 (Indisponible)</a></li>
-      <li><a href="math-chemistry-l2/cours-03-indisponible/index.html">Cours 03 (Indisponible)</a></li>
-    </ul>
-  </main>
-
-  <footer>
-    <p>© 2019 Alethia</p>
-  </footer>
-
-  <!-- ✅ Firebase : gestion du statut utilisateur -->
-  <script type="module">
-    import { auth } from "../firebase-config.js";
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-    const loginLink = document.getElementById("login-link");
-    const userInfo = document.getElementById("user-info");
-    const userEmail = document.getElementById("user-email");
-    const logoutLink = document.getElementById("logout-link");
-
-    // Vérifier si l’utilisateur est connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loginLink.style.display = "none";
-        userInfo.style.display = "inline";
-        userEmail.textContent = user.email;
-      } else {
-        loginLink.style.display = "inline";
-        userInfo.style.display = "none";
-      }
-    });
-
-    // Déconnexion
-    logoutLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      signOut(auth).then(() => {
-        window.location.href = "../login.html";
-      });
-    });
-  </script>
-<script src="/header.js"></script>\n<script src="/auth-guard.js"></script>\n<script>if(window.initAuthGuard) initAuthGuard();</script>\n</body>
+  <h2>Liste des cours</h2>
+  <div class="menu">
+    <a href="math.html" class="btn">Course 01: Mathématiques appliquées</a>
+    <a href="course02.html" class="btn">Course 02: Indisponible</a>
+    <a href="course03.html" class="btn">Course 03: Indisponible</a>
+  </div>
+  <a href="../index.html" class="back-btn">← Retour à l’accueil</a>
+</body>
 </html>
