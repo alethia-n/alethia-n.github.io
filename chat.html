@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat - Alethia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Chat - Discuter avec l’administrateur</h2>
+    <div id="chat-box" class="chat-box"></div>
+
+    <form id="chatForm">
+      <input type="text" id="chatMessage" placeholder="Écrivez votre message..." required />
+      <button type="submit">Envoyer</button>
+    </form>
+
+    <p><button id="logout-btn" class="back-btn">Se déconnecter</button></p>
+  </main>
+
+  <script type="module">
+  import { auth, db } from "./firebase-config.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const chatBox = document.getElementById("chat-box");
+  const chatForm = document.getElementById("chatForm");
+  const chatMessage = document.getElementById("chatMessage");
+  const logoutBtn = document.getElementById("logout-btn");
+  let userEmail = null;
+
+  // Vérifie si l'utilisateur est connecté
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      alert("Veuillez vous connecter pour accéder au chat.");
+      window.location.href = "quotes.html";
+      return;
+    }
+    userEmail = user.email;
+    initChat();
+  });
+
+  // Initialisation du chat
+  function initChat() {
+    const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+      chatBox.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const messageClass = data.sender === userEmail ? "me" : "other";
+        chatBox.innerHTML += `<div class="msg ${messageClass}"><b>${data.sender}</b><p>${data.text}</p></div>`;
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  }
+
+  // Envoi d'un message
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!chatMessage.value.trim()) return;
+    await addDoc(collection(db, "chat"), {
+      sender: userEmail,
+      text: chatMessage.value,
+      createdAt: serverTimestamp()
+    });
+    chatMessage.value = "";
+  });
+
+  // Déconnexion
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  });
+  </script>
+</body>
+</html>
