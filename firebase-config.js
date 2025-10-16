@@ -1,11 +1,8 @@
 // === firebase-config.js ===
-
-// Import des modules Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// Configuration Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCuwjW3DjLYvo2gorazMA99qPam4mQ3D5k",
   authDomain: "alethiamessage.firebaseapp.com",
@@ -16,12 +13,8 @@ const firebaseConfig = {
   measurementId: "G-4YJ1K1Y7FT"
 };
 
-// Initialisation de Firebase
 const app = initializeApp(firebaseConfig);
-
-// Authentification et Firestore
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Export pour utilisation dans les autres scripts
 export { auth, db };
