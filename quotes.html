@@ -8,10 +8,11 @@
   <style>
     .hidden { display: none; }
     .logout { margin-top: 20px; cursor: pointer; }
+    #errorMsg { color: red; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <!-- Formulaire de connexion -->
+  <!-- FORMULAIRE DE CONNEXION / INSCRIPTION -->
   <div id="loginDiv">
     <h2>Connexion / Inscription</h2>
     <form id="loginForm">
@@ -19,10 +20,10 @@
       <input type="password" name="password" placeholder="Mot de passe" required>
       <button type="submit">Se connecter</button>
     </form>
-    <p id="errorMsg" style="color:red;"></p>
+    <p id="errorMsg"></p>
   </div>
 
-  <!-- Contenu des citations -->
+  <!-- PAGE DES CITATIONS -->
   <div id="quotesDiv" class="hidden">
     <button id="logoutBtn" class="logout">Se déconnecter</button>
     <h2>Citations</h2>
@@ -32,8 +33,12 @@
 
   <script type="module">
     import { auth } from "./firebase-config.js";
-    import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
     const loginDiv = document.getElementById("loginDiv");
     const quotesDiv = document.getElementById("quotesDiv");
@@ -41,7 +46,7 @@
     const errorMsg = document.getElementById("errorMsg");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // Vérifie si déjà connecté
+    // Vérifie si l'utilisateur est déjà connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
         loginDiv.classList.add("hidden");
@@ -52,18 +57,19 @@
       }
     });
 
-    // Soumission du formulaire
+    // Gestion du formulaire
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = loginForm.email.value;
       const password = loginForm.password.value;
+      errorMsg.textContent = "";
 
       try {
-        // Essaye de connecter l'utilisateur
+        // Tentative de connexion
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
-        // Si email inconnu → créer le compte
         if (err.code === "auth/user-not-found") {
+          // Crée le compte si utilisateur non trouvé
           try {
             await createUserWithEmailAndPassword(auth, email, password);
           } catch (createErr) {
