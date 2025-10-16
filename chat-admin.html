@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat Admin - Alethia</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Chat - Espace Administrateur</h2>
+    <div id="chat-box" class="chat-box"></div>
+    <form id="chatForm">
+      <input type="text" id="chatMessage" placeholder="Votre réponse..." required />
+      <button type="submit">Envoyer</button>
+    </form>
+  </main>
+
+  <script type="module">
+  import { auth, db } from "./firebase-config.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+  const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+  const chatBox = document.getElementById("chat-box");
+  const chatForm = document.getElementById("chatForm");
+  const chatMessage = document.getElementById("chatMessage");
+  let userEmail = null;
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html";
+      return;
+    }
+    if (user.email !== ADMIN_EMAIL) {
+      alert("Accès refusé : réservé à l'administrateur");
+      window.location.href = "index.html";
+      return;
+    }
+    userEmail = user.email;
+    initChat();
+  });
+
+  function initChat() {
+    const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+      chatBox.innerHTML = "";
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const messageClass = data.sender === userEmail ? "me" : "other";
+        chatBox.innerHTML += `<div class="msg ${messageClass}"><b>${data.sender}</b><p>${data.text}</p></div>`;
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  }
+
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!chatMessage.value.trim()) return;
+    await addDoc(collection(db, "chat"), {
+      sender: userEmail,
+      text: chatMessage.value,
+      createdAt: serverTimestamp()
+    });
+    chatMessage.value = "";
+  });
+  </script>
+</body>
+</html>
