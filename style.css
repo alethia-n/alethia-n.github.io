@@ -1,8 +1,14 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
+  font-family: "Times New Roman", serif;
+  background-color: #1a1410;
+  color: #e5d6c6;
+  margin: 0;
   padding: 40px;
-  background: #fafafa;
+  text-align: center;
+}
+
+h1, h2 {
+  color: #d6bfa9;
 }
 
 .menu {
@@ -13,8 +19,8 @@ body {
 }
 
 .btn, .back-btn {
-  background: #007bff;
-  color: white;
+  background: #4b3a2d;
+  color: #e5d6c6;
   padding: 12px 20px;
   text-decoration: none;
   border-radius: 8px;
@@ -22,51 +28,5 @@ body {
 }
 
 .btn:hover, .back-btn:hover {
-  background: #0056b3;
-}
-
-.logout {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: #e63946;
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.logout:hover {
-  background: #b51c2e;
-}
-
-.auth-forms {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 220px;
-}
-
-input, button {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0056b3;
+  background: #6a4e3a;
 }
