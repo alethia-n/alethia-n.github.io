@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Citations</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+
   <script type="module">
-    import { auth, db } from "./firebase-config.js";
+    import { auth } from "./firebase-config.js";
     import {
       onAuthStateChanged,
       signInWithEmailAndPassword,
@@ -14,15 +15,22 @@
       signOut
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-    document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", () => {
       const authSection = document.getElementById("auth-section");
       const quotesSection = document.getElementById("quotes-section");
+      const loading = document.getElementById("loading");
       const loginForm = document.getElementById("login-form");
       const signupForm = document.getElementById("signup-form");
       const logoutBtn = document.getElementById("logout-btn");
 
-      // Changement d’état d’authentification
+      // Masquer tout au début
+      authSection.style.display = "none";
+      quotesSection.style.display = "none";
+      loading.style.display = "block";
+
+      // Attendre que Firebase connaisse l'état de connexion
       onAuthStateChanged(auth, (user) => {
+        loading.style.display = "none";
         if (user) {
           authSection.style.display = "none";
           quotesSection.style.display = "block";
@@ -38,7 +46,7 @@
         const email = document.getElementById("login-email").value;
         const password = document.getElementById("login-password").value;
         signInWithEmailAndPassword(auth, email, password)
-          .catch(err => alert("Erreur : " + err.message));
+          .catch((err) => alert("Erreur : " + err.message));
       });
 
       // Inscription
@@ -47,7 +55,7 @@
         const email = document.getElementById("signup-email").value;
         const password = document.getElementById("signup-password").value;
         createUserWithEmailAndPassword(auth, email, password)
-          .catch(err => alert("Erreur : " + err.message));
+          .catch((err) => alert("Erreur : " + err.message));
       });
 
       // Déconnexion
@@ -55,6 +63,7 @@
     });
   </script>
 </head>
+
 <body>
   <nav>
     <ul>
@@ -65,21 +74,26 @@
     </ul>
   </nav>
 
+  <!-- INDICATEUR DE CHARGEMENT -->
+  <section id="loading" style="display:none; text-align:center; margin-top:50px;">
+    <p>Chargement...</p>
+  </section>
+
   <!-- SECTION CONNEXION / INSCRIPTION -->
-  <section id="auth-section" class="auth-container">
+  <section id="auth-section" class="auth-container" style="display:none;">
     <h2>Veuillez vous connecter ou vous inscrire pour accéder à cette page</h2>
     <div class="auth-forms">
       <form id="login-form">
         <h3>Connexion</h3>
-        <input type="email" id="login-email" placeholder="Email" required>
-        <input type="password" id="login-password" placeholder="Mot de passe" required>
+        <input type="email" id="login-email" placeholder="Email" required />
+        <input type="password" id="login-password" placeholder="Mot de passe" required />
         <button type="submit">Se connecter</button>
       </form>
 
       <form id="signup-form">
         <h3>Inscription</h3>
-        <input type="email" id="signup-email" placeholder="Email" required>
-        <input type="password" id="signup-password" placeholder="Mot de passe" required>
+        <input type="email" id="signup-email" placeholder="Email" required />
+        <input type="password" id="signup-password" placeholder="Mot de passe" required />
         <button type="submit">S'inscrire</button>
       </form>
     </div>
