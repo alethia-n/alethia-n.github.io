@@ -10,18 +10,19 @@
     .logout { margin-top: 20px; cursor: pointer; }
     #errorMsg { color: red; margin-top: 10px; }
     input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
-    button { padding: 8px 12px; cursor: pointer; }
+    button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
   </style>
 </head>
 <body>
   <!-- FORMULAIRE DE CONNEXION / INSCRIPTION -->
   <div id="loginDiv">
     <h2>Connexion / Inscription</h2>
-    <form id="loginForm">
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Mot de passe (≥6 caractères)" required>
-      <button type="submit">Se connecter / S’inscrire</button>
-    </form>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Mot de passe (≥6 caractères)" required>
+    <div>
+      <button id="loginBtn">Se connecter</button>
+      <button id="signupBtn">S’inscrire</button>
+    </div>
     <p id="errorMsg"></p>
   </div>
 
@@ -44,7 +45,10 @@
 
     const loginDiv = document.getElementById("loginDiv");
     const quotesDiv = document.getElementById("quotesDiv");
-    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
     const errorMsg = document.getElementById("errorMsg");
     const logoutBtn = document.getElementById("logoutBtn");
 
@@ -59,33 +63,41 @@
       }
     });
 
-    // Gestion du formulaire
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = loginForm.email.value.trim();
-      const password = loginForm.password.value;
+    // Fonction de connexion
+    loginBtn.addEventListener("click", async () => {
       errorMsg.textContent = "";
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) {
+        errorMsg.textContent = "Veuillez remplir tous les champs.";
+        return;
+      }
 
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        errorMsg.textContent = err.message;
+      }
+    });
+
+    // Fonction d'inscription
+    signupBtn.addEventListener("click", async () => {
+      errorMsg.textContent = "";
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) {
+        errorMsg.textContent = "Veuillez remplir tous les champs.";
+        return;
+      }
       if (password.length < 6) {
         errorMsg.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
         return;
       }
 
       try {
-        // Tentative de connexion
-        await signInWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
       } catch (err) {
-        if (err.code === "auth/user-not-found") {
-          // Création automatique du compte si l'utilisateur n'existe pas
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-          } catch (createErr) {
-            errorMsg.textContent = createErr.message;
-          }
-        } else {
-          // Affiche toutes les autres erreurs Firebase
-          errorMsg.textContent = err.message;
-        }
+        errorMsg.textContent = err.message;
       }
     });
 
