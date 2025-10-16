@@ -1,119 +1,236 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Chat - Admin</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Chat</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      background: #1a1410;
+      color: #e5d6c6;
+      font-family: "Times New Roman", serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
     .admin-container {
       display: flex;
       gap: 20px;
-      justify-content: center;
-      align-items: flex-start;
-      flex-wrap: wrap;
+      width: 90%;
+      max-width: 1000px;
     }
-    .users-list {
-      width: 280px;
-      background: #2a1f1a;
+
+    .user-list {
+      flex: 1;
+      background: #2b211b;
       border-radius: 10px;
-      padding: 15px;
-      max-height: 400px;
+      padding: 10px;
+      height: 500px;
       overflow-y: auto;
     }
-    .user-item {
+
+    .user {
+      padding: 10px;
+      margin: 5px 0;
+      background: #3a2f28;
+      border-radius: 8px;
+      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #3b2c23;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      cursor: pointer;
     }
-    .user-item:hover { background: #5a3e30; }
+
+    .user:hover { background: #4b3a2d; }
     .badge {
       background: red;
       color: white;
       border-radius: 50%;
-      padding: 2px 7px;
-      font-size: 12px;
-      font-weight: bold;
+      padding: 4px 8px;
+      font-size: 0.8em;
     }
+
     .chat-box {
-      width: 380px;
-      height: 400px;
-      background: #2a1f1a;
+      flex: 2;
+      background: #2b211b;
       border-radius: 10px;
-      padding: 10px;
-      overflow-y: auto;
-    }
-    .msg {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 6px;
-      max-width: 75%;
-    }
-    .me { background: #4b3a2d; margin-left: auto; text-align: right; }
-    .other { background: #6a4e3a; text-align: left; }
-    form {
-      margin-top: 10px;
+      padding: 15px;
       display: flex;
-      gap: 5px;
-      justify-content: center;
+      flex-direction: column;
+      height: 500px;
     }
-    form input {
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      background: #1a1410;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 80%;
+    }
+
+    .sent {
+      background: #4b3a2d;
+      align-self: flex-end;
+      float: right;
+      clear: both;
+    }
+
+    .received {
+      background: #3a2f28;
+      float: left;
+      clear: both;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
       flex: 1;
       padding: 10px;
-      border-radius: 8px;
-      border: none;
+      border: 1px solid #4b3a2d;
+      border-radius: 6px;
+      background: #1a1410;
+      color: #e5d6c6;
     }
-    form button {
-      padding: 10px 14px;
+
+    button {
+      background: #4b3a2d;
       border: none;
-      border-radius: 8px;
-      background: #6a4e3a;
-      color: white;
+      color: #e5d6c6;
+      border-radius: 6px;
+      padding: 10px 15px;
       cursor: pointer;
     }
+
+    button:hover { background: #6a4e3a; }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h2>Chat - Panneau Administrateur</h2>
-    <div class="admin-container">
-      <div class="users-list" id="users-list">
-        <p class="muted">Chargement des utilisateurs...</p>
-      </div>
-      <div>
-        <div id="chat-box" class="chat-box"></div>
-        <form id="chatForm" style="display:none;">
-          <input type="text" id="chatMessage" placeholder="Écrire un message..." required />
-          <button type="submit">Envoyer</button>
-        </form>
-      </div>
+  <h2>Espace administrateur – Messagerie</h2>
+  <div class="admin-container">
+    <div class="user-list" id="userList"></div>
+
+    <div class="chat-box">
+      <div class="messages" id="messages"></div>
+      <form id="chatForm">
+        <input type="text" id="msgInput" placeholder="Écris une réponse..." required />
+        <button type="submit">Envoyer</button>
+      </form>
     </div>
-    <p><button id="logout-btn" class="back-btn">Se déconnecter</button></p>
-  </main>
+  </div>
 
   <script type="module">
-  import { auth, db } from "./firebase-config.js";
-  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { collection, doc, query, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { auth, db } from "./firebase-config.js";
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import {
+      collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, getDocs, updateDoc, doc
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  const ADMIN_EMAIL = "nouredine.m22@gmail.com"; // ton mail admin
-  const usersList = document.getElementById("users-list");
-  const chatBox = document.getElementById("chat-box");
-  const chatForm = document.getElementById("chatForm");
-  const chatMessage = document.getElementById("chatMessage");
-  const logoutBtn = document.getElementById("logout-btn");
-  let activeUser = null;
+    const userListDiv = document.getElementById("userList");
+    const messagesDiv = document.getElementById("messages");
+    const chatForm = document.getElementById("chatForm");
+    const msgInput = document.getElementById("msgInput");
 
-  // ✅ Vérifier l'authentification
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = "index.html";
-      return;
+    let selectedUser = null;
+    let unsubscribeMessages = null;
+
+    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user || user.email !== ADMIN_EMAIL) {
+        alert("Accès réservé à l’administrateur.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      // 🔸 Récupère la liste des utilisateurs
+      const chatsRef = collection(db, "chats");
+
+      onSnapshot(chatsRef, async (snapshot) => {
+        userListDiv.innerHTML = "";
+        for (const chatDoc of snapshot.docs) {
+          const userEmailSafe = chatDoc.id;
+          const userEmail = userEmailSafe.replace(/_/g, ".");
+          const messagesRef = collection(db, "chats", userEmailSafe, "messages");
+          const unreadQuery = query(messagesRef, orderBy("createdAt"));
+          const messagesSnap = await getDocs(unreadQuery);
+          const unreadCount = messagesSnap.docs.filter(d => d.data().readByAdmin === false && d.data().sender !== ADMIN_EMAIL).length;
+
+          const div = document.createElement("div");
+          div.classList.add("user");
+          div.textContent = userEmail;
+          if (unreadCount > 0) {
+            const badge = document.createElement("span");
+            badge.classList.add("badge");
+            badge.textContent = unreadCount;
+            div.appendChild(badge);
+          }
+          div.addEventListener("click", () => openChat(userEmailSafe, userEmail));
+          userListDiv.appendChild(div);
+        }
+      });
+    });
+
+    async function openChat(userEmailSafe, userEmail) {
+      selectedUser = userEmailSafe;
+      messagesDiv.innerHTML = "";
+
+      if (unsubscribeMessages) unsubscribeMessages();
+
+      const messagesRef = collection(db, "chats", userEmailSafe, "messages");
+      const q = query(messagesRef, orderBy("createdAt"));
+
+      // 🔸 Écoute des messages en temps réel
+      unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        messagesDiv.innerHTML = "";
+        snapshot.forEach(async (docSnap) => {
+          const data = docSnap.data();
+          const div = document.createElement("div");
+          div.classList.add("msg");
+          div.classList.add(data.sender === ADMIN_EMAIL ? "sent" : "received");
+          div.textContent = data.text;
+          messagesDiv.appendChild(div);
+
+          // 🔸 Marquer comme lus les messages reçus
+          if (data.sender !== ADMIN_EMAIL && data.readByAdmin === false) {
+            await updateDoc(docSnap.ref, { readByAdmin: true });
+          }
+        });
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
     }
-    if (user.email !== ADMIN_EMAIL) {
-      alert("Accès réservé à l'adminis
+
+    // 🔸 Envoi d’un message
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!selectedUser) return alert("Sélectionne un utilisateur.");
+      const text = msgInput.value.trim();
+      if (!text) return;
+      const messagesRef = collection(db, "chats", selectedUser, "messages");
+      await addDoc(messagesRef, {
+        text,
+        sender: ADMIN_EMAIL,
+        readByAdmin: true,
+        readByUser: false,
+        createdAt: serverTimestamp()
+      });
+      msgInput.value = "";
+    });
+  </script>
+</body>
+</html>
