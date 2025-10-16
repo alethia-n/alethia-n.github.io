@@ -17,8 +17,8 @@
     <h2>Connexion / Inscription</h2>
     <form id="loginForm">
       <input type="email" name="email" placeholder="Email" required>
-      <input type="password" name="password" placeholder="Mot de passe" required>
-      <button type="submit">Se connecter</button>
+      <input type="password" name="password" placeholder="Mot de passe (≥6 caractères)" required>
+      <button type="submit">Se connecter / S’inscrire</button>
     </form>
     <p id="errorMsg"></p>
   </div>
@@ -68,14 +68,16 @@
         // Tentative de connexion
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
+        // Si l'utilisateur n'existe pas → création du compte
         if (err.code === "auth/user-not-found") {
-          // Crée le compte si utilisateur non trouvé
           try {
             await createUserWithEmailAndPassword(auth, email, password);
           } catch (createErr) {
+            // Affiche l'erreur exacte sous le formulaire
             errorMsg.textContent = createErr.message;
           }
         } else {
+          // Affiche toute autre erreur (mot de passe trop court, email invalide...)
           errorMsg.textContent = err.message;
         }
       }
