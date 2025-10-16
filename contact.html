@@ -18,32 +18,41 @@
     <p id="status" class="muted"></p>
   </main>
 
+  <!-- 🔥 Connexion à Firebase -->
   <script type="module">
-  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+    import { db } from "./firebase-config.js";
+    import { collection, addDoc, serverTimestamp } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  if (typeof firebaseConfig !== 'undefined') {
-    if (!getApps().length) initializeApp(firebaseConfig);
-  }
-  const db = getFirestore();
+    const form = document.getElementById("contactForm");
+    const status = document.getElementById("status");
 
-  document.getElementById('contactForm').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-    const status = document.getElementById('status');
-    try{
-      await addDoc(collection(db, 'messages'), {
-        name, email, message,
-        createdAt: serverTimestamp()
-      });
-      status.textContent = 'Message envoyé avec succès !';
-      document.getElementById('contactForm').reset();
-    }catch(err){
-      status.textContent = 'Erreur envoi: ' + err.message;
-    }
-  });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!name || !email || !message) {
+        status.textContent = "⚠️ Tous les champs sont obligatoires.";
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "messages"), {
+          name,
+          email,
+          message,
+          createdAt: serverTimestamp()
+        });
+
+        status.textContent = "✅ Message envoyé avec succès !";
+        form.reset();
+      } catch (err) {
+        status.textContent = "❌ Erreur : " + err.message;
+      }
+    });
   </script>
 </body>
 </html>
