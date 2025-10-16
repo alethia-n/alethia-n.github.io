@@ -1,84 +1,72 @@
-/* === Authentification (style intégré au thème sombre) === */
-.auth-container {
-  max-width: 900px;
-  margin: 60px auto;
+body {
+  font-family: Arial, sans-serif;
   text-align: center;
-  background: #2b211b;
-  border: 1px solid #4b3a2d;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 0 15px rgba(75, 58, 45, 0.3);
+  padding: 40px;
+  background: #fafafa;
 }
 
-.auth-container h2 {
-  color: #f0c997;
-  margin-bottom: 30px;
-  font-size: 1.4em;
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn, .back-btn {
+  background: #007bff;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.btn:hover, .back-btn:hover {
+  background: #0056b3;
+}
+
+.logout {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #e63946;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.logout:hover {
+  background: #b51c2e;
 }
 
 .auth-forms {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 25px;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
 }
 
-.auth-forms form {
-  background: #1a1410;
-  border: 1px solid #4b3a2d;
-  border-radius: 8px;
-  padding: 20px;
-  width: 280px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 220px;
 }
 
-.auth-forms h3 {
-  color: #d6bfa9;
-  margin-bottom: 15px;
-}
-
-.auth-forms input {
-  background: #2b211b;
-  border: 1px solid #4b3a2d;
-  color: #e5d6c6;
+input, button {
   padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-.auth-forms input::placeholder {
-  color: #b79c83;
-}
-
-.auth-forms button {
-  background: #4b3a2d;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  color: #e5d6c6;
-  font-weight: bold;
+button {
+  background: #007bff;
+  color: white;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
-.auth-forms button:hover {
-  background: #6a4e3a;
-}
-
-#quotes-section {
-  text-align: center;
-  margin-top: 50px;
-}
-
-#quotes-section blockquote {
-  font-style: italic;
-  background: #2b211b;
-  border-left: 4px solid #6a4e3a;
-  padding: 15px 20px;
-  margin: 20px auto;
-  max-width: 700px;
-  border-radius: 8px;
-  color: #e5d6c6;
+button:hover {
+  background: #0056b3;
 }
