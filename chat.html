@@ -22,7 +22,7 @@
   <script type="module">
   import { auth, db } from "./firebase-config.js";
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { collection, addDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
   const chatBox = document.getElementById("chat-box");
   const chatForm = document.getElementById("chatForm");
@@ -30,44 +30,54 @@
   const logoutBtn = document.getElementById("logout-btn");
   let userEmail = null;
 
-  // Vérifie si l'utilisateur est connecté
+  // 🔹 Authentification
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       alert("Veuillez vous connecter pour accéder au chat.");
       window.location.href = "quotes.html";
       return;
     }
-    userEmail = user.email;
+    userEmail = user.email.replace(/[.#$/\[\]]/g, "_"); // Firestore key safe
     initChat();
   });
 
-  // Initialisation du chat
+  // 🔹 Initialisation du chat utilisateur
   function initChat() {
-    const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+    const messagesRef = collection(db, "chats", userEmail, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+
     onSnapshot(q, (snapshot) => {
       chatBox.innerHTML = "";
       snapshot.forEach((doc) => {
         const data = doc.data();
-        const messageClass = data.sender === userEmail ? "me" : "other";
-        chatBox.innerHTML += `<div class="msg ${messageClass}"><b>${data.sender}</b><p>${data.text}</p></div>`;
+        const messageClass = data.sender === auth.currentUser.email ? "me" : "other";
+        chatBox.innerHTML += `<div class="msg ${messageClass}">
+          <b>${data.sender === auth.currentUser.email ? "Moi" : "Admin"}</b>
+          <p>${data.text}</p>
+        </div>`;
       });
       chatBox.scrollTop = chatBox.scrollHeight;
     });
   }
 
-  // Envoi d'un message
+  // 🔹 Envoi d’un message
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!chatMessage.value.trim()) return;
-    await addDoc(collection(db, "chat"), {
-      sender: userEmail,
+    const userRef = doc(db, "chats", userEmail);
+    const messagesRef = collection(userRef, "messages");
+
+    await addDoc(messagesRef, {
+      sender: auth.currentUser.email,
       text: chatMessage.value,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      readByAdmin: false // 🔴 pour le compteur admin
     });
+
     chatMessage.value = "";
   });
 
-  // Déconnexion
+  // 🔹 Déconnexion
   logoutBtn.addEventListener("click", async () => {
     await signOut(auth);
     window.location.href = "index.html";
