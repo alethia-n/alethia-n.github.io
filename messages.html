@@ -5,151 +5,87 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Messages - Admin</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    header {
-      background-color: #2b211b;
-      color: #e5d6c6;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #4b3a2d;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.6em;
-    }
-    #logoutBtn {
-      background: #4b3a2d;
-      color: #e5d6c6;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #logoutBtn:hover {
-      background: #6a4e3a;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #4b3a2d;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #2b211b;
-      color: #d6bfa9;
-    }
-    td {
-      background-color: #1a1410;
-      color: #e5d6c6;
-    }
-  </style>
 </head>
 <body>
-  <header>
-    <h1>Boîte de réception (Admin)</h1>
-    <button id="logoutBtn">Se déconnecter</button>
-  </header>
-
   <main class="container">
-    <h2>Messages reçus</h2>
+    <h2>Messages reçus (admin)</h2>
     <div id="messages-area">
       <p class="muted">Chargement...</p>
     </div>
   </main>
 
   <script type="module">
-    import { auth, db } from "./firebase-config.js";
-    import { onAuthStateChanged, signOut } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { collection, getDocs, orderBy, query } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { auth, db } from "./firebase-config.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const ADMIN_EMAIL = "medjoudj.nouredine@gmail.com";
-    const logoutBtn = document.getElementById("logoutBtn");
+  // ✅ Ton email administrateur :
+  const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+
+  onAuthStateChanged(auth, async (user) => {
     const area = document.getElementById("messages-area");
 
-    // 🔐 Vérifie si utilisateur connecté
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("⚠️ Vous devez être connecté pour accéder à cette page.");
-        window.location.href = "index.html";
+    if (!user) {
+      window.location.href = "index.html"; // Redirection si non connecté
+      return;
+    }
+
+    if (user.email !== ADMIN_EMAIL) {
+      alert("Accès réservé à l’administrateur.");
+      window.location.href = "index.html"; // Redirection si pas admin
+      return;
+    }
+
+    try {
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        area.innerHTML = "<p>Aucun message trouvé.</p>";
         return;
       }
-      if (user.email !== ADMIN_EMAIL) {
-        alert("⛔ Accès refusé. Réservé à l'administrateur.");
-        window.location.href = "index.html";
-        return;
-      }
-      // Si admin, afficher les messages
-      await loadMessages();
-    });
 
-    // 🔓 Déconnexion
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      alert("Vous avez été déconnecté.");
-      window.location.href = "index.html";
-    });
-
-    // 📩 Chargement des messages Firestore
-    async function loadMessages() {
-      try {
-        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-          area.innerHTML = "<p>Aucun message trouvé.</p>";
-          return;
-        }
-
-        let html = `
-          <table class="messages-table">
-            <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
-
-        snap.forEach(doc => {
-          const data = doc.data();
-          const date = data.createdAt?.toDate?.().toLocaleString() || "-";
-          html += `
+      let html = `
+        <table class="messages-table">
+          <thead>
             <tr>
-              <td>${escapeHtml(data.name || "")}</td>
-              <td>${escapeHtml(data.email || "")}</td>
-              <td>${escapeHtml(data.message || "")}</td>
-              <td>${date}</td>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Message</th>
+              <th>Date</th>
             </tr>
-          `;
-        });
+          </thead>
+          <tbody>
+      `;
 
-        html += "</tbody></table>";
-        area.innerHTML = html;
-      } catch (err) {
-        area.innerHTML = `<p class="muted">Erreur : ${err.message}</p>`;
-      }
-    }
+      snap.forEach(doc => {
+        const data = doc.data();
+        const date = data.createdAt?.toDate
+          ? data.createdAt.toDate().toLocaleString()
+          : "-";
+        html += `
+          <tr>
+            <td>${escapeHtml(data.name || "")}</td>
+            <td>${escapeHtml(data.email || "")}</td>
+            <td>${escapeHtml(data.message || "")}</td>
+            <td>${date}</td>
+          </tr>
+        `;
+      });
 
-    // 🛡 Empêche l'injection HTML
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, m => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[m]));
+      html += "</tbody></table>";
+      area.innerHTML = html;
+
+    } catch (err) {
+      area.innerHTML = `<p class="muted">Erreur : ${err.message}</p>`;
     }
+  });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    }[m]));
+  }
   </script>
 </body>
 </html>
