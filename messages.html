@@ -5,11 +5,55 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Messages - Admin</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    header {
+      background-color: #2b211b;
+      color: #e5d6c6;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #4b3a2d;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.6em;
+    }
+    #logoutBtn {
+      background: #4b3a2d;
+      color: #e5d6c6;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #logoutBtn:hover {
+      background: #6a4e3a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #4b3a2d;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #2b211b;
+      color: #d6bfa9;
+    }
+    td {
+      background-color: #1a1410;
+      color: #e5d6c6;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Boîte de réception</h1>
-    <button id="logoutBtn" style="float:right;">Se déconnecter</button>
+    <h1>Boîte de réception (Admin)</h1>
+    <button id="logoutBtn">Se déconnecter</button>
   </header>
 
   <main class="container">
@@ -32,8 +76,13 @@
 
     // 🔐 Vérifie si utilisateur connecté
     onAuthStateChanged(auth, async (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
-        // redirection vers accueil si non admin
+      if (!user) {
+        alert("⚠️ Vous devez être connecté pour accéder à cette page.");
+        window.location.href = "index.html";
+        return;
+      }
+      if (user.email !== ADMIN_EMAIL) {
+        alert("⛔ Accès refusé. Réservé à l'administrateur.");
         window.location.href = "index.html";
         return;
       }
@@ -44,6 +93,7 @@
     // 🔓 Déconnexion
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
+      alert("Vous avez été déconnecté.");
       window.location.href = "index.html";
     });
 
