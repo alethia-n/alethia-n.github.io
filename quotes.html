@@ -6,59 +6,114 @@
 <title>Citations + Chat</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  body { display: flex; font-family: sans-serif; }
-  .hidden { display: none; }
-  #loginDiv, #quotesDiv { padding: 20px; }
-  .logout { margin-bottom: 20px; cursor: pointer; }
-  #errorMsg { color: red; margin-bottom: 10px; }
-  input, button { padding: 8px; margin-bottom: 10px; }
-  button { cursor: pointer; }
+  body { font-family: sans-serif; margin:0; padding:0; }
 
-  /* Sidebar admin */
-  #sidebar { width: 200px; border-right: 1px solid #ccc; padding: 10px; }
-  #sidebar h3 { margin-top: 0; }
-  .userItem { padding: 5px; cursor: pointer; border-bottom: 1px solid #eee; }
-  .userItem.active { background-color: #ddd; }
+  /* ---------------- Connexion ---------------- */
+  #loginDiv { padding: 20px; max-width: 400px; margin: 50px auto; border:1px solid #ccc; border-radius:8px; }
+  input, button { width:100%; padding:10px; margin-bottom:10px; }
+  button { cursor:pointer; }
+  #errorMsg { color:red; }
 
-  /* Chat */
-  #chatContainer { flex: 1; padding: 10px; }
-  #messages { max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 10px; }
-  .message { padding: 5px; border-bottom: 1px solid #eee; }
+  /* ---------------- Citations ---------------- */
+  #quotesDiv { display:none; padding:20px; position:relative; }
+
+  blockquote { margin:20px 0; padding-left:20px; border-left:4px solid #ccc; font-style:italic; }
+
+  /* ---------------- Sidebar admin ---------------- */
+  #sidebar { width:200px; position:absolute; left:0; top:0; bottom:0; border-right:1px solid #ccc; padding:10px; background:#f9f9f9; display:none; overflow-y:auto; }
+  .userItem { padding:5px; cursor:pointer; border-bottom:1px solid #eee; }
+  .userItem.active { background:#ddd; }
+
+  /* ---------------- Chat flottant ---------------- */
+  #chatToggle {
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#007bff;
+    color:#fff;
+    font-size:24px;
+    text-align:center;
+    line-height:50px;
+    cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    z-index:1000;
+  }
+
+  #chatContainer {
+    position:fixed;
+    bottom:80px;
+    right:20px;
+    width:300px;
+    max-height:400px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    background:#fff;
+    display:none;
+    flex-direction:column;
+    z-index:1000;
+  }
+
+  #chatHeader {
+    padding:10px;
+    background:#007bff;
+    color:#fff;
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
+  #messages { flex:1; overflow-y:auto; padding:10px; border-top:1px solid #ccc; border-bottom:1px solid #ccc; }
+  .message { margin-bottom:5px; }
+
+  #newMessage { padding:8px; width:calc(100% - 16px); margin:5px auto; }
+  #sendBtn { padding:8px; margin:5px; width:calc(100% - 10px); cursor:pointer; }
+
+  #logoutBtn { cursor:pointer; background:#ff4d4d; border:none; color:#fff; padding:5px 10px; border-radius:5px; }
 </style>
 </head>
 <body>
 
-<!-- FORMULAIRE DE CONNEXION / INSCRIPTION -->
+<!-- FORMULAIRE DE CONNEXION -->
 <div id="loginDiv">
   <h2>Connexion / Inscription</h2>
   <input type="email" id="email" placeholder="Email" required>
   <input type="password" id="password" placeholder="Mot de passe (≥6 caractères)" required>
-  <div>
-    <button id="loginBtn">Se connecter</button>
-    <button id="signupBtn">S’inscrire</button>
-  </div>
+  <button id="loginBtn">Se connecter</button>
+  <button id="signupBtn">S’inscrire</button>
   <p id="errorMsg"></p>
 </div>
 
-<!-- PAGE DES CITATIONS + CHAT -->
-<div id="quotesDiv" class="hidden" style="display:flex; flex:1;">
+<!-- PAGE CITATIONS -->
+<div id="quotesDiv">
   <!-- Sidebar admin -->
-  <div id="sidebar" class="hidden">
+  <div id="sidebar">
     <h3>Utilisateurs</h3>
     <div id="usersList"></div>
   </div>
 
-  <!-- Contenu principal -->
-  <div id="chatContainer">
-    <button id="logoutBtn" class="logout">Se déconnecter</button>
-    <h2>Citations</h2>
-    <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
-    <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+  <!-- Citations -->
+  <h2>Citations</h2>
+  <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+  <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+</div>
 
-    <div id="messages"></div>
-    <input type="text" id="newMessage" placeholder="Tapez votre message">
-    <button id="sendBtn">Envoyer</button>
+<!-- Bouton pour ouvrir/fermer le chat -->
+<div id="chatToggle">💬</div>
+
+<!-- Chat flottant -->
+<div id="chatContainer">
+  <div id="chatHeader">
+    <span>Chat</span>
+    <button id="logoutBtn">Se déconnecter</button>
   </div>
+  <div id="messages"></div>
+  <input type="text" id="newMessage" placeholder="Tapez votre message">
+  <button id="sendBtn">Envoyer</button>
 </div>
 
 <script type="module">
@@ -69,8 +124,8 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { collection, addDoc, query, orderBy, onSnapshot, getDocs } 
-  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { collection, addDoc, query, orderBy, onSnapshot, getDocs, serverTimestamp } 
+from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const loginDiv = document.getElementById("loginDiv");
 const quotesDiv = document.getElementById("quotesDiv");
@@ -88,46 +143,50 @@ const sendBtn = document.getElementById("sendBtn");
 const sidebar = document.getElementById("sidebar");
 const usersListDiv = document.getElementById("usersList");
 
+const chatToggle = document.getElementById("chatToggle");
+const chatContainer = document.getElementById("chatContainer");
+
 const ADMIN_EMAIL = "nouredine.m22@gmail.com";
 let userEmail = "";
 let selectedUser = null;
 
 const messagesCollection = collection(db, "chats_messages");
 
-// ------------------- Connexion/Inscription -------------------
+// ------------------- Connexion / Inscription -------------------
 loginBtn.addEventListener("click", async () => {
   errorMsg.textContent = "";
   const email = emailInput.value.trim();
   const password = passwordInput.value;
-  if (!email || !password) { errorMsg.textContent = "Veuillez remplir tous les champs."; return; }
+  if(!email || !password){ errorMsg.textContent="Veuillez remplir tous les champs."; return; }
   try { await signInWithEmailAndPassword(auth, email, password); }
-  catch(err) { errorMsg.textContent = err.message; }
+  catch(err){ errorMsg.textContent = err.message; }
 });
 
 signupBtn.addEventListener("click", async () => {
   errorMsg.textContent = "";
   const email = emailInput.value.trim();
   const password = passwordInput.value;
-  if (!email || !password) { errorMsg.textContent = "Veuillez remplir tous les champs."; return; }
-  if (password.length < 6) { errorMsg.textContent = "Le mot de passe doit contenir au moins 6 caractères."; return; }
+  if(!email || !password){ errorMsg.textContent="Veuillez remplir tous les champs."; return; }
+  if(password.length < 6){ errorMsg.textContent="Le mot de passe doit contenir au moins 6 caractères."; return; }
   try { await createUserWithEmailAndPassword(auth, email, password); }
-  catch(err) { errorMsg.textContent = err.message; }
+  catch(err){ errorMsg.textContent = err.message; }
 });
 
 logoutBtn.addEventListener("click", async () => { await signOut(auth); });
 
 // ------------------- Gestion chat -------------------
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    loginDiv.classList.add("hidden");
-    quotesDiv.classList.remove("hidden");
+  if(user){
+    loginDiv.style.display = "none";
+    quotesDiv.style.display = "block";
+    chatToggle.style.display = "block";
     userEmail = user.email;
 
-    // Sidebar visible seulement pour admin
-    if(userEmail === ADMIN_EMAIL) sidebar.classList.remove("hidden");
+    // Sidebar admin
+    if(userEmail === ADMIN_EMAIL) sidebar.style.display="block";
 
     // Liste des utilisateurs pour admin
-    if(userEmail === ADMIN_EMAIL) {
+    if(userEmail === ADMIN_EMAIL){
       const snapshot = await getDocs(messagesCollection);
       const usersSet = new Set();
       snapshot.forEach(doc => {
@@ -149,39 +208,29 @@ onAuthStateChanged(auth, async (user) => {
       });
     }
 
-    // Messages en temps réel
     loadMessages();
   } else {
-    loginDiv.classList.remove("hidden");
-    quotesDiv.classList.add("hidden");
-    userEmail = "";
-    selectedUser = null;
+    loginDiv.style.display="block";
+    quotesDiv.style.display="none";
+    chatContainer.style.display="none";
+    chatToggle.style.display="none";
+    userEmail="";
+    selectedUser=null;
   }
 });
 
-// Charger messages selon rôle
-function loadMessages() {
-  let q;
-  if(userEmail === ADMIN_EMAIL) {
-    if(!selectedUser) {
-      messagesDiv.innerHTML = "<i>Sélectionnez un utilisateur pour voir les messages</i>";
-      return;
-    }
-    q = query(messagesCollection, orderBy("timestamp"));
-  } else {
-    q = query(messagesCollection, orderBy("timestamp"));
-  }
-
-  onSnapshot(q, snapshot => {
-    messagesDiv.innerHTML = "";
-    snapshot.forEach(doc => {
+// Charger messages
+function loadMessages(){
+  let q = query(messagesCollection, orderBy("timestamp"));
+  onSnapshot(q, snapshot=>{
+    messagesDiv.innerHTML="";
+    snapshot.forEach(doc=>{
       const data = doc.data();
-      if(userEmail === ADMIN_EMAIL) {
-        // admin voit seulement messages de la conversation sélectionnée
-        if(data.sender !== selectedUser && data.recipient !== selectedUser) return;
+      if(userEmail === ADMIN_EMAIL){
+        if(!selectedUser) return;
+        if(!(data.sender === selectedUser || data.recipient === selectedUser)) return;
       } else {
-        // utilisateur voit ses messages et réponses admin
-        if(!((data.sender === userEmail) || (data.sender === ADMIN_EMAIL && data.recipient === userEmail))) return;
+        if(!((data.sender===userEmail) || (data.sender===ADMIN_EMAIL && data.recipient===userEmail))) return;
       }
       const div = document.createElement("div");
       div.classList.add("message");
@@ -193,31 +242,32 @@ function loadMessages() {
 }
 
 // Envoyer message
-sendBtn.addEventListener("click", async () => {
+sendBtn.addEventListener("click", async ()=>{
   const text = newMessageInput.value.trim();
   if(!text || !userEmail) return;
 
-  let recipientEmail;
-  if(userEmail === ADMIN_EMAIL) {
-    if(!selectedUser){ alert("Sélectionnez un utilisateur"); return; }
-    recipientEmail = selectedUser;
-  } else {
-    recipientEmail = ADMIN_EMAIL;
-  }
+  let recipientEmail = (userEmail===ADMIN_EMAIL) ? selectedUser : ADMIN_EMAIL;
+  if(userEmail===ADMIN_EMAIL && !recipientEmail){ alert("Sélectionnez un utilisateur"); return; }
 
-  try {
-    await addDoc(messagesCollection, {
-      sender: userEmail,
-      recipient: recipientEmail,
-      text: text,
-      readByUser: false,
-      timestamp: new Date()
+  try{
+    await addDoc(messagesCollection,{
+      sender:userEmail,
+      recipient:recipientEmail,
+      text:text,
+      readByUser:false,
+      timestamp:serverTimestamp()
     });
-    newMessageInput.value = "";
+    newMessageInput.value="";
     if(userEmail !== ADMIN_EMAIL) alert("Message envoyé !");
-  } catch(err) {
-    alert("Erreur : " + err.message);
+  } catch(err){
+    alert("Erreur: "+err.message);
   }
+});
+
+// ------------------- Toggle chat -------------------
+chatToggle.addEventListener("click", ()=>{
+  if(chatContainer.style.display === "none") chatContainer.style.display="flex";
+  else chatContainer.style.display="none";
 });
 </script>
 </body>
