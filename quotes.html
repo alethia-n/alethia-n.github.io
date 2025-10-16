@@ -6,18 +6,29 @@
 <title>Citations + Chat</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.hidden { display: none; }
-.logout { margin-top: 20px; cursor: pointer; }
-#errorMsg { color: red; margin-top: 10px; }
-input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
-button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
-#chatContainer { border: 1px solid #ccc; padding: 10px; margin-top: 20px; max-width: 400px; }
-#messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
-.message { padding: 5px; border-bottom: 1px solid #eee; }
+  body { display: flex; font-family: sans-serif; }
+  .hidden { display: none; }
+  #loginDiv, #quotesDiv { padding: 20px; }
+  .logout { margin-bottom: 20px; cursor: pointer; }
+  #errorMsg { color: red; margin-bottom: 10px; }
+  input, button { padding: 8px; margin-bottom: 10px; }
+  button { cursor: pointer; }
+
+  /* Sidebar admin */
+  #sidebar { width: 200px; border-right: 1px solid #ccc; padding: 10px; }
+  #sidebar h3 { margin-top: 0; }
+  .userItem { padding: 5px; cursor: pointer; border-bottom: 1px solid #eee; }
+  .userItem.active { background-color: #ddd; }
+
+  /* Chat */
+  #chatContainer { flex: 1; padding: 10px; }
+  #messages { max-height: 400px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; margin-bottom: 10px; }
+  .message { padding: 5px; border-bottom: 1px solid #eee; }
 </style>
 </head>
 <body>
 
+<!-- FORMULAIRE DE CONNEXION / INSCRIPTION -->
 <div id="loginDiv">
   <h2>Connexion / Inscription</h2>
   <input type="email" id="email" placeholder="Email" required>
@@ -29,14 +40,21 @@ button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
   <p id="errorMsg"></p>
 </div>
 
-<div id="quotesDiv" class="hidden">
-  <button id="logoutBtn" class="logout">Se déconnecter</button>
-  <h2>Citations</h2>
-  <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
-  <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+<!-- PAGE DES CITATIONS + CHAT -->
+<div id="quotesDiv" class="hidden" style="display:flex; flex:1;">
+  <!-- Sidebar admin -->
+  <div id="sidebar" class="hidden">
+    <h3>Utilisateurs</h3>
+    <div id="usersList"></div>
+  </div>
 
+  <!-- Contenu principal -->
   <div id="chatContainer">
-    <h3>Chat</h3>
+    <button id="logoutBtn" class="logout">Se déconnecter</button>
+    <h2>Citations</h2>
+    <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+    <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+
     <div id="messages"></div>
     <input type="text" id="newMessage" placeholder="Tapez votre message">
     <button id="sendBtn">Envoyer</button>
@@ -51,7 +69,7 @@ import {
   signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { collection, addDoc, query, where, orderBy, onSnapshot } 
+import { collection, addDoc, query, orderBy, onSnapshot, getDocs } 
   from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 const loginDiv = document.getElementById("loginDiv");
@@ -67,50 +85,16 @@ const messagesDiv = document.getElementById("messages");
 const newMessageInput = document.getElementById("newMessage");
 const sendBtn = document.getElementById("sendBtn");
 
+const sidebar = document.getElementById("sidebar");
+const usersListDiv = document.getElementById("usersList");
+
 const ADMIN_EMAIL = "nouredine.m22@gmail.com";
 let userEmail = "";
+let selectedUser = null;
 
-const messagesCollection = collection(db, "chats", "messages");
+const messagesCollection = collection(db, "chats_messages");
 
-// Vérifie la connexion
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loginDiv.classList.add("hidden");
-    quotesDiv.classList.remove("hidden");
-    userEmail = user.email;
-
-    // Filtre des messages
-    const q = userEmail === ADMIN_EMAIL 
-      ? query(messagesCollection, orderBy("timestamp")) // admin voit tout
-      : query(messagesCollection,
-              where("sender", "==", userEmail)
-              ,orderBy("timestamp")); // utilisateur voit seulement ses messages et ceux de l’admin
-
-    onSnapshot(query(messagesCollection, orderBy("timestamp")), (snapshot) => {
-      messagesDiv.innerHTML = "";
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        // Filtrage pour l'utilisateur normal
-        if (userEmail !== ADMIN_EMAIL) {
-          if (data.sender !== ADMIN_EMAIL && data.sender !== userEmail) return;
-          if (data.recipient !== userEmail && data.sender !== userEmail) return;
-        }
-        const div = document.createElement("div");
-        div.classList.add("message");
-        div.textContent = `${data.sender}: ${data.text}`;
-        messagesDiv.appendChild(div);
-      });
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    });
-
-  } else {
-    loginDiv.classList.remove("hidden");
-    quotesDiv.classList.add("hidden");
-    userEmail = "";
-  }
-});
-
-// Connexion
+// ------------------- Connexion/Inscription -------------------
 loginBtn.addEventListener("click", async () => {
   errorMsg.textContent = "";
   const email = emailInput.value.trim();
@@ -120,7 +104,6 @@ loginBtn.addEventListener("click", async () => {
   catch(err) { errorMsg.textContent = err.message; }
 });
 
-// Inscription
 signupBtn.addEventListener("click", async () => {
   errorMsg.textContent = "";
   const email = emailInput.value.trim();
@@ -131,23 +114,111 @@ signupBtn.addEventListener("click", async () => {
   catch(err) { errorMsg.textContent = err.message; }
 });
 
-// Déconnexion
 logoutBtn.addEventListener("click", async () => { await signOut(auth); });
 
-// Envoyer un message
+// ------------------- Gestion chat -------------------
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    loginDiv.classList.add("hidden");
+    quotesDiv.classList.remove("hidden");
+    userEmail = user.email;
+
+    // Sidebar visible seulement pour admin
+    if(userEmail === ADMIN_EMAIL) sidebar.classList.remove("hidden");
+
+    // Liste des utilisateurs pour admin
+    if(userEmail === ADMIN_EMAIL) {
+      const snapshot = await getDocs(messagesCollection);
+      const usersSet = new Set();
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if(data.sender !== ADMIN_EMAIL) usersSet.add(data.sender);
+      });
+      usersListDiv.innerHTML = "";
+      Array.from(usersSet).forEach(email => {
+        const div = document.createElement("div");
+        div.classList.add("userItem");
+        div.textContent = email;
+        div.addEventListener("click", () => {
+          document.querySelectorAll(".userItem").forEach(e=>e.classList.remove("active"));
+          div.classList.add("active");
+          selectedUser = email;
+          loadMessages();
+        });
+        usersListDiv.appendChild(div);
+      });
+    }
+
+    // Messages en temps réel
+    loadMessages();
+  } else {
+    loginDiv.classList.remove("hidden");
+    quotesDiv.classList.add("hidden");
+    userEmail = "";
+    selectedUser = null;
+  }
+});
+
+// Charger messages selon rôle
+function loadMessages() {
+  let q;
+  if(userEmail === ADMIN_EMAIL) {
+    if(!selectedUser) {
+      messagesDiv.innerHTML = "<i>Sélectionnez un utilisateur pour voir les messages</i>";
+      return;
+    }
+    q = query(messagesCollection, orderBy("timestamp"));
+  } else {
+    q = query(messagesCollection, orderBy("timestamp"));
+  }
+
+  onSnapshot(q, snapshot => {
+    messagesDiv.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if(userEmail === ADMIN_EMAIL) {
+        // admin voit seulement messages de la conversation sélectionnée
+        if(data.sender !== selectedUser && data.recipient !== selectedUser) return;
+      } else {
+        // utilisateur voit ses messages et réponses admin
+        if(!((data.sender === userEmail) || (data.sender === ADMIN_EMAIL && data.recipient === userEmail))) return;
+      }
+      const div = document.createElement("div");
+      div.classList.add("message");
+      div.textContent = `${data.sender}: ${data.text}`;
+      messagesDiv.appendChild(div);
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+}
+
+// Envoyer message
 sendBtn.addEventListener("click", async () => {
   const text = newMessageInput.value.trim();
-  if (!text || !userEmail) return;
-  await addDoc(messagesCollection, {
-    sender: userEmail,
-    recipient: userEmail === ADMIN_EMAIL ? null : ADMIN_EMAIL,
-    text: text,
-    readByUser: false,
-    timestamp: new Date()
-  });
-  newMessageInput.value = "";
+  if(!text || !userEmail) return;
+
+  let recipientEmail;
+  if(userEmail === ADMIN_EMAIL) {
+    if(!selectedUser){ alert("Sélectionnez un utilisateur"); return; }
+    recipientEmail = selectedUser;
+  } else {
+    recipientEmail = ADMIN_EMAIL;
+  }
+
+  try {
+    await addDoc(messagesCollection, {
+      sender: userEmail,
+      recipient: recipientEmail,
+      text: text,
+      readByUser: false,
+      timestamp: new Date()
+    });
+    newMessageInput.value = "";
+    if(userEmail !== ADMIN_EMAIL) alert("Message envoyé !");
+  } catch(err) {
+    alert("Erreur : " + err.message);
+  }
 });
 </script>
-
 </body>
 </html>
