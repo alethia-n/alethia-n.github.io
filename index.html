@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Accueil - Mon site</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Mon Site</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="courses.html">Courses</a>
+      <a href="quotes.html">Quotes</a>
+      <a href="contact.html">Contact</a>
+      <a id="login-btn" href="login.html" class="btn">Login</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Bienvenue</h2>
+    <p>Page d'accueil du site. Utilise la navigation pour tester les pages.</p>
+  </main>
+
+  <script>
+  // Hide login button when user is logged in (optional improvement for index)
+  // We'll initialize Firebase safely if firebaseConfig is defined in firebase-config.js.
+  (async ()=>{
+    try{
+      const { initializeApp, getApps, getApp } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js');
+      if (typeof firebaseConfig !== 'undefined') {
+        if (!getApps().length) initializeApp(firebaseConfig);
+      }
+      const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+      const auth = getAuth();
+      onAuthStateChanged(auth, user => {
+        const btn = document.getElementById('login-btn');
+        if (user) btn.style.display='none';
+      });
+    }catch(e){ console.log('Firebase not initialized (index)', e); }
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Contact</h2>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Nom" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <textarea id="message" placeholder="Votre message" required></textarea>
+      <button type="submit">Envoyer</button>
+    </form>
+    <p id="status" class="muted"></p>
+  </main>
+
+  <script type="module">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+
+  if (typeof firebaseConfig !== 'undefined') {
+    if (!getApps().length) initializeApp(firebaseConfig);
+  }
+  const db = getFirestore();
+
+  document.getElementById('contactForm').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+    const status = document.getElementById('status');
+    try{
+      await addDoc(collection(db, 'messages'), {
+        name, email, message,
+        createdAt: serverTimestamp()
+      });
+      status.textContent = 'Message envoyé avec succès !';
+      document.getElementById('contactForm').reset();
+    }catch(err){
+      status.textContent = 'Erreur envoi: ' + err.message;
+    }
+  });
+  </script>
+</body>
+</html>

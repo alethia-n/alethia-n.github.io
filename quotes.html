@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quotes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Citations</h2>
+    <div id="quotes-list">
+      <!-- Citations statiques d'exemple -->
+      <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+      <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+    </div>
+    <button id="logout" class="btn">Se déconnecter</button>
+  </main>
+
+  <script type="module">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+
+  if (typeof firebaseConfig !== 'undefined') {
+    if (!getApps().length) initializeApp(firebaseConfig);
+  }
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      // Not logged in — redirect to login page
+      window.location.href = 'login.html';
+      return;
+    }
+    // User is logged in — keep quotes visible
+    document.getElementById('logout').addEventListener('click', async ()=>{
+      await signOut(auth);
+      window.location.href = 'index.html';
+    });
+  });
+  </script>
+</body>
+</html>

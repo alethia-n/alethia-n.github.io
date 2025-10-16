@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Messages - Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Messages reçus (admin)</h2>
+    <div id="messages-area">
+      <p class="muted">Chargement...</p>
+    </div>
+  </main>
+
+  <script type="module">
+  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+  import { getFirestore, collection, query, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+
+  const ADMIN_EMAIL = 'medjoudj.nouredine@gmail.com';
+
+  if (typeof firebaseConfig !== 'undefined') {
+    if (!getApps().length) initializeApp(firebaseConfig);
+  }
+  const auth = getAuth();
+  const db = getFirestore();
+
+  onAuthStateChanged(auth, async (user)=>{
+    if (!user) {
+      window.location.href = 'index.html';
+      return;
+    }
+    if (user.email !== ADMIN_EMAIL) {
+      window.location.href = 'index.html';
+      return;
+    }
+    // user is admin — fetch messages
+    const area = document.getElementById('messages-area');
+    try{
+      const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        area.innerHTML = '<p>Aucun message trouvé.</p>';
+        return;
+      }
+      let html = '<table class="messages-table"><thead><tr><th>Nom</th><th>Email</th><th>Message</th><th>Date</th></tr></thead><tbody>';
+      snap.forEach(doc => {
+        const data = doc.data();
+        const date = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : '-';
+        html += `<tr><td>${escapeHtml(data.name||'')}</td><td>${escapeHtml(data.email||'')}</td><td>${escapeHtml(data.message||'')}</td><td>${date}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      area.innerHTML = html;
+    }catch(err){
+      area.innerHTML = '<p class="muted">Erreur: ' + err.message + '</p>';
+    }
+  });
+
+  // small helper to avoid HTML injection when rendering messages
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+  </script>
+</body>
+</html>
