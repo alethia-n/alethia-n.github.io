@@ -3,71 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connexion - Quotes</title>
+  <title>Citations</title>
   <link rel="stylesheet" href="style.css" />
 
-  <script type="module">
-    import { auth } from "./firebase-config.js";
-    import {
-      onAuthStateChanged,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  <style>
+    .logout {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      background: #4b3a2d;
+      color: #e5d6c6;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+    .logout:hover { background: #6a4e3a; }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const loginForm = document.getElementById("login-form");
-      const signupForm = document.getElementById("signup-form");
-
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          window.location.href = "quotes-page.html";
-        }
-      });
-
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.location.href = "quotes-page.html";
-        } catch (err) {
-          alert("Erreur : " + err.message);
-        }
-      });
-
-      signupForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("signup-email").value;
-        const password = document.getElementById("signup-password").value;
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-          window.location.href = "quotes-page.html";
-        } catch (err) {
-          alert("Erreur : " + err.message);
-        }
-      });
-    });
-  </script>
+    /* Bulle rouge du chat */
+    #chat-link {
+      position: relative;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    #chatBadge {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <h2>Connexion requise</h2>
-  <div class="auth-forms">
-    <form id="login-form">
-      <h3>Connexion</h3>
-      <input type="email" id="login-email" placeholder="Email" required />
-      <input type="password" id="login-password" placeholder="Mot de passe" required />
-      <button type="submit">Se connecter</button>
-    </form>
+  <!-- Bouton déconnexion -->
+  <button id="logout-btn" class="logout">Se déconnecter</button>
 
-    <form id="signup-form">
-      <h3>Inscription</h3>
-      <input type="email" id="signup-email" placeholder="Email" required />
-      <input type="password" id="signup-password" placeholder="Mot de passe" required />
-      <button type="submit">S'inscrire</button>
-    </form>
-  </div>
-  <a href="index.html" class="back-btn">← Retour à l’accueil</a>
+  <main>
+    <h2>Citations</h2>
+    <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+    <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+
+    <!-- Bouton vers chat -->
+    <a href="chat.html" id="chat-link" class="btn">💬 Chat</a>
+    <span id="chatBadge"></span>
+  </main>
+
+  <!-- === Script Firebase et Chat === -->
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import { onAuthStateChanged, signOut } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { collection, query, onSnapshot } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+
+    const logoutBtn = document.getElementById("logout-btn");
+    const chatLink = document.getElementById("chat-link");
+    const badge = document.getElementById("chatBadge");
+
+    // Vérifie connexion utilisateur
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html"; // redirige si non connecté
+        return;
+      }
+
+      // Surveille les messages non lus
+      const safeEmail = user.email.replace(/\./g, "_");
+      const messagesRef = collection(db, "chats", safeEmail, "messages");
+      onSnapshot(query(messagesRef), (snapshot) => {
+        let unread = 0;
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.sender === ADMIN_EMAIL && data.readByUser === false) unread++;
+        });
+        badge.textContent = unread;
+        badge.style.display = unread > 0 ? "inline-block" : "none";
+      });
+    });
+
+    // Déconnexion
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>
