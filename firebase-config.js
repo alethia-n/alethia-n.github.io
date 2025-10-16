@@ -1,31 +1,27 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+// === firebase-config.js ===
 
-    // Collection des utilisateurs
-    match /users/{userId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.token.email == userId;
-    }
+// Import des modules Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    // Collection des messages
-    match /chats_messages/{messageId} {
-      allow create: if request.auth != null && (
-        // Admin peut envoyer à n’importe qui
-        request.auth.token.email == "nouredine.m22@gmail.com" ||
-        // Utilisateur peut envoyer uniquement à l’admin
-        request.resource.data.recipient == "nouredine.m22@gmail.com"
-      );
+// Configuration Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCuwjW3DjLYvo2gorazMA99qPam4mQ3D5k",
+  authDomain: "alethiamessage.firebaseapp.com",
+  projectId: "alethiamessage",
+  storageBucket: "alethiamessage.firebasestorage.app",
+  messagingSenderId: "1093724154743",
+  appId: "1:1093724154743:web:e90669c98f47dc64d48f72",
+  measurementId: "G-4YJ1K1Y7FT"
+};
 
-      allow read: if request.auth != null && (
-        // Admin lit tous les messages
-        request.auth.token.email == "nouredine.m22@gmail.com" ||
-        // Utilisateur lit seulement ses messages ou ceux envoyés par admin à lui
-        resource.data.sender == request.auth.token.email ||
-        resource.data.recipient == request.auth.token.email
-      );
+// Initialisation de Firebase
+const app = initializeApp(firebaseConfig);
 
-      allow update, delete: if false; // personne ne peut modifier/supprimer
-    }
-  }
-}
+// Authentification et Firestore
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Export pour utilisation dans les autres scripts
+export { auth, db };
