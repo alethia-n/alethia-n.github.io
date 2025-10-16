@@ -1,161 +1,153 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Citations + Chat</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .hidden { display: none; }
-    .logout { margin-top: 20px; cursor: pointer; }
-    #errorMsg { color: red; margin-top: 10px; }
-    input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
-    button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
-    #chatContainer { border: 1px solid #ccc; padding: 10px; margin-top: 20px; max-width: 400px; }
-    #messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
-    .message { padding: 5px; border-bottom: 1px solid #eee; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citations + Chat</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.hidden { display: none; }
+.logout { margin-top: 20px; cursor: pointer; }
+#errorMsg { color: red; margin-top: 10px; }
+input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
+button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+#chatContainer { border: 1px solid #ccc; padding: 10px; margin-top: 20px; max-width: 400px; }
+#messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+.message { padding: 5px; border-bottom: 1px solid #eee; }
+</style>
 </head>
 <body>
-  <!-- FORMULAIRE DE CONNEXION / INSCRIPTION -->
-  <div id="loginDiv">
-    <h2>Connexion / Inscription</h2>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Mot de passe (≥6 caractères)" required>
-    <div>
-      <button id="loginBtn">Se connecter</button>
-      <button id="signupBtn">S’inscrire</button>
-    </div>
-    <p id="errorMsg"></p>
+
+<div id="loginDiv">
+  <h2>Connexion / Inscription</h2>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Mot de passe (≥6 caractères)" required>
+  <div>
+    <button id="loginBtn">Se connecter</button>
+    <button id="signupBtn">S’inscrire</button>
   </div>
+  <p id="errorMsg"></p>
+</div>
 
-  <!-- PAGE DES CITATIONS + CHAT -->
-  <div id="quotesDiv" class="hidden">
-    <button id="logoutBtn" class="logout">Se déconnecter</button>
-    <h2>Citations</h2>
-    <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
-    <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+<div id="quotesDiv" class="hidden">
+  <button id="logoutBtn" class="logout">Se déconnecter</button>
+  <h2>Citations</h2>
+  <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+  <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
 
-    <!-- Chat intégré -->
-    <div id="chatContainer">
-      <h3>Chat avec l'admin</h3>
-      <div id="messages"></div>
-      <input type="text" id="newMessage" placeholder="Tapez votre message">
-      <button id="sendBtn">Envoyer</button>
-    </div>
+  <div id="chatContainer">
+    <h3>Chat</h3>
+    <div id="messages"></div>
+    <input type="text" id="newMessage" placeholder="Tapez votre message">
+    <button id="sendBtn">Envoyer</button>
   </div>
+</div>
 
-  <script type="module">
-    import { auth, db } from "./firebase-config.js";
-    import {
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { collection, addDoc, query, onSnapshot } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+<script type="module">
+import { auth, db } from "./firebase-config.js";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { collection, addDoc, query, where, orderBy, onSnapshot } 
+  from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const loginDiv = document.getElementById("loginDiv");
-    const quotesDiv = document.getElementById("quotesDiv");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    const errorMsg = document.getElementById("errorMsg");
-    const logoutBtn = document.getElementById("logoutBtn");
+const loginDiv = document.getElementById("loginDiv");
+const quotesDiv = document.getElementById("quotesDiv");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const errorMsg = document.getElementById("errorMsg");
+const logoutBtn = document.getElementById("logoutBtn");
 
-    const messagesDiv = document.getElementById("messages");
-    const newMessageInput = document.getElementById("newMessage");
-    const sendBtn = document.getElementById("sendBtn");
+const messagesDiv = document.getElementById("messages");
+const newMessageInput = document.getElementById("newMessage");
+const sendBtn = document.getElementById("sendBtn");
 
-    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+let userEmail = "";
 
-    let userEmail = "";
+const messagesCollection = collection(db, "chats", "messages");
 
-    // Vérifie si l'utilisateur est connecté
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        loginDiv.classList.add("hidden");
-        quotesDiv.classList.remove("hidden");
-        userEmail = user.email;
+// Vérifie la connexion
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginDiv.classList.add("hidden");
+    quotesDiv.classList.remove("hidden");
+    userEmail = user.email;
 
-        // Surveille les messages
-        const safeEmail = user.email.replace(/\./g, "_");
-        const messagesRef = collection(db, "chats", safeEmail, "messages");
-        onSnapshot(query(messagesRef), (snapshot) => {
-          messagesDiv.innerHTML = "";
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const div = document.createElement("div");
-            div.classList.add("message");
-            div.textContent = `${data.sender}: ${data.text}`;
-            messagesDiv.appendChild(div);
-          });
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        });
-      } else {
-        loginDiv.classList.remove("hidden");
-        quotesDiv.classList.add("hidden");
-        userEmail = "";
-      }
-    });
+    // Filtre des messages
+    const q = userEmail === ADMIN_EMAIL 
+      ? query(messagesCollection, orderBy("timestamp")) // admin voit tout
+      : query(messagesCollection,
+              where("sender", "==", userEmail)
+              ,orderBy("timestamp")); // utilisateur voit seulement ses messages et ceux de l’admin
 
-    // Connexion
-    loginBtn.addEventListener("click", async () => {
-      errorMsg.textContent = "";
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      if (!email || !password) {
-        errorMsg.textContent = "Veuillez remplir tous les champs.";
-        return;
-      }
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        errorMsg.textContent = err.message;
-      }
-    });
-
-    // Inscription
-    signupBtn.addEventListener("click", async () => {
-      errorMsg.textContent = "";
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      if (!email || !password) {
-        errorMsg.textContent = "Veuillez remplir tous les champs.";
-        return;
-      }
-      if (password.length < 6) {
-        errorMsg.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        errorMsg.textContent = err.message;
-      }
-    });
-
-    // Déconnexion
-    logoutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-    });
-
-    // Envoyer un message
-    sendBtn.addEventListener("click", async () => {
-      const text = newMessageInput.value.trim();
-      if (!text || !userEmail) return;
-      const safeEmail = userEmail.replace(/\./g, "_");
-      const messagesRef = collection(db, "chats", safeEmail, "messages");
-      await addDoc(messagesRef, {
-        sender: userEmail,
-        text: text,
-        readByUser: true,
-        timestamp: new Date()
+    onSnapshot(query(messagesCollection, orderBy("timestamp")), (snapshot) => {
+      messagesDiv.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        // Filtrage pour l'utilisateur normal
+        if (userEmail !== ADMIN_EMAIL) {
+          if (data.sender !== ADMIN_EMAIL && data.sender !== userEmail) return;
+          if (data.recipient !== userEmail && data.sender !== userEmail) return;
+        }
+        const div = document.createElement("div");
+        div.classList.add("message");
+        div.textContent = `${data.sender}: ${data.text}`;
+        messagesDiv.appendChild(div);
       });
-      newMessageInput.value = "";
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
-  </script>
+
+  } else {
+    loginDiv.classList.remove("hidden");
+    quotesDiv.classList.add("hidden");
+    userEmail = "";
+  }
+});
+
+// Connexion
+loginBtn.addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) { errorMsg.textContent = "Veuillez remplir tous les champs."; return; }
+  try { await signInWithEmailAndPassword(auth, email, password); }
+  catch(err) { errorMsg.textContent = err.message; }
+});
+
+// Inscription
+signupBtn.addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) { errorMsg.textContent = "Veuillez remplir tous les champs."; return; }
+  if (password.length < 6) { errorMsg.textContent = "Le mot de passe doit contenir au moins 6 caractères."; return; }
+  try { await createUserWithEmailAndPassword(auth, email, password); }
+  catch(err) { errorMsg.textContent = err.message; }
+});
+
+// Déconnexion
+logoutBtn.addEventListener("click", async () => { await signOut(auth); });
+
+// Envoyer un message
+sendBtn.addEventListener("click", async () => {
+  const text = newMessageInput.value.trim();
+  if (!text || !userEmail) return;
+  await addDoc(messagesCollection, {
+    sender: userEmail,
+    recipient: userEmail === ADMIN_EMAIL ? null : ADMIN_EMAIL,
+    text: text,
+    readByUser: false,
+    timestamp: new Date()
+  });
+  newMessageInput.value = "";
+});
+</script>
+
 </body>
 </html>
