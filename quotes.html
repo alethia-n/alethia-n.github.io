@@ -5,94 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Citations</title>
   <link rel="stylesheet" href="style.css" />
-
   <style>
-    .logout {
-      position: fixed;
-      top: 15px;
-      right: 20px;
-      background: #4b3a2d;
-      color: #e5d6c6;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 14px;
-      cursor: pointer;
-    }
-    .logout:hover { background: #6a4e3a; }
-
-    /* Bulle rouge du chat */
-    #chat-link {
-      position: relative;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    #chatBadge {
-      background: red;
-      color: white;
-      border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 12px;
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      display: none;
-    }
+    .hidden { display: none; }
+    .logout { margin-top: 20px; cursor: pointer; }
   </style>
 </head>
-
 <body>
-  <!-- Bouton déconnexion -->
-  <button id="logout-btn" class="logout">Se déconnecter</button>
+  <!-- Formulaire de connexion -->
+  <div id="loginDiv">
+    <h2>Connexion / Inscription</h2>
+    <form id="loginForm">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Mot de passe" required>
+      <button type="submit">Se connecter</button>
+    </form>
+    <p id="errorMsg" style="color:red;"></p>
+  </div>
 
-  <main>
+  <!-- Contenu des citations -->
+  <div id="quotesDiv" class="hidden">
+    <button id="logoutBtn" class="logout">Se déconnecter</button>
     <h2>Citations</h2>
     <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
     <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+  </div>
 
-    <!-- Bouton vers chat -->
-    <a href="chat.html" id="chat-link" class="btn">💬 Chat</a>
-    <span id="chatBadge"></span>
-  </main>
-
-  <!-- === Script Firebase et Chat === -->
   <script type="module">
-    import { auth, db } from "./firebase-config.js";
-    import { onAuthStateChanged, signOut } 
+    import { auth } from "./firebase-config.js";
+    import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
       from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { collection, query, onSnapshot } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+    const loginDiv = document.getElementById("loginDiv");
+    const quotesDiv = document.getElementById("quotesDiv");
+    const loginForm = document.getElementById("loginForm");
+    const errorMsg = document.getElementById("errorMsg");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-    const logoutBtn = document.getElementById("logout-btn");
-    const chatLink = document.getElementById("chat-link");
-    const badge = document.getElementById("chatBadge");
-
-    // Vérifie connexion utilisateur
+    // Vérifie si déjà connecté
     onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html"; // redirige si non connecté
-        return;
+      if (user) {
+        loginDiv.classList.add("hidden");
+        quotesDiv.classList.remove("hidden");
+      } else {
+        loginDiv.classList.remove("hidden");
+        quotesDiv.classList.add("hidden");
       }
+    });
 
-      // Surveille les messages non lus
-      const safeEmail = user.email.replace(/\./g, "_");
-      const messagesRef = collection(db, "chats", safeEmail, "messages");
-      onSnapshot(query(messagesRef), (snapshot) => {
-        let unread = 0;
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.sender === ADMIN_EMAIL && data.readByUser === false) unread++;
-        });
-        badge.textContent = unread;
-        badge.style.display = unread > 0 ? "inline-block" : "none";
-      });
+    // Soumission du formulaire
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = loginForm.email.value;
+      const password = loginForm.password.value;
+
+      try {
+        // Essaye de connecter l'utilisateur
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        // Si email inconnu → créer le compte
+        if (err.code === "auth/user-not-found") {
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+          } catch (createErr) {
+            errorMsg.textContent = createErr.message;
+          }
+        } else {
+          errorMsg.textContent = err.message;
+        }
+      }
     });
 
     // Déconnexion
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
-      window.location.href = "index.html";
     });
   </script>
 </body>
