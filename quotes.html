@@ -1,43 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Quotes</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citations</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { auth, db } from "./firebase-config.js";
+    import {
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const authSection = document.getElementById("auth-section");
+      const quotesSection = document.getElementById("quotes-section");
+      const loginForm = document.getElementById("login-form");
+      const signupForm = document.getElementById("signup-form");
+      const logoutBtn = document.getElementById("logout-btn");
+
+      // Changement d’état d’authentification
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          authSection.style.display = "none";
+          quotesSection.style.display = "block";
+        } else {
+          authSection.style.display = "block";
+          quotesSection.style.display = "none";
+        }
+      });
+
+      // Connexion
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        signInWithEmailAndPassword(auth, email, password)
+          .catch(err => alert("Erreur : " + err.message));
+      });
+
+      // Inscription
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        createUserWithEmailAndPassword(auth, email, password)
+          .catch(err => alert("Erreur : " + err.message));
+      });
+
+      // Déconnexion
+      logoutBtn.addEventListener("click", () => signOut(auth));
+    });
+  </script>
 </head>
 <body>
-  <main class="container">
-    <h2>Citations</h2>
-    <div id="quotes-list">
-      <!-- Citations statiques d'exemple -->
-      <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
-      <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="courses/index.html">Courses</a></li>
+      <li><a href="quotes.html" class="active">Quotes</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- SECTION CONNEXION / INSCRIPTION -->
+  <section id="auth-section" class="auth-container">
+    <h2>Veuillez vous connecter ou vous inscrire pour accéder à cette page</h2>
+    <div class="auth-forms">
+      <form id="login-form">
+        <h3>Connexion</h3>
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Mot de passe" required>
+        <button type="submit">Se connecter</button>
+      </form>
+
+      <form id="signup-form">
+        <h3>Inscription</h3>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Mot de passe" required>
+        <button type="submit">S'inscrire</button>
+      </form>
     </div>
-    <button id="logout" class="btn">Se déconnecter</button>
-  </main>
+  </section>
 
-  <script type="module">
-  import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
-
-  if (typeof firebaseConfig !== 'undefined') {
-    if (!getApps().length) initializeApp(firebaseConfig);
-  }
-  const auth = getAuth();
-
-  onAuthStateChanged(auth, user => {
-    if (!user) {
-      // Not logged in — redirect to login page
-      window.location.href = 'login.html';
-      return;
-    }
-    // User is logged in — keep quotes visible
-    document.getElementById('logout').addEventListener('click', async ()=>{
-      await signOut(auth);
-      window.location.href = 'index.html';
-    });
-  });
-  </script>
+  <!-- SECTION CITATIONS -->
+  <section id="quotes-section" style="display:none;">
+    <h2>Citations</h2>
+    <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
+    <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+    <button id="logout-btn">Se déconnecter</button>
+  </section>
 </body>
 </html>
