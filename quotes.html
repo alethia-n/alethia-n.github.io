@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Citations</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citations + Chat</title>
+  <link rel="stylesheet" href="style.css">
   <style>
     .hidden { display: none; }
     .logout { margin-top: 20px; cursor: pointer; }
     #errorMsg { color: red; margin-top: 10px; }
     input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
     button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+    #chatContainer { border: 1px solid #ccc; padding: 10px; margin-top: 20px; max-width: 400px; }
+    #messages { max-height: 200px; overflow-y: auto; margin-bottom: 10px; }
+    .message { padding: 5px; border-bottom: 1px solid #eee; }
   </style>
 </head>
 <body>
@@ -26,22 +29,32 @@
     <p id="errorMsg"></p>
   </div>
 
-  <!-- PAGE DES CITATIONS -->
+  <!-- PAGE DES CITATIONS + CHAT -->
   <div id="quotesDiv" class="hidden">
     <button id="logoutBtn" class="logout">Se déconnecter</button>
     <h2>Citations</h2>
     <blockquote>"In the middle of difficulty lies opportunity." — Albert Einstein</blockquote>
     <blockquote>"La vie est un mystère qu'il faut vivre, et non un problème à résoudre." — Gandhi</blockquote>
+
+    <!-- Chat intégré -->
+    <div id="chatContainer">
+      <h3>Chat avec l'admin</h3>
+      <div id="messages"></div>
+      <input type="text" id="newMessage" placeholder="Tapez votre message">
+      <button id="sendBtn">Envoyer</button>
+    </div>
   </div>
 
   <script type="module">
-    import { auth } from "./firebase-config.js";
+    import { auth, db } from "./firebase-config.js";
     import {
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { collection, addDoc, query, onSnapshot } 
+      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const loginDiv = document.getElementById("loginDiv");
     const quotesDiv = document.getElementById("quotesDiv");
@@ -52,18 +65,43 @@
     const errorMsg = document.getElementById("errorMsg");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    // Vérifie si l'utilisateur est déjà connecté
+    const messagesDiv = document.getElementById("messages");
+    const newMessageInput = document.getElementById("newMessage");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+
+    let userEmail = "";
+
+    // Vérifie si l'utilisateur est connecté
     onAuthStateChanged(auth, (user) => {
       if (user) {
         loginDiv.classList.add("hidden");
         quotesDiv.classList.remove("hidden");
+        userEmail = user.email;
+
+        // Surveille les messages
+        const safeEmail = user.email.replace(/\./g, "_");
+        const messagesRef = collection(db, "chats", safeEmail, "messages");
+        onSnapshot(query(messagesRef), (snapshot) => {
+          messagesDiv.innerHTML = "";
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const div = document.createElement("div");
+            div.classList.add("message");
+            div.textContent = `${data.sender}: ${data.text}`;
+            messagesDiv.appendChild(div);
+          });
+          messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
       } else {
         loginDiv.classList.remove("hidden");
         quotesDiv.classList.add("hidden");
+        userEmail = "";
       }
     });
 
-    // Fonction de connexion
+    // Connexion
     loginBtn.addEventListener("click", async () => {
       errorMsg.textContent = "";
       const email = emailInput.value.trim();
@@ -72,7 +110,6 @@
         errorMsg.textContent = "Veuillez remplir tous les champs.";
         return;
       }
-
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
@@ -80,7 +117,7 @@
       }
     });
 
-    // Fonction d'inscription
+    // Inscription
     signupBtn.addEventListener("click", async () => {
       errorMsg.textContent = "";
       const email = emailInput.value.trim();
@@ -93,7 +130,6 @@
         errorMsg.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
         return;
       }
-
       try {
         await createUserWithEmailAndPassword(auth, email, password);
       } catch (err) {
@@ -104,6 +140,21 @@
     // Déconnexion
     logoutBtn.addEventListener("click", async () => {
       await signOut(auth);
+    });
+
+    // Envoyer un message
+    sendBtn.addEventListener("click", async () => {
+      const text = newMessageInput.value.trim();
+      if (!text || !userEmail) return;
+      const safeEmail = userEmail.replace(/\./g, "_");
+      const messagesRef = collection(db, "chats", safeEmail, "messages");
+      await addDoc(messagesRef, {
+        sender: userEmail,
+        text: text,
+        readByUser: true,
+        timestamp: new Date()
+      });
+      newMessageInput.value = "";
     });
   </script>
 </body>
