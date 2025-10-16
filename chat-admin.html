@@ -3,67 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Chat Admin - Alethia</title>
+  <title>Chat - Admin</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .users-list {
+      width: 280px;
+      background: #2a1f1a;
+      border-radius: 10px;
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #3b2c23;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .user-item:hover { background: #5a3e30; }
+    .badge {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .chat-box {
+      width: 380px;
+      height: 400px;
+      background: #2a1f1a;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .msg {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 6px;
+      max-width: 75%;
+    }
+    .me { background: #4b3a2d; margin-left: auto; text-align: right; }
+    .other { background: #6a4e3a; text-align: left; }
+    form {
+      margin-top: 10px;
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+    form input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    form button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #6a4e3a;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <main class="container">
-    <h2>Chat - Espace Administrateur</h2>
-    <div id="chat-box" class="chat-box"></div>
-    <form id="chatForm">
-      <input type="text" id="chatMessage" placeholder="Votre réponse..." required />
-      <button type="submit">Envoyer</button>
-    </form>
+    <h2>Chat - Panneau Administrateur</h2>
+    <div class="admin-container">
+      <div class="users-list" id="users-list">
+        <p class="muted">Chargement des utilisateurs...</p>
+      </div>
+      <div>
+        <div id="chat-box" class="chat-box"></div>
+        <form id="chatForm" style="display:none;">
+          <input type="text" id="chatMessage" placeholder="Écrire un message..." required />
+          <button type="submit">Envoyer</button>
+        </form>
+      </div>
+    </div>
+    <p><button id="logout-btn" class="back-btn">Se déconnecter</button></p>
   </main>
 
   <script type="module">
   import { auth, db } from "./firebase-config.js";
-  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-  import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { collection, doc, query, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-  const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+  const ADMIN_EMAIL = "nouredine.m22@gmail.com"; // ton mail admin
+  const usersList = document.getElementById("users-list");
   const chatBox = document.getElementById("chat-box");
   const chatForm = document.getElementById("chatForm");
   const chatMessage = document.getElementById("chatMessage");
-  let userEmail = null;
+  const logoutBtn = document.getElementById("logout-btn");
+  let activeUser = null;
 
-  onAuthStateChanged(auth, (user) => {
+  // ✅ Vérifier l'authentification
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = "index.html";
       return;
     }
     if (user.email !== ADMIN_EMAIL) {
-      alert("Accès refusé : réservé à l'administrateur");
-      window.location.href = "index.html";
-      return;
-    }
-    userEmail = user.email;
-    initChat();
-  });
-
-  function initChat() {
-    const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
-    onSnapshot(q, (snapshot) => {
-      chatBox.innerHTML = "";
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const messageClass = data.sender === userEmail ? "me" : "other";
-        chatBox.innerHTML += `<div class="msg ${messageClass}"><b>${data.sender}</b><p>${data.text}</p></div>`;
-      });
-      chatBox.scrollTop = chatBox.scrollHeight;
-    });
-  }
-
-  chatForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!chatMessage.value.trim()) return;
-    await addDoc(collection(db, "chat"), {
-      sender: userEmail,
-      text: chatMessage.value,
-      createdAt: serverTimestamp()
-    });
-    chatMessage.value = "";
-  });
-  </script>
-</body>
-</html>
+      alert("Accès réservé à l'adminis
