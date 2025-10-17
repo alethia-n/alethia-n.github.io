@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat</title>
+  <title>Chat privé – Alethia</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      background: #181818;
+      color: #f0f0f0;
+      font-family: "Segoe UI", sans-serif;
+    }
     .chat-container {
       max-width: 600px;
       margin: 50px auto;
-      background: #2b211b;
+      background: #1f1f1f;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -18,10 +23,8 @@
       height: 400px;
       overflow-y: auto;
       padding: 10px;
-      border: 1px solid #4b3a2d;
       border-radius: 8px;
-      background: #1a1410;
-      color: #e5d6c6;
+      background: #101010;
       margin-bottom: 15px;
     }
     .msg {
@@ -30,15 +33,17 @@
       border-radius: 10px;
       display: inline-block;
       max-width: 80%;
+      word-wrap: break-word;
     }
     .sent {
-      background: #4b3a2d;
-      align-self: flex-end;
+      background: #007bff;
+      color: #fff;
       float: right;
       clear: both;
     }
     .received {
-      background: #3a2f28;
+      background: #2e2e2e;
+      color: #ffecb3;
       float: left;
       clear: both;
     }
@@ -49,24 +54,27 @@
     input {
       flex: 1;
       padding: 10px;
-      border: 1px solid #4b3a2d;
+      border: none;
       border-radius: 6px;
-      background: #1a1410;
-      color: #e5d6c6;
+      background: #2e2e2e;
+      color: #fff;
     }
     button {
-      background: #4b3a2d;
+      background: #007bff;
       border: none;
-      color: #e5d6c6;
+      color: #fff;
       border-radius: 6px;
       padding: 10px 15px;
       cursor: pointer;
     }
-    button:hover { background: #6a4e3a; }
+    button:hover { background: #0056b3; }
     .back-btn {
-      margin-bottom: 15px;
+      color: #007bff;
+      text-decoration: none;
       display: inline-block;
+      margin-bottom: 10px;
     }
+    .back-btn:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -88,11 +96,12 @@
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import {
-      collection, addDoc, serverTimestamp,
-      query, orderBy, onSnapshot, doc, updateDoc
+      collection, addDoc, serverTimestamp, query, orderBy, onSnapshot
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
+    // 🔐 UID de l’admin (sécurisé, non visible publiquement comme un email)
+    const ADMIN_UID = "RiLWVTLHIQhMS0wI7k7WvOcWg0j2";
+
     const messagesDiv = document.getElementById("messages");
     const form = document.getElementById("chat-form");
     const input = document.getElementById("msg-input");
@@ -103,46 +112,42 @@
         return;
       }
 
-      const safeEmail = user.email.replace(/\./g, "_");
-      const messagesRef = collection(db, "chats", safeEmail, "messages");
-      const q = query(messagesRef, orderBy("createdAt"));
+      // Chaque message est enregistré dans "chats_messages"
+      const messagesRef = collection(db, "chats_messages");
+      const q = query(messagesRef, orderBy("timestamp"));
 
-      // 🔸 Écoute en temps réel des messages
+      // 🔸 Affichage des messages filtrés (entre user et admin uniquement)
       onSnapshot(q, (snapshot) => {
         messagesDiv.innerHTML = "";
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const div = document.createElement("div");
-          div.classList.add("msg");
-          div.classList.add(data.sender === user.email ? "sent" : "received");
-          div.textContent = data.text;
-          messagesDiv.appendChild(div);
+          if (
+            (data.senderUid === user.uid && data.recipientUid === ADMIN_UID) ||
+            (data.senderUid === ADMIN_UID && data.recipientUid === user.uid)
+          ) {
+            const div = document.createElement("div");
+            div.classList.add("msg");
+            div.classList.add(data.senderUid === user.uid ? "sent" : "received");
+            div.textContent = data.text;
+            messagesDiv.appendChild(div);
+          }
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
       });
 
-      // 🔸 Marque les messages de l’admin comme lus
-      onSnapshot(q, (snapshot) => {
-        snapshot.forEach(async (docSnap) => {
-          const data = docSnap.data();
-          if (data.sender === ADMIN_EMAIL && data.readByUser === false) {
-            await updateDoc(docSnap.ref, { readByUser: true });
-          }
-        });
-      });
-
-      // 🔸 Envoi d’un message
+      // 🔸 Envoi d’un message vers l’admin
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const text = input.value.trim();
         if (!text) return;
+
         await addDoc(messagesRef, {
+          senderUid: user.uid,
+          recipientUid: ADMIN_UID,
           text,
-          sender: user.email,
-          readByUser: true,
-          readByAdmin: false,
-          createdAt: serverTimestamp()
+          timestamp: serverTimestamp()
         });
+
         input.value = "";
       });
     });
