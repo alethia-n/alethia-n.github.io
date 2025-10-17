@@ -3,16 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contact</title>
+  <title>Contact — Alethia</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    main.container { max-width: 500px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    form input, form textarea { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+    button { background: #007bff; color: white; border: none; border-radius: 6px; padding: 10px 15px; cursor: pointer; width: 100%; font-weight: bold; transition: background 0.2s; }
+    button:hover { background: #0056b3; }
+    #status { margin-top: 10px; text-align: center; font-weight: bold; }
+  </style>
 </head>
 <body>
   <main class="container">
     <h2>Contact</h2>
     <form id="contactForm">
-      <input type="text" id="name" placeholder="Nom" required />
-      <input type="email" id="email" placeholder="Email" required />
-      <textarea id="message" placeholder="Votre message" required></textarea>
+      <input type="text" id="name" placeholder="Nom complet" minlength="2" maxlength="60" required />
+      <input type="email" id="email" placeholder="Adresse e-mail" required />
+      <textarea id="message" placeholder="Votre message..." minlength="5" maxlength="1000" required></textarea>
       <button type="submit">Envoyer</button>
     </form>
     <p id="status" class="muted"></p>
@@ -34,10 +41,17 @@
       const email = document.getElementById("email").value.trim();
       const message = document.getElementById("message").value.trim();
 
+      // Validation basique
       if (!name || !email || !message) {
         status.textContent = "⚠️ Tous les champs sont obligatoires.";
+        status.style.color = "red";
         return;
       }
+
+      // Anti-spam rapide (empêche plusieurs clics)
+      form.querySelector("button").disabled = true;
+      status.textContent = "⏳ Envoi en cours...";
+      status.style.color = "#333";
 
       try {
         await addDoc(collection(db, "messages"), {
@@ -48,9 +62,13 @@
         });
 
         status.textContent = "✅ Message envoyé avec succès !";
+        status.style.color = "green";
         form.reset();
       } catch (err) {
         status.textContent = "❌ Erreur : " + err.message;
+        status.style.color = "red";
+      } finally {
+        form.querySelector("button").disabled = false;
       }
     });
   </script>
