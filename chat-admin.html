@@ -3,123 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Chat</title>
+  <title>Admin Chat – Alethia</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      background: #1a1410;
-      color: #e5d6c6;
-      font-family: "Times New Roman", serif;
+      background: #181818;
+      color: #f0f0f0;
+      font-family: "Segoe UI", sans-serif;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
     }
-
+    h2 {
+      margin-bottom: 15px;
+    }
     .admin-container {
       display: flex;
       gap: 20px;
       width: 90%;
-      max-width: 1000px;
+      max-width: 1100px;
     }
-
     .user-list {
       flex: 1;
-      background: #2b211b;
+      background: #1f1f1f;
       border-radius: 10px;
       padding: 10px;
       height: 500px;
       overflow-y: auto;
     }
-
     .user {
       padding: 10px;
       margin: 5px 0;
-      background: #3a2f28;
+      background: #2e2e2e;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .user:hover { background: #4b3a2d; }
+    .user:hover {
+      background: #3c3c3c;
+    }
     .badge {
-      background: red;
+      background: #ff3b3b;
       color: white;
       border-radius: 50%;
       padding: 4px 8px;
       font-size: 0.8em;
     }
-
     .chat-box {
       flex: 2;
-      background: #2b211b;
+      background: #1f1f1f;
       border-radius: 10px;
       padding: 15px;
       display: flex;
       flex-direction: column;
       height: 500px;
     }
-
     .messages {
       flex: 1;
       overflow-y: auto;
-      background: #1a1410;
+      background: #101010;
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 10px;
     }
-
     .msg {
       margin: 8px 0;
       padding: 8px 12px;
       border-radius: 10px;
       display: inline-block;
       max-width: 80%;
+      word-wrap: break-word;
     }
-
     .sent {
-      background: #4b3a2d;
-      align-self: flex-end;
+      background: #007bff;
+      color: #fff;
       float: right;
       clear: both;
     }
-
     .received {
-      background: #3a2f28;
+      background: #2e2e2e;
+      color: #ffecb3;
       float: left;
       clear: both;
     }
-
     form {
       display: flex;
       gap: 10px;
     }
-
     input {
       flex: 1;
       padding: 10px;
-      border: 1px solid #4b3a2d;
-      border-radius: 6px;
-      background: #1a1410;
-      color: #e5d6c6;
-    }
-
-    button {
-      background: #4b3a2d;
       border: none;
-      color: #e5d6c6;
+      border-radius: 6px;
+      background: #2e2e2e;
+      color: #fff;
+    }
+    button {
+      background: #007bff;
+      border: none;
+      color: #fff;
       border-radius: 6px;
       padding: 10px 15px;
       cursor: pointer;
     }
-
-    button:hover { background: #6a4e3a; }
+    button:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h2>Espace administrateur – Messagerie</h2>
+  <h2>Espace Administrateur – Messagerie</h2>
   <div class="admin-container">
     <div class="user-list" id="userList"></div>
 
@@ -138,8 +134,11 @@
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import {
-      collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, getDocs, updateDoc, doc
+      collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc, doc
     } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // 🔐 UID sécurisé de l’administrateur
+    const ADMIN_UID = "RiLWVTLHIQhMS0wI7k7WvOcWg0j2";
 
     const userListDiv = document.getElementById("userList");
     const messagesDiv = document.getElementById("messages");
@@ -149,66 +148,76 @@
     let selectedUser = null;
     let unsubscribeMessages = null;
 
-    const ADMIN_EMAIL = "nouredine.m22@gmail.com";
-
     onAuthStateChanged(auth, async (user) => {
-      if (!user || user.email !== ADMIN_EMAIL) {
-        alert("Accès réservé à l’administrateur.");
+      if (!user || user.uid !== ADMIN_UID) {
+        alert("Accès refusé. Espace réservé à l’administrateur.");
         window.location.href = "index.html";
         return;
       }
 
-      // 🔸 Récupère la liste des utilisateurs
-      const chatsRef = collection(db, "chats");
+      // 🔹 Liste des utilisateurs uniques ayant échangé des messages
+      const messagesRef = collection(db, "chats_messages");
+      const q = query(messagesRef, orderBy("timestamp"));
 
-      onSnapshot(chatsRef, async (snapshot) => {
+      onSnapshot(q, (snapshot) => {
+        const users = {};
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const otherUid =
+            data.senderUid === ADMIN_UID ? data.recipientUid : data.senderUid;
+          if (!users[otherUid]) {
+            users[otherUid] = { unread: 0 };
+          }
+          // Compte les messages non lus
+          if (data.recipientUid === ADMIN_UID && !data.read) {
+            users[otherUid].unread++;
+          }
+        });
+
         userListDiv.innerHTML = "";
-        for (const chatDoc of snapshot.docs) {
-          const userEmailSafe = chatDoc.id;
-          const userEmail = userEmailSafe.replace(/_/g, ".");
-          const messagesRef = collection(db, "chats", userEmailSafe, "messages");
-          const unreadQuery = query(messagesRef, orderBy("createdAt"));
-          const messagesSnap = await getDocs(unreadQuery);
-          const unreadCount = messagesSnap.docs.filter(d => d.data().readByAdmin === false && d.data().sender !== ADMIN_EMAIL).length;
-
+        for (const [uid, info] of Object.entries(users)) {
           const div = document.createElement("div");
           div.classList.add("user");
-          div.textContent = userEmail;
-          if (unreadCount > 0) {
+          div.textContent = uid;
+          if (info.unread > 0) {
             const badge = document.createElement("span");
             badge.classList.add("badge");
-            badge.textContent = unreadCount;
+            badge.textContent = info.unread;
             div.appendChild(badge);
           }
-          div.addEventListener("click", () => openChat(userEmailSafe, userEmail));
+          div.addEventListener("click", () => openChat(uid));
           userListDiv.appendChild(div);
         }
       });
     });
 
-    async function openChat(userEmailSafe, userEmail) {
-      selectedUser = userEmailSafe;
+    // 🔸 Ouvrir la discussion avec un utilisateur
+    function openChat(userUid) {
+      selectedUser = userUid;
       messagesDiv.innerHTML = "";
-
       if (unsubscribeMessages) unsubscribeMessages();
 
-      const messagesRef = collection(db, "chats", userEmailSafe, "messages");
-      const q = query(messagesRef, orderBy("createdAt"));
+      const messagesRef = collection(db, "chats_messages");
+      const q = query(messagesRef, orderBy("timestamp"));
 
-      // 🔸 Écoute des messages en temps réel
       unsubscribeMessages = onSnapshot(q, (snapshot) => {
         messagesDiv.innerHTML = "";
         snapshot.forEach(async (docSnap) => {
           const data = docSnap.data();
-          const div = document.createElement("div");
-          div.classList.add("msg");
-          div.classList.add(data.sender === ADMIN_EMAIL ? "sent" : "received");
-          div.textContent = data.text;
-          messagesDiv.appendChild(div);
+          if (
+            (data.senderUid === ADMIN_UID && data.recipientUid === userUid) ||
+            (data.senderUid === userUid && data.recipientUid === ADMIN_UID)
+          ) {
+            const div = document.createElement("div");
+            div.classList.add("msg");
+            div.classList.add(data.senderUid === ADMIN_UID ? "sent" : "received");
+            div.textContent = data.text;
+            messagesDiv.appendChild(div);
 
-          // 🔸 Marquer comme lus les messages reçus
-          if (data.sender !== ADMIN_EMAIL && data.readByAdmin === false) {
-            await updateDoc(docSnap.ref, { readByAdmin: true });
+            // 🔹 Marquer les messages reçus comme lus
+            if (data.recipientUid === ADMIN_UID && !data.read) {
+              await updateDoc(doc(db, "chats_messages", docSnap.id), { read: true });
+            }
           }
         });
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -218,17 +227,19 @@
     // 🔸 Envoi d’un message
     chatForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!selectedUser) return alert("Sélectionne un utilisateur.");
+      if (!selectedUser) return alert("Sélectionnez un utilisateur avant d’envoyer.");
       const text = msgInput.value.trim();
       if (!text) return;
-      const messagesRef = collection(db, "chats", selectedUser, "messages");
+
+      const messagesRef = collection(db, "chats_messages");
       await addDoc(messagesRef, {
+        senderUid: ADMIN_UID,
+        recipientUid: selectedUser,
         text,
-        sender: ADMIN_EMAIL,
-        readByAdmin: true,
-        readByUser: false,
-        createdAt: serverTimestamp()
+        timestamp: serverTimestamp(),
+        read: false
       });
+
       msgInput.value = "";
     });
   </script>
