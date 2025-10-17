@@ -10,23 +10,20 @@
 body { font-family:sans-serif; margin:0; padding:0; background:#f0f2f5; color:#333; }
 .hidden { display:none; }
 
-/* Formulaires */
 input, button { display:block; width:100%; margin-bottom:10px; padding:10px; border-radius:5px; border:1px solid #ccc; box-sizing:border-box; }
 button { background:#007bff; color:#fff; border:none; cursor:pointer; transition:background 0.2s; }
 button:hover { background:#0056b3; }
+
 #errorMsg, #signupError, #loginError { color:red; font-weight:bold; margin-bottom:10px; }
 
-/* Citations */
 blockquote { font-style:italic; margin:20px; padding:10px 20px; border-left:4px solid #007bff; background:#e9ecef; border-radius:5px; }
 
-/* Sidebar Admin */
 #sidebar { width:250px; position:fixed; left:0; top:0; bottom:0; border-right:1px solid #ccc; padding:10px; background:#fff; display:none; overflow-y:auto; box-shadow:2px 0 5px rgba(0,0,0,0.1);}
 .userItem { padding:10px; cursor:pointer; border-bottom:1px solid #eee; border-radius:5px; transition:background 0.2s; }
 .userItem:hover { background:#f0f0f0; }
 .userItem.active { background:#007bff; color:white; }
 .userItem.newMessage { font-weight:bold; background-color:#ffd966; }
 
-/* Chat flottant */
 #chatToggle { position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:#007bff; color:#fff; font-size:28px; text-align:center; line-height:60px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.3); z-index:1000; }
 #chatToggle:hover { background:#0056b3; }
 #chatContainer { position:fixed; bottom:90px; right:20px; width:350px; max-height:500px; display:none; flex-direction:column; border-radius:10px; background:#1c1c1c; color:#fff5b7; box-shadow:0 4px 15px rgba(0,0,0,0.4); z-index:1000; overflow:hidden; }
@@ -39,7 +36,6 @@ blockquote { font-style:italic; margin:20px; padding:10px 20px; border-left:4px 
 #sendBtn { padding:10px; margin:5px; width:calc(100% - 10px); cursor:pointer; background:#007bff; color:#fff; border:none; border-radius:6px; transition:background 0.2s; }
 #sendBtn:hover { background:#0056b3; }
 
-/* Responsive */
 @media screen and (max-width:768px) { #chatContainer { width:90%; right:5%; bottom:80px; } #sidebar { width:200px; } }
 </style>
 </head>
@@ -65,7 +61,7 @@ blockquote { font-style:italic; margin:20px; padding:10px 20px; border-left:4px 
 <p id="loginError"></p>
 </div>
 
-<!-- PAGE CITATIONS + SIDEBAR ADMIN -->
+<!-- PAGE CITATIONS -->
 <div id="quotesDiv" class="hidden">
 <div id="sidebar">
 <h3>Utilisateurs</h3>
@@ -91,171 +87,213 @@ blockquote { font-style:italic; margin:20px; padding:10px 20px; border-left:4px 
 <script type="module">
 import { auth, db } from "./firebase-config.js";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { collection, addDoc, query, orderBy, onSnapshot, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { collection, addDoc, query, orderBy, onSnapshot, getDocs, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-const ADMIN_UID="RiLWVTLHIQhMS0wI7k7WvOcWg0j2";
+let ADMIN_UID = "";
+let currentUserUid = "";
+let selectedUser = null;
+const usersDivMap = {};
 
-let currentUserUid="", selectedUser=null;
-const usersDivMap={};
+const signupDiv = document.getElementById("signupDiv");
+const loginDiv = document.getElementById("loginDiv");
+const quotesDiv = document.getElementById("quotesDiv");
+const firstNameInput = document.getElementById("firstName");
+const lastNameInput = document.getElementById("lastName");
+const signupEmailInput = document.getElementById("signupEmail");
+const signupPasswordInput = document.getElementById("signupPassword");
+const loginEmailInput = document.getElementById("loginEmail");
+const loginPasswordInput = document.getElementById("loginPassword");
+const signupBtn = document.getElementById("signupBtn");
+const loginBtn = document.getElementById("loginBtn");
+const signupError = document.getElementById("signupError");
+const loginError = document.getElementById("loginError");
+const logoutBtn = document.getElementById("logoutBtn");
+const messagesDiv = document.getElementById("messages");
+const newMessageInput = document.getElementById("newMessage");
+const sendBtn = document.getElementById("sendBtn");
+const sidebar = document.getElementById("sidebar");
+const usersListDiv = document.getElementById("usersList");
+const chatToggle = document.getElementById("chatToggle");
+const chatContainer = document.getElementById("chatContainer");
 
-const signupDiv=document.getElementById("signupDiv");
-const loginDiv=document.getElementById("loginDiv");
-const quotesDiv=document.getElementById("quotesDiv");
-const firstNameInput=document.getElementById("firstName");
-const lastNameInput=document.getElementById("lastName");
-const signupEmailInput=document.getElementById("signupEmail");
-const signupPasswordInput=document.getElementById("signupPassword");
-const loginEmailInput=document.getElementById("loginEmail");
-const loginPasswordInput=document.getElementById("loginPassword");
-const signupBtn=document.getElementById("signupBtn");
-const loginBtn=document.getElementById("loginBtn");
-const signupError=document.getElementById("signupError");
-const loginError=document.getElementById("loginError");
-const logoutBtn=document.getElementById("logoutBtn");
-const messagesDiv=document.getElementById("messages");
-const newMessageInput=document.getElementById("newMessage");
-const sendBtn=document.getElementById("sendBtn");
-const sidebar=document.getElementById("sidebar");
-const usersListDiv=document.getElementById("usersList");
-const chatToggle=document.getElementById("chatToggle");
-const chatContainer=document.getElementById("chatContainer");
+const messagesCollection = collection(db, "chats_messages");
+const usersCollection = collection(db, "users");
 
-const messagesCollection=collection(db,"chats_messages");
-const usersCollection=collection(db,"users");
-
-// Affichage nom ou Admin
-function displayName(name){
-    return name;
-}
-
-// INSCRIPTION
-signupBtn.addEventListener("click", async()=>{
-    signupError.textContent="";
-    const firstName=firstNameInput.value.trim();
-    const lastName=lastNameInput.value.trim();
-    const email=signupEmailInput.value.trim();
-    const password=signupPasswordInput.value;
-    if(!firstName||!lastName||!email||!password){signupError.textContent="Veuillez remplir tous les champs."; return;}
-    if(password.length<6){signupError.textContent="Le mot de passe doit contenir au moins 6 caractères."; return;}
-    try{
-        const userCredential=await createUserWithEmailAndPassword(auth,email,password);
-        await setDoc(doc(db,"users",userCredential.user.uid),{firstName,lastName,email,createdAt:serverTimestamp()});
-        signupDiv.classList.add("hidden");
-        loginDiv.classList.remove("hidden");
-    }catch(err){signupError.textContent=err.message;}
-});
-
-// CONNEXION
-loginBtn.addEventListener("click", async()=>{
-    loginError.textContent="";
-    const email=loginEmailInput.value.trim();
-    const password=loginPasswordInput.value;
-    if(!email||!password){loginError.textContent="Veuillez remplir tous les champs."; return;}
-    try{await signInWithEmailAndPassword(auth,email,password);}catch(err){loginError.textContent=err.message;}
-});
-
-// DECONNEXION
-logoutBtn.addEventListener("click", async()=>{await signOut(auth);});
-
-// AUTH STATE
-onAuthStateChanged(auth, async(user)=>{
-    if(user){
-        currentUserUid=user.uid;
-        loginDiv.classList.add("hidden");
-        signupDiv.classList.add("hidden");
-        quotesDiv.classList.remove("hidden");
-        chatToggle.style.display="block";
-
-        if(currentUserUid===ADMIN_UID){
-            sidebar.style.display="block";
-            await loadUsersForAdmin();
-        }else{
-            sidebar.style.display="none";
-            selectedUser=ADMIN_UID;
-        }
-
-        loadMessages();
-    }else{
-        loginDiv.classList.remove("hidden");
-        signupDiv.classList.add("hidden");
-        quotesDiv.classList.add("hidden");
-        chatContainer.style.display="none";
-        chatToggle.style.display="none";
-        currentUserUid="";
-        selectedUser=null;
+// 🔹 Charger l'UID admin depuis Firestore
+async function loadAdminUid() {
+  try {
+    const adminDoc = await getDoc(doc(db, "config", "admin"));
+    if (adminDoc.exists()) {
+      ADMIN_UID = adminDoc.data().uid;
+      console.log("✅ UID admin chargé :", ADMIN_UID);
+    } else {
+      console.error("❌ Aucun document 'admin' trouvé !");
     }
+  } catch (err) {
+    console.error("Erreur chargement UID admin :", err);
+  }
+}
+await loadAdminUid();
+
+// 🔹 INSCRIPTION
+signupBtn.addEventListener("click", async () => {
+  signupError.textContent = "";
+  const firstName = firstNameInput.value.trim();
+  const lastName = lastNameInput.value.trim();
+  const email = signupEmailInput.value.trim();
+  const password = signupPasswordInput.value;
+
+  if (!firstName || !lastName || !email || !password) {
+    signupError.textContent = "Veuillez remplir tous les champs.";
+    return;
+  }
+  if (password.length < 6) {
+    signupError.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
+    return;
+  }
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+      firstName,
+      lastName,
+      email,
+      createdAt: serverTimestamp(),
+    });
+    signupDiv.classList.add("hidden");
+    loginDiv.classList.remove("hidden");
+  } catch (err) {
+    signupError.textContent = err.message;
+  }
 });
 
-// SIDEBAR ADMIN
-async function loadUsersForAdmin(){
-    const usersSnapshot=await getDocs(usersCollection);
-    usersListDiv.innerHTML="";
-    usersSnapshot.forEach(doc=>{
-        const data=doc.data();
-        if(doc.id!==ADMIN_UID){
-            const div=document.createElement("div");
-            div.classList.add("userItem");
-            div.textContent=`${data.firstName} ${data.lastName}`;
-            div.addEventListener("click",()=>{
-                document.querySelectorAll(".userItem").forEach(e=>e.classList.remove("active"));
-                div.classList.remove("newMessage");
-                div.classList.add("active");
-                selectedUser=doc.id;
-                loadMessages();
-            });
-            usersListDiv.appendChild(div);
-            usersDivMap[doc.id]=data;
-        }
-    });
-}
-
-// CHARGER MESSAGES
-function loadMessages(){
-    const q=query(messagesCollection,orderBy("timestamp"));
-    onSnapshot(q,snapshot=>{
-        messagesDiv.innerHTML="";
-        snapshot.forEach(doc=>{
-            const data=doc.data();
-            // filtrage par UID
-            if(currentUserUid===ADMIN_UID){
-                if(!selectedUser) return;
-                if(!(data.senderUid===selectedUser || data.recipientUid===selectedUser)) return;
-            }else{
-                if(!(data.senderUid===currentUserUid || (data.senderUid===ADMIN_UID && data.recipientUid===currentUserUid))) return;
-            }
-            const div=document.createElement("div");
-            div.classList.add("message");
-            div.classList.add(data.senderUid===ADMIN_UID?"admin":"user");
-            div.textContent=`${data.senderName}: ${data.text}`;
-            messagesDiv.appendChild(div);
-        });
-        messagesDiv.scrollTop=messagesDiv.scrollHeight;
-    });
-}
-
-// ENVOYER MESSAGE
-sendBtn.addEventListener("click", async()=>{
-    const text=newMessageInput.value.trim();
-    if(!text||!currentUserUid) return;
-    let recipientUid=(currentUserUid===ADMIN_UID)?selectedUser:ADMIN_UID;
-    if(currentUserUid===ADMIN_UID && !recipientUid){alert("Sélectionnez un utilisateur"); return;}
-    let senderName=(currentUserUid===ADMIN_UID)?"Admin":usersDivMap[currentUserUid]?.firstName + " " + usersDivMap[currentUserUid]?.lastName;
-    try{
-        await addDoc(messagesCollection,{
-            senderUid: currentUserUid,
-            recipientUid: recipientUid,
-            senderName: senderName,
-            text: text,
-            readByUser:false,
-            timestamp:serverTimestamp()
-        });
-        newMessageInput.value="";
-        if(currentUserUid!==ADMIN_UID) alert("Message envoyé !");
-    }catch(err){alert("Erreur: "+err.message);}
+// 🔹 CONNEXION
+loginBtn.addEventListener("click", async () => {
+  loginError.textContent = "";
+  const email = loginEmailInput.value.trim();
+  const password = loginPasswordInput.value;
+  if (!email || !password) {
+    loginError.textContent = "Veuillez remplir tous les champs.";
+    return;
+  }
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    loginError.textContent = err.message;
+  }
 });
 
-// TOGGLE CHAT
-chatToggle.addEventListener("click",()=>{chatContainer.style.display=(chatContainer.style.display==="none")?"flex":"none";});
+// 🔹 DECONNEXION
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+// 🔹 AUTH STATE
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUserUid = user.uid;
+    loginDiv.classList.add("hidden");
+    signupDiv.classList.add("hidden");
+    quotesDiv.classList.remove("hidden");
+    chatToggle.style.display = "block";
+
+    if (currentUserUid === ADMIN_UID) {
+      sidebar.style.display = "block";
+      await loadUsersForAdmin();
+    } else {
+      sidebar.style.display = "none";
+      selectedUser = ADMIN_UID;
+    }
+
+    loadMessages();
+  } else {
+    loginDiv.classList.remove("hidden");
+    signupDiv.classList.add("hidden");
+    quotesDiv.classList.add("hidden");
+    chatContainer.style.display = "none";
+    chatToggle.style.display = "none";
+    currentUserUid = "";
+    selectedUser = null;
+  }
+});
+
+// 🔹 UTILISATEURS (ADMIN)
+async function loadUsersForAdmin() {
+  const usersSnapshot = await getDocs(usersCollection);
+  usersListDiv.innerHTML = "";
+  usersSnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (doc.id !== ADMIN_UID) {
+      const div = document.createElement("div");
+      div.classList.add("userItem");
+      div.textContent = `${data.firstName} ${data.lastName}`;
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".userItem").forEach((e) => e.classList.remove("active"));
+        div.classList.remove("newMessage");
+        div.classList.add("active");
+        selectedUser = doc.id;
+        loadMessages();
+      });
+      usersListDiv.appendChild(div);
+      usersDivMap[doc.id] = data;
+    }
+  });
+}
+
+// 🔹 MESSAGES
+function loadMessages() {
+  const q = query(messagesCollection, orderBy("timestamp"));
+  onSnapshot(q, (snapshot) => {
+    messagesDiv.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      if (currentUserUid === ADMIN_UID) {
+        if (!selectedUser) return;
+        if (!(data.senderUid === selectedUser || data.recipientUid === selectedUser)) return;
+      } else {
+        if (!(data.senderUid === currentUserUid || (data.senderUid === ADMIN_UID && data.recipientUid === currentUserUid))) return;
+      }
+      const div = document.createElement("div");
+      div.classList.add("message");
+      div.classList.add(data.senderUid === ADMIN_UID ? "admin" : "user");
+      div.textContent = `${data.senderName}: ${data.text}`;
+      messagesDiv.appendChild(div);
+    });
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+}
+
+// 🔹 ENVOYER MESSAGE
+sendBtn.addEventListener("click", async () => {
+  const text = newMessageInput.value.trim();
+  if (!text || !currentUserUid) return;
+  let recipientUid = currentUserUid === ADMIN_UID ? selectedUser : ADMIN_UID;
+  if (currentUserUid === ADMIN_UID && !recipientUid) {
+    alert("Sélectionnez un utilisateur");
+    return;
+  }
+  let senderName =
+    currentUserUid === ADMIN_UID
+      ? "Admin"
+      : usersDivMap[currentUserUid]?.firstName + " " + usersDivMap[currentUserUid]?.lastName;
+  try {
+    await addDoc(messagesCollection, {
+      senderUid: currentUserUid,
+      recipientUid: recipientUid,
+      senderName: senderName,
+      text: text,
+      timestamp: serverTimestamp(),
+    });
+    newMessageInput.value = "";
+    if (currentUserUid !== ADMIN_UID) alert("Message envoyé !");
+  } catch (err) {
+    alert("Erreur: " + err.message);
+  }
+});
+
+// 🔹 TOGGLE CHAT
+chatToggle.addEventListener("click", () => {
+  chatContainer.style.display = chatContainer.style.display === "none" ? "flex" : "none";
+});
 </script>
 </body>
 </html>
