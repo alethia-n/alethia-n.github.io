@@ -1,76 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Contact — Alethia</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    main.container { max-width: 500px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    form input, form textarea { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
-    button { background: #007bff; color: white; border: none; border-radius: 6px; padding: 10px 15px; cursor: pointer; width: 100%; font-weight: bold; transition: background 0.2s; }
-    button:hover { background: #0056b3; }
-    #status { margin-top: 10px; text-align: center; font-weight: bold; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #fff8f0;
+      font-family: Arial, sans-serif;
+    }
+    .facebook-icon {
+      color: #6b3e26;
+      font-size: 80px;
+      text-decoration: none;
+      transition: transform 0.3s ease;
+    }
+    .facebook-icon:hover {
+      transform: scale(1.2);
+      color: #8b4513;
+    }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h2>Contact</h2>
-    <form id="contactForm">
-      <input type="text" id="name" placeholder="Nom complet" minlength="2" maxlength="60" required />
-      <input type="email" id="email" placeholder="Adresse e-mail" required />
-      <textarea id="message" placeholder="Votre message..." minlength="5" maxlength="1000" required></textarea>
-      <button type="submit">Envoyer</button>
-    </form>
-    <p id="status" class="muted"></p>
-  </main>
+  <a href="https://web.facebook.com/N.M.Gertrude/" target="_blank" class="facebook-icon">
+    <i class="fab fa-facebook"></i>
+  </a>
 
-  <!-- 🔥 Connexion à Firebase -->
-  <script type="module">
-    import { db } from "./firebase-config.js";
-    import { collection, addDoc, serverTimestamp } 
-      from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-
-    const form = document.getElementById("contactForm");
-    const status = document.getElementById("status");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
-
-      // Validation basique
-      if (!name || !email || !message) {
-        status.textContent = "⚠️ Tous les champs sont obligatoires.";
-        status.style.color = "red";
-        return;
-      }
-
-      // Anti-spam rapide (empêche plusieurs clics)
-      form.querySelector("button").disabled = true;
-      status.textContent = "⏳ Envoi en cours...";
-      status.style.color = "#333";
-
-      try {
-        await addDoc(collection(db, "messages"), {
-          name,
-          email,
-          message,
-          createdAt: serverTimestamp()
-        });
-
-        status.textContent = "✅ Message envoyé avec succès !";
-        status.style.color = "green";
-        form.reset();
-      } catch (err) {
-        status.textContent = "❌ Erreur : " + err.message;
-        status.style.color = "red";
-      } finally {
-        form.querySelector("button").disabled = false;
-      }
-    });
-  </script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
