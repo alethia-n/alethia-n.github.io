@@ -178,13 +178,68 @@
       <div class="math-display">
         $$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,\xi) $$
       </div>
+ 
+  <h3>Techniques principales d’intégration</h3>
+<ul style="padding-left: 1.4em; color: #5c3a21; line-height: 1.6;">
+  <li>
+    <strong>Intégration par substitution :</strong>  
+    Cette technique consiste à transformer une intégrale compliquée en une forme plus simple grâce à un changement de variable.  
+    <em>Principe :</em> si <span class="math-inline">\(u = \phi(x)\)</span>, alors <span class="math-inline">\(du = \phi'(x) dx\)</span> et :
+    <div class="math-display">
+      $$ \int f(\phi(x)) \phi'(x)\,dx = \int f(u)\,du $$
+    </div>
+    <div class="example">
+      <h4>Exemple :</h4>
+      <div class="math-display">
+        $$ \int 2x \cos(x^2)\,dx $$
+      </div>
+      Posons \( u = x^2 \Rightarrow du = 2x\,dx \), donc
+      <div class="math-display">
+        $$ \int 2x \cos(x^2)\,dx = \int \cos(u)\,du = \sin(u) + C = \sin(x^2) + C $$
+      </div>
+    </div>
+  </li>
 
-      <h3>Remarques importantes</h3>
-      <ul>
-        <li>La fonction doit être bornée.</li>
-        <li>Si <code>f</code> est continue, l'intégrale existe toujours.</li>
-        <li>Si <code>f(x) ≥ 0</code>, l'intégrale correspond à une aire réelle ; sinon, c'est une aire algébrique.</li>
-      </ul>
+  <li>
+    <strong>Intégration par parties :</strong>  
+    Cette méthode permet d’intégrer le produit de deux fonctions. La formule générale est :
+    <div class="math-display">
+      $$ \int u v'\,dx = u v - \int u' v\,dx $$
+    </div>
+    <div class="example">
+      <h4>Exemple :</h4>
+      <div class="math-display">
+        $$ \int x e^x dx $$
+      </div>
+      Posons \( u = x, \quad v' = e^x \Rightarrow u' = 1, \quad v = e^x \), donc
+      <div class="math-display">
+        $$ \int x e^x dx = x e^x - \int e^x dx = x e^x - e^x + C = e^x(x-1) + C $$
+      </div>
+    </div>
+  </li>
+
+  <li>
+    <strong>Décomposition en fractions simples :</strong>  
+    Utile pour intégrer des fractions rationnelles. Si <span class="math-inline">\(R(x) = \frac{P(x)}{Q(x)}\)</span> avec \(\deg P < \deg Q\), on factorise \(Q\) et on écrit \(R\) comme somme de fractions simples :
+    <div class="math-display">
+      $$ \frac{P(x)}{Q(x)} = \sum_i \frac{A_i}{x-r_i} + \sum_j \frac{B_j x + C_j}{x^2 + px + q} $$
+    </div>
+    <div class="example">
+      <h4>Exemple :</h4>
+      <div class="math-display">
+        $$ \int \frac{2x+3}{x(x+1)} dx $$
+      </div>
+      Décomposition : \( \frac{2x+3}{x(x+1)} = \frac{A}{x} + \frac{B}{x+1} \)  
+      Multiplions par \( x(x+1) \) : \( 2x+3 = A(x+1) + Bx = (A+B)x + A \)  
+      Identification : \( A = 3, B = -1 \)  
+      Donc :
+      <div class="math-display">
+        $$ \int \frac{2x+3}{x(x+1)} dx = 3\ln|x| - \ln|x+1| + C $$
+      </div>
+    </div>
+  </li>
+</ul>
+
 
       <h3>Exemple concret</h3>
       <div class="example">
