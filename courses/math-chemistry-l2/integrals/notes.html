@@ -6,129 +6,71 @@
   <title>Notes de cours - Intégrales</title>
   <link rel="stylesheet" href="/style.css">
   <style>
-    /* --- Style global --- */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
-      margin: 0;
-      padding: 0;
-      color: #3b2f2f;
-      line-height: 1.6;
-    }
-
-    header, footer {
-      background-color: #5c3a21;
-      color: #fff;
-      text-align: center;
-      padding: 1em;
-    }
-
-    header h1 {
-      margin: 0.2em 0;
-      font-size: 1.8em;
-    }
-
-    header nav a {
-      color: #d4a373;
-      margin: 0 1em;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    header nav a:hover {
-      text-decoration: underline;
-    }
-
+    /* ---- Style spécifique pour les notes de cours ---- */
     main {
+      padding: 20px;
       max-width: 900px;
-      margin: 2em auto;
-      padding: 2em;
-      background-color: #fff8f0;
+      margin: auto;
+      background-color: #fff7ec;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      color: #3b2f2f;
     }
 
-    h2 {
-      color: #5c3a21;
-      border-bottom: 2px solid #d4a373;
-      padding-bottom: 0.2em;
-      margin-top: 2em;
-    }
-
-    h3, h4 {
-      color: #6e4a32;
-      margin-top: 1.2em;
-    }
-
-    hr {
-      border: 0;
-      border-top: 1px solid #d4a373;
-      margin: 2em 0;
+    h2, h3 {
+      color: #3a1e00;
+      border-bottom: 2px solid #c8a97e;
+      padding-bottom: 5px;
+      margin-top: 30px;
     }
 
     p, li {
-      margin: 0.6em 0;
+      font-size: 1.05em;
+      line-height: 1.7;
+      text-align: justify;
     }
 
     ul {
-      padding-left: 1.4em;
+      padding-left: 30px;
     }
 
     code {
-      background-color: #f1e6dd;
+      background-color: #f5f0e6;
       padding: 2px 5px;
       border-radius: 4px;
       font-family: monospace;
     }
 
-    /* --- Formules MathJax --- */
+    /* ---- Équations ---- */
     .math-display {
       text-align: center;
-      font-size: 1 em;
+      font-size: 1.3em;
       margin: 1em 0;
-      padding: 0.5em 1em;
-      background-color: #fff8f0;
-      border-left: 4px solid #8B4513;
-      border-radius: 6px;
-      color: #5c3a21;
+      padding: 0.3em 0;
     }
 
     .math-inline {
       font-size: 1.1em;
-      background-color: #fff8f0;
+      background-color: #fdf7ee;
       padding: 0 4px;
       border-radius: 4px;
-      color: #5c3a21;
     }
 
-    /* --- Exemples et Exercices simplifiés --- */
-    .example, .exercise {
-      background-color: #fff8f0;
-      border-left: 4px solid #8B4513;
-      padding: 0.8em 1em;
-      margin: 1em 0;
-      border-radius: 8px;
-      color: #5c3a21;
+    /* ---- Blocs spéciaux ---- */
+    .definition, .example, .remark, .theorem {
+      background-color: #fdf0e0;
+      padding: 10px 15px;
+      margin: 15px 0;
+      border-radius: 6px;
     }
 
-    .example h4, .exercise h4 {
+    .example h4, .definition h3, .theorem h3 {
       margin-top: 0;
+      color: #3a1e00;
     }
 
-    /* --- Responsive --- */
+    /* ---- Responsive ---- */
     @media (max-width: 600px) {
-      main {
-        padding: 1em;
-      }
-
-      header h1 {
-        font-size: 1.5em;
-      }
-
-      .math-display {
-        font-size: 1.1em;
-      }
+      main { padding: 10px; }
+      .math-display { font-size: 1.1em; }
     }
   </style>
 </head>
@@ -142,199 +84,250 @@
   </header>
 
   <main>
-    <article class="cours avancé">
+    <article>
 
-      <!-- Introduction -->
       <h2>Introduction — Intuition géométrique</h2>
       <p>
-        L'intégrale d'une fonction réelle continue sur un intervalle  <span class="math-inline">[a,b]</span> représente, dans l'interprétation classique, <strong>l'aire algébrique</strong> délimitée par la courbe <code>y = f(x)</code>, l'axe des abscisses et les droites <code>x=a</code>, <code>x=b</code>. 
-        Cette idée intuitive est à la base de la définition rigoureuse par sommes de Riemann et débouche sur le lien fondamental entre dérivation et intégration : le <strong> <em>théorème fondamental du calcul intégral</em><strong>.
+        L'intégrale d'une fonction réelle continue sur un intervalle <span class="math-inline">[a,b]</span> représente l'aire algébrique délimitée par la courbe <code>y = f(x)</code>, l'axe des abscisses et les droites <span class="math-inline">x = a</span> et <span class="math-inline">x = b</span>.  
+        Cette intuition conduit à la définition rigoureuse par sommes de Riemann et au théorème fondamental du calcul intégral.
       </p>
-      <hr>
-
-      <!-- Section 1 -->
-      <h2>1. Définition (somme de Riemann)</h2>
-      <p>
-        Soit <span class="math-inline"> f : [a,b] → ℝ </span> bornée. On subdivise l'intervalle <span class="math-inline">[a,b]</span>  en plusieurs sous-intervalles pour approximer l'aire sous la courbe.
-      </p>
-
-      <p>
-        Soit une partition <span class="math-inline">\(P = \{ x_0 = a < x_1 < \dots < x_n = b \}\)</span>. Chaque sous-intervalle est <span class="math-inline">\([x_{i-1}, x_i]\)</span> et sa longueur est <span class="math-inline">\(\Delta x_i = x_i - x_{i-1}\)</span>.
-      </p>
-
-      <p>
-        On choisit un point <span class="math-inline">\(\xi_i \in [x_{i-1}, x_i]\)</span> dans chaque sous-intervalle. La valeur de la fonction en ce point sert de hauteur pour un rectangle dont la base est \(\Delta x_i\).  
-        La <strong>**somme de Riemann**<strong> correspond à la somme des aires de tous ces rectangles :
-      </p>
-
-      <div class="math-display">
-        $$ S(P,f,\xi) = \sum_{i=1}^n f(\xi_i) \Delta x_i $$
-      </div>
-
-      <p>
-        Lorsque le pas maximal <span class="math-inline">\(\|P\|\)</span> tend vers 0, si la limite existe et ne dépend pas des points choisis, on définit l'intégrale de Riemann :
-      </p>
-
-      <div class="math-display">
-        $$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,\xi) $$
-      </div>
- 
-  <h3>Techniques principales d’intégration</h3> 
-  <li>
-    <strong>Intégration par substitution :</strong>  
-    Cette technique consiste à transformer une intégrale compliquée en une forme plus simple grâce à un changement de variable.  
-    <em>Principe :</em> si <span class="math-inline">\(u = \phi(x)\)</span>, alors <span class="math-inline">\(du = \phi'(x) dx\)</span> et :
-    <div class="math-display">
-      $$ \int f(\phi(x)) \phi'(x)\,dx = \int f(u)\,du $$
-    </div>
-    <div class="example">
-      <h4>Exemple :</h4>
-      <div class="math-display">
-        $$ \int 2x \cos(x^2)\,dx $$
-      </div>
-      Posons \( u = x^2 \Rightarrow du = 2x\,dx \), donc
-      <div class="math-display">
-        $$ \int 2x \cos(x^2)\,dx = \int \cos(u)\,du = \sin(u) + C = \sin(x^2) + C $$
-      </div>
-    </div>
-  </li>
-
-  <li>
-    <strong>Intégration par parties :</strong>  
-    Cette méthode permet d’intégrer le produit de deux fonctions. La formule générale est :
-    <div class="math-display">
-      $$ \int u v'\,dx = u v - \int u' v\,dx $$
-    </div>
-    <div class="example">
-      <h4>Exemple :</h4>
-      <div class="math-display">
-        $$ \int x e^x dx $$
-      </div>
-      Posons \( u = x, \quad v' = e^x \Rightarrow u' = 1, \quad v = e^x \), donc
-      <div class="math-display">
-        $$ \int x e^x dx = x e^x - \int e^x dx = x e^x - e^x + C = e^x(x-1) + C $$
-      </div>
-    </div>
-  </li>
-
-  <li>
-    <strong>Décomposition en fractions simples :</strong>  
-    Utile pour intégrer des fractions rationnelles. Si <span class="math-inline">\(R(x) = \frac{P(x)}{Q(x)}\)</span> avec \(\deg P < \deg Q\), on factorise \(Q\) et on écrit \(R\) comme somme de fractions simples :
-    <div class="math-display">
-      $$ \frac{P(x)}{Q(x)} = \sum_i \frac{A_i}{x-r_i} + \sum_j \frac{B_j x + C_j}{x^2 + px + q} $$
-    </div>
-    <div class="example">
-      <h4>Exemple :</h4>
-      <div class="math-display">
-        $$ \int \frac{2x+3}{x(x+1)} dx $$
-      </div>
-      Décomposition : \( \frac{2x+3}{x(x+1)} = \frac{A}{x} + \frac{B}{x+1} \)  
-      Multiplions par \( x(x+1) \) : \( 2x+3 = A(x+1) + Bx = (A+B)x + A \)  
-      Identification : \( A = 3, B = -1 \)  
-      Donc :
-      <div class="math-display">
-        $$ \int \frac{2x+3}{x(x+1)} dx = 3\ln|x| - \ln|x+1| + C $$
-      </div>
-    </div>
-  </li>
-</ul>
-
-
-      <h3>Exemple concret</h3>
-      <div class="example">
-        Considérons <span class="math-inline">\(f(x) = x^2\)</span> sur <span class="math-inline">[0,1]</span> et une partition uniforme <span class="math-inline">\(x_i = i/n\)</span>. Choisissons les points droits <span class="math-inline">\(\xi_i = x_i\)</span> :
-        <div class="math-display">
-          $$ S(P,f,\xi) = \sum_{i=1}^{n} \left(\frac{i}{n}\right)^2 \cdot \frac{1}{n} = \frac{1}{n^3} \sum_{i=1}^{n} i^2 $$
-        </div>
-        Or, <span class="math-inline">\(\sum_{i=1}^{n} i^2 = \frac{n(n+1)(2n+1)}{6}\)</span>, donc
-        <div class="math-display">
-          $$ S(P,f,\xi) = \frac{(n+1)(2n+1)}{6n^2} $$
-        </div>
-        Lorsque <code>n → ∞</code>, on retrouve l'intégrale exacte :
-        <div class="math-display">
-          $$ \int_0^1 x^2 dx = \frac{1}{3} $$
-        </div>
-      </div>
 
       <hr>
 
-      <!-- Section 2 -->
-      <h2>2. Théorème fondamental du calcul (TFI)</h2>
+      <h2>1. Définition rigoureuse (somme de Riemann)</h2>
+
+      <p>Soit <code>f : [a,b] → ℝ</code> bornée. On subdivise l'intervalle en sous-intervalles pour approximer l'aire sous la courbe :</p>
+
       <p>
-        <strong>Partie 1 :</strong> Si <span class="math-inline">\(F(x) = \int_a^x f(t)\,dt\)</span> avec <code>f</code> continue, alors <span class="math-inline">\(F'(x) = f(x)\)</span>.
+        Soit une partition <span class="math-inline">P = { x_0 = a < x_1 < ... < x_n = b }</span>.  
+        Chaque sous-intervalle est <span class="math-inline">[x_{i-1}, x_i]</span> et sa longueur <span class="math-inline">Δx_i = x_i - x_{i-1}</span>.
       </p>
+
+      <p>
+        Choisissons un point <span class="math-inline">ξ_i ∈ [x_{i-1}, x_i]</span>. La somme de Riemann est :
+      </p>
+
       <div class="math-display">
-        $$ \frac{F(x+h)-F(x)}{h} = \frac{1}{h} \int_x^{x+h} f(t)\,dt $$
+        S(P,f,ξ) = ∑_{i=1}^{n} f(ξ_i) Δx_i
       </div>
-      <p>
-        Lorsque <code>h → 0</code>, la limite vaut <code>f(x)</code>.
-      </p>
 
       <p>
-        <strong>Partie 2 :</strong> Si <code>F</code> est une primitive de <code>f</code>, alors :
+        Si le pas maximal de la partition tend vers 0 et que la limite est indépendante des choix de ξ_i, on définit l'intégrale :
       </p>
+
       <div class="math-display">
-        $$ \int_a^b f(x)\,dx = F(b) - F(a) $$
+        ∫_a^b f(x) dx = lim_{||P||→0} S(P,f,ξ)
       </div>
 
-      <hr>
-
-      <!-- Section 3 -->
-      <h2>3. Intégrales indéfinies — primitives usuelles</h2>
-      <div class="example">
-        <h4>Exemples de primitives</h4>
-        <ul>
-          <li>\(\int x^n dx = \frac{x^{n+1}}{n+1} + C, n \neq -1\)</li>
-          <li>\(\int \frac{dx}{x} = \ln|x| + C\)</li>
-          <li>\(\int e^x dx = e^x + C\)</li>
-          <li>\(\int a^x dx = \frac{a^x}{\ln a} + C\)</li>
-          <li>\(\int \sin x dx = -\cos x + C\)</li>
-          <li>\(\int \cos x dx = \sin x + C\)</li>
-        </ul>
-      </div>
-
-      <!-- Section 4 -->
-      <h2>4. Techniques d'intégration</h2>
-      <p>Les principales méthodes :</p>
+      <h3>Remarques</h3>
       <ul>
-        <li>Intégration par substitution</li>
-        <li>Intégration par parties</li>
-        <li>Décomposition en fractions simples</li>
+        <li>f doit être bornée pour que la somme de Riemann soit définie.</li>
+        <li>Si f est continue sur [a,b], l'intégrale existe toujours.</li>
+        <li>Si f(x) ≥ 0, l'intégrale représente une aire réelle, sinon une aire algébrique.</li>
       </ul>
 
       <div class="example">
-        <h4>Exemple substitution</h4>
-        <p>
-          \(\int 2x \sqrt{x^2+1} dx\), posons \(u = x^2+1\), alors \(du = 2x dx\) :
-        </p>
+        <h4>Exemple</h4>
+        <p>Pour f(x) = x² sur [0,1] et une partition uniforme x_i = i/n :</p>
         <div class="math-display">
-          \(\int \sqrt{u} du = \frac{2}{3} u^{3/2} + C = \frac{2}{3} (x^2+1)^{3/2} + C\)
+          S(P,f,ξ) = ∑_{i=1}^{n} (i/n)² * (1/n) = (1/n³) ∑_{i=1}^{n} i²
+        </div>
+        <p>Or ∑_{i=1}^{n} i² = n(n+1)(2n+1)/6, donc :</p>
+        <div class="math-display">
+          S(P,f,ξ) = (n+1)(2n+1)/(6n²) → 1/3 lorsque n → ∞
+        </div>
+        <p>Donc : <span class="math-inline">∫_0^1 x² dx = 1/3</span></p>
+      </div>
+
+      <hr>
+
+      <h2>2. Théorème fondamental du calcul (TFI)</h2>
+
+      <p>
+        <strong>Partie 1 :</strong> Soit F(x) = ∫_a^x f(t) dt avec f continue. Alors F est dérivable et F'(x) = f(x).
+      </p>
+
+      <div class="math-display">
+        (F(x+h) - F(x))/h = (1/h) ∫_x^{x+h} f(t) dt
+      </div>
+      <p>Lorsque h→0, le membre de droite tend vers f(x).</p>
+
+      <p>
+        <strong>Partie 2 :</strong> Si F est une primitive de f sur [a,b], alors :
+      </p>
+
+      <div class="math-display">
+        ∫_a^b f(x) dx = F(b) - F(a)
+      </div>
+
+      <hr>
+
+      <h2>3. Intégrales indéfinies — primitives usuelles</h2>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ x³ dx = x⁴/4 + C
+      </div>
+
+      <ul>
+        <li>∫ x^n dx = x^{n+1}/(n+1) + C (n≠-1)</li>
+        <li>∫ dx/x = ln|x| + C</li>
+        <li>∫ sqrt(x) dx = 2/3 x^{3/2} + C</li>
+        <li>∫ 1/sqrt(x) dx = 2 sqrt(x) + C</li>
+        <li>∫ 1/x² dx = -1/x + C</li>
+        <li>∫ e^{ax} dx = (1/a) e^{ax} + C</li>
+        <li>∫ a^x dx = a^x / ln(a) + C</li>
+        <li>∫ ln x dx = x ln x - x + C</li>
+      </ul>
+
+      <ul>
+        <li>∫ sin x dx = -cos x + C</li>
+        <li>∫ cos x dx = sin x + C</li>
+        <li>∫ tan x dx = -ln|cos x| + C</li>
+        <li>∫ cot x dx = ln|sin x| + C</li>
+        <li>∫ sec² x dx = tan x + C</li>
+        <li>∫ csc² x dx = -cot x + C</li>
+        <li>∫ sec x tan x dx = sec x + C</li>
+        <li>∫ csc x cot x dx = -csc x + C</li>
+        <li>∫ sin² x dx = x/2 - sin(2x)/4 + C</li>
+        <li>∫ cos² x dx = x/2 + sin(2x)/4 + C</li>
+      </ul>
+
+      <hr>
+
+      <h2>4. Techniques principales d’intégration</h2>
+
+      <h3>4.1 Substitution</h3>
+      <p>∫ f(φ(x)) φ'(x) dx = ∫ f(u) du</p>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        <p>∫ 2x cos(x²) dx</p>
+        Posons u = x² ⇒ du = 2x dx, donc :
+        <div class="math-display">
+          ∫ 2x cos(x²) dx = ∫ cos(u) du = sin(u) + C = sin(x²) + C
         </div>
       </div>
 
-      <!-- Section 5 -->
+      <div class="example">
+        <h4>Exemple</h4>
+        <p>∫ dx / √(1 - x²)</p>
+        Posons x = sin θ ⇒ dx = cos θ dθ, √(1-x²) = cos θ :
+        <div class="math-display">
+          ∫ dx / √(1 - x²) = ∫ dθ = θ + C = arcsin(x) + C
+        </div>
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        <p>∫ 2x / (1 + x²) dx</p>
+        Posons u = 1 + x² ⇒ du = 2x dx :
+        <div class="math-display">
+          ∫ 2x / (1 + x²) dx = ∫ du / u = ln|u| + C = ln|1 + x²| + C
+        </div>
+      </div>
+
+      <h3>4.2 Intégration par parties</h3>
+      <p>Formule : ∫ u v' dx = u v - ∫ u' v dx</p>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ x e^x dx  
+        Posons u = x, dv = e^x dx ⇒ u' = 1, v = e^x :
+        <div class="math-display">
+          ∫ x e^x dx = x e^x - ∫ e^x dx = x e^x - e^x + C
+        </div>
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ ln x dx  
+        Posons u = ln x, dv = dx ⇒ u' = 1/x, v = x :
+        <div class="math-display">
+          ∫ ln x dx = x ln x - ∫ x*(1/x) dx = x ln x - x + C
+        </div>
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ x cos x dx  
+        Posons u = x, dv = cos x dx ⇒ u' = 1, v = sin x :
+        <div class="math-display">
+          ∫ x cos x dx = x sin x - ∫ sin x dx = x sin x + cos x + C
+        </div>
+      </div>
+
+      <h3>4.3 Décomposition en fractions simples</h3>
+      <p>Pour R(x) = P(x)/Q(x) avec deg P < deg Q, on factorise Q et écrit R comme somme de fractions simples.</p>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ (2x + 3) / (x(x+1)) dx  
+        Décomposition : (2x+3)/(x(x+1)) = A/x + B/(x+1)  
+        Identification : A = 3, B = -1  
+        <div class="math-display">
+          ∫ (2x + 3)/(x(x+1)) dx = 3 ln|x| - ln|x+1| + C
+        </div>
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ (5x + 7)/((x+1)(x+2)) dx  
+        Décomposition : (5x+7)/((x+1)(x+2)) = A/(x+1) + B/(x+2)  
+        Identification : A = 3, B = 2  
+        <div class="math-display">
+          ∫ (5x + 7)/((x+1)(x+2)) dx = 3 ln|x+1| + 2 ln|x+2| + C
+        </div>
+      </div>
+
+      <hr>
+
       <h2>5. Intégrales trigonométriques</h2>
-      <p>Quelques intégrales classiques :</p>
+
+      <p>Intégrales de puissances de sinus et cosinus :</p>
+      <div class="math-display">
+        ∫ sin^n x dx, ∫ cos^n x dx
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ sin³ x dx = -cos x + cos³ x / 3 + C
+      </div>
+
+      <div class="example">
+        <h4>Exemple</h4>
+        ∫ cos³ x dx = sin x - sin³ x / 3 + C
+      </div>
+
+      <p>Intégrales des fonctions trigonométriques usuelles :</p>
       <ul>
-        <li>\(\int \sin x dx = -\cos x + C\)</li>
-        <li>\(\int \cos x dx = \sin x + C\)</li>
-        <li>\(\int \tan x dx = -\ln|\cos x| + C\)</li>
-        <li>\(\int \cot x dx = \ln|\sin x| + C\)</li>
-        <li>\(\int \sec^2 x dx = \tan x + C\)</li>
-        <li>\(\int \csc^2 x dx = -\cot x + C\)</li>
+        <li>∫ sin x dx = -cos x + C</li>
+        <li>∫ cos x dx = sin x + C</li>
+        <li>∫ tan x dx = -ln|cos x| + C</li>
+        <li>∫ cot x dx = ln|sin x| + C</li>
+        <li>∫ sec² x dx = tan x + C</li>
+        <li>∫ csc² x dx = -cot x + C</li>
+        <li>∫ sec x tan x dx = sec x + C</li>
+        <li>∫ csc x cot x dx = -csc x + C</li>
+        <li>∫ sin² x dx = x/2 - sin 2x /4 + C</li>
+        <li>∫ cos² x dx = x/2 + sin 2x /4 + C</li>
+        <li>∫ sin x cos x dx = sin² x / 2 + C</li>
       </ul>
 
     </article>
   </main>
 
   <footer>
-    &copy; 2025 Notes de cours. Tous droits réservés.
+    <p>&copy; 2019 Alethia. Tous droits réservés.</p>
   </footer>
 
-  <!-- MathJax pour afficher les formules -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], packages: {'[+]': ['amsmath']} },
+      svg: { fontCache: 'global' }
+    };
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </body>
 </html>
