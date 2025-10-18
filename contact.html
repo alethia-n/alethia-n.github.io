@@ -6,30 +6,46 @@
   <title>Contact</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Import officiel de Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    integrity="sha512-+2kE/sfXgxQ2M1VdNQ5QnqRZgS62SBBmPz9+gOkdDg6zTVB4eqwAgT4RZldZJ+e3Z7zYFrO+ms7p1KYa3D6jig=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
   />
 
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       background-color: #fff8f0;
       font-family: Arial, sans-serif;
     }
+
+    nav {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: #6b3e26;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #8b4513;
+    }
+
     .facebook-icon {
       color: #6b3e26;
       font-size: 100px;
       text-decoration: none;
       transition: transform 0.3s ease, color 0.3s ease;
     }
+
     .facebook-icon:hover {
       transform: scale(1.2);
       color: #8b4513;
@@ -37,7 +53,12 @@
   </style>
 </head>
 <body>
-  <a href="https://web.facebook.com/N.M.Gertrude/" target="_blank" class="facebook-icon" aria-label="Facebook">
+  <nav>
+    <a href="courses.html">Courses</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <a href="https://web.facebook.com/N.M.Gertrude/" target="_blank" class="facebook-icon">
     <i class="fa-brands fa-facebook"></i>
   </a>
 </body>
