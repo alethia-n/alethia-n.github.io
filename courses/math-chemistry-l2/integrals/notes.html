@@ -1,10 +1,42 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notes de cours - Intégrales</title>
-  <link rel="stylesheet" href="/style.css"> 
+  <!-- CSS relatif -->
+  <link rel="stylesheet" href="../../style.css"> 
+  <style>
+    /* Styles spécifiques pour MathJax et affichage des intégrales */
+    .math-display {
+      display: block;
+      text-align: center;
+      font-size: 1.2em;
+      margin: 1em 0;
+    }
+    article.cours {
+      max-width: 900px;
+      margin: auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      font-family: 'Georgia', serif;
+    }
+    article.cours h2 {
+      margin-top: 2em;
+      color: #2c3e50;
+    }
+    article.cours h3, article.cours h4 {
+      color: #34495e;
+    }
+    footer {
+      text-align: center;
+      padding: 1em 0;
+      margin-top: 2em;
+      border-top: 1px solid #ccc;
+      color: #555;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -30,133 +62,78 @@
       <p>
         Soit <code>f : [a,b] → ℝ</code> bornée. Pour une partition
         <code>P = {x_0=a < x_1 < ... < x_n=b}</code> on pose <code>Δx_i = x_i - x_{i-1}</code> et on choisit un point <code>ξ_i ∈ [x_{i-1}, x_i]</code>. La somme de Riemann est
-        $$ S(P,f,ξ) = \sum_{i=1}^n f(ξ_i) \Delta x_i. $$
-        Si la limite de ces sommes lorsque le pas maximal de la partition tend vers 0 existe et est indépendante des choix <code>ξ_i</code>, on appelle cette limite l'intégrale de Riemann :
-        $$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,ξ). $$
       </p>
+      <div class="math-display">$$ S(P,f,ξ) = \sum_{i=1}^n f(ξ_i) \Delta x_i $$</div>
+      <p>
+        Si la limite de ces sommes lorsque le pas maximal de la partition tend vers 0 existe et est indépendante des choix <code>ξ_i</code>, on appelle cette limite l'intégrale de Riemann :
+      </p>
+      <div class="math-display">$$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,ξ) $$</div>
 
       <h3>Conséquences et remarques</h3>
       <ul>
         <li>Si <code>f</code> est continue sur <code>[a,b]</code>, alors <code>f</code> est intégrable (Riemann) sur <code>[a,b]</code>.</li>
-        <li>Si <code>f(x) ≥ 0</code>, alors <code>\int_a^b f(x)\,dx</code> est l'aire sous la courbe. Si <code>f</code> change de signe, on obtient une aire algébrique (zones négatives comptées négativement).</li>
+        <li>Si <code>f(x) ≥ 0</code>, alors <code>\int_a^b f(x)\,dx</code> est l'aire sous la courbe. Si <code>f</code> change de signe, on obtient une aire algébrique.</li>
         <li>Propriétés linéaires : pour toute constante <code>α, β</code> et fonctions intégrables <code>f, g</code>, on a
-          $$ \int_a^b (\alpha f + \beta g) dx = \alpha \int_a^b f(x)\,dx + \beta \int_a^b g(x)\,dx. $$
+          <div class="math-display">$$ \int_a^b (\alpha f + \beta g) dx = \alpha \int_a^b f(x)\,dx + \beta \int_a^b g(x)\,dx $$</div>
         </li>
       </ul>
 
       <hr>
 
-      <h2>2. Théorème fondamental du calcul (TFI) — démonstration utile</h2>
-      <p>
-        <strong>Partie 1 (primitive)</strong> : Si <code>F(x) = \int_a^x f(t)\,dt</code> avec <code>f</code> continue sur <code>[a,b]</code>, alors <code>F</code> est dérivable et <code>F'(x) = f(x)</code>.
-      </p>
-      <p>(Preuve courte) :</p>
-      <p>
-        $$ \frac{F(x+h)-F(x)}{h} = \frac{1}{h}\int_x^{x+h} f(t)\,dt. $$
-        Par continuité de <code>f</code>, lorsque <code>h→0</code> la moyenne de <code>f</code> sur <code>[x,x+h]</code> tend vers <code>f(x)</code>, donc la limite vaut <code>f(x)</code>.
-      </p>
+      <h2>2. Théorème fondamental du calcul (TFI)</h2>
+      <p><strong>Partie 1 (primitive)</strong> : Si <code>F(x) = \int_a^x f(t)\,dt</code> avec <code>f</code> continue sur <code>[a,b]</code>, alors <code>F'(x) = f(x)</code>.</p>
+      <div class="math-display">$$ \frac{F(x+h)-F(x)}{h} = \frac{1}{h}\int_x^{x+h} f(t)\,dt $$</div>
+      <p>Par continuité, la limite lorsque <code>h → 0</code> vaut <code>f(x)</code>.</p>
 
-      <p>
-        <strong>Partie 2 (calcul d'intégrale par primitive)</strong> : Si <code>F</code> est une primitive de <code>f</code> sur <code>[a,b]</code>, alors
-        $$ \int_a^b f(x)\,dx = F(b) - F(a). $$
-      </p>
+      <p><strong>Partie 2 (calcul d'intégrale par primitive)</strong> :</p>
+      <div class="math-display">$$ \int_a^b f(x)\,dx = F(b) - F(a) $$</div>
 
       <hr>
 
-      <h2>3. Intégrales indéfinies — primitives usuelles</h2>
-      <ul>
-        <li>$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C \quad (n\ne -1).$$</li>
-        <li>$$\int \frac{1}{x}\,dx = \ln|x| + C.$$</li>
-        <li>$$\int e^{ax}\,dx = \frac{1}{a} e^{ax} + C.$$</li>
-        <li>$$\int \sin x\,dx = -\cos x + C, \quad \int \cos x\,dx = \sin x + C.$$</li>
-        <li>$$\int \sec^2 x\,dx = \tan x + C, \quad \int \csc^2 x\,dx = -\cot x + C.$$</li>
-      </ul>
+      <h2>3. Primitives usuelles</h2>
+      <div class="math-display">$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C, \quad n\ne -1$$</div>
+      <div class="math-display">$$\int \frac{1}{x}\,dx = \ln|x| + C$$</div>
+      <div class="math-display">$$\int e^{ax}\,dx = \frac{1}{a} e^{ax} + C$$</div>
+      <div class="math-display">$$\int \sin x\,dx = -\cos x + C, \quad \int \cos x\,dx = \sin x + C$$</div>
+      <div class="math-display">$$\int \sec^2 x\,dx = \tan x + C, \quad \int \csc^2 x\,dx = -\cot x + C$$</div>
 
       <h4>Exemple simple</h4>
-      <p>
-        Calculer $$\int x^3\,dx.$$  
-        Solution : $$\frac{x^4}{4} + C.$$ Vérification : dérivée de $$\frac{x^4}{4}$$ = $$x^3$$.
-      </p>
+      <div class="math-display">$$\int x^3\,dx = \frac{x^4}{4} + C$$</div>
 
       <hr>
 
       <h2>4. Techniques principales d’intégration</h2>
-      <h3>4.1 Changement de variable (substitution)</h3>
-      <p>
-        Principe : si <code>u = φ(x)</code> est une bijection différentiable et <code>du = φ'(x)\,dx</code>, alors
-        $$ \int f(\phi(x)) \phi'(x)\,dx = \int f(u)\,du. $$
-      </p>
 
-      <h4>Exemple 1</h4>
-      <p>
-        $$ \int 2x \cos(x^2)\,dx. $$  
-        Posons <code>u = x^2</code> ⇒ <code>du = 2x dx</code>. Donc
-        $$ \int 2x \cos(x^2)\,dx = \int \cos(u)\,du = \sin(u) + C = \sin(x^2) + C. $$
-      </p>
-
-      <h4>Exemple 2 (substitution trigonométrique)</h4>
-      <p>
-        $$ \int \frac{dx}{\sqrt{1-x^2}}. $$  
-        Posons <code>x = \sin \theta</code>, <code>dx = \cos \theta d\theta</code>, racine → <code>\sqrt{1-\sin^2\theta} = \cos\theta</code>. Donc
-        $$ \int \frac{dx}{\sqrt{1-x^2}} = \int d\theta = \theta + C = \arcsin(x) + C. $$
-      </p>
+      <h3>4.1 Changement de variable</h3>
+      <div class="math-display">$$ \int f(\phi(x)) \phi'(x)\,dx = \int f(u)\,du $$</div>
+      <div class="math-display">$$ \int 2x \cos(x^2)\,dx = \sin(x^2) + C $$</div>
 
       <h3>4.2 Intégration par parties</h3>
-      <p>
-        Formule : $$ \int u(x) v'(x)\,dx = u(x) v(x) - \int u'(x) v(x)\,dx. $$
-      </p>
-
-      <h4>Exemple 3</h4>
-      <p>
-        $$ \int x e^x dx $$  
-        Posons <code>u = x</code>, <code>v' = e^x</code> ⇒ <code>u' = 1</code>, <code>v = e^x</code>  
-        $$ \int x e^x dx = x e^x - \int e^x dx = x e^x - e^x + C = e^x(x-1) + C. $$
-      </p>
+      <div class="math-display">$$ \int u(x) v'(x)\,dx = u(x)v(x) - \int u'(x)v(x)\,dx $$</div>
+      <div class="math-display">$$ \int x e^x dx = e^x (x-1) + C $$</div>
 
       <h3>4.3 Décomposition en éléments simples</h3>
-      <p>
-        Soit <code>R(x) = P(x)/Q(x)</code> avec deg(<code>P</code>) &lt; deg(<code>Q</code>). On factorise <code>Q</code> et on écrit une somme de termes simples.  
-      </p>
-
-      <h4>Exemple 5</h4>
-      <p>
-        $$ \int \frac{2x+3}{x(x+1)} dx. $$  
-        Décomposition : $$ \frac{2x+3}{x(x+1)} = \frac{A}{x} + \frac{B}{x+1} $$  
-        Multiplions par <code>x(x+1)</code> : $$ 2x+3 = A(x+1) + Bx = (A+B)x + A $$  
-        Identification : $$ A = 3, B = -1 $$  
-        Donc $$ \int \frac{2x+3}{x(x+1)} dx = 3\ln|x| - \ln|x+1| + C. $$
-      </p>
+      <div class="math-display">$$ \int \frac{2x+3}{x(x+1)} dx = 3 \ln|x| - \ln|x+1| + C $$</div>
 
       <hr>
 
       <h2>5. Intégrales trigonométriques</h2>
-      <p>Exemple :</p>
-      <p>$$ \int \sin^3 x dx = -\cos x + \frac{\cos^3 x}{3} + C $$</p>
+      <div class="math-display">$$ \int \sin^3 x dx = -\cos x + \frac{\cos^3 x}{3} + C $$</div>
 
       <hr>
 
       <h2>6. Intégrales impropres</h2>
-      <p>
-        Exemple de convergence : $$ \int_1^{+\infty} \frac{1}{x^p} dx $$
-        converge si et seulement si <code>p>1</code>.
-      </p>
+      <div class="math-display">$$ \int_1^{+\infty} \frac{1}{x^p} dx $$</div>
+      <p>Converge si et seulement si <code>p>1</code>.</p>
 
       <hr>
 
       <h2>9. Exercices guidés</h2>
       <h4>Exercice 2</h4>
-      <p>Calculer $$\int \frac{x}{\sqrt{1+x^2}} dx.$$  
-        Solution : poser <code>u=1+x^2</code>, <code>du=2x dx</code> ⇒
-        $$ \int \frac{x}{\sqrt{1+x^2}} dx = \frac{1}{2} \int u^{-1/2} du = \sqrt{1+x^2} + C $$
-      </p>
+      <div class="math-display">$$ \int \frac{x}{\sqrt{1+x^2}} dx = \sqrt{1+x^2} + C $$</div>
 
       <h4>Exercice 3</h4>
-      <p>
-        $$ \int \frac{4x+1}{x^2+x} dx $$  
-        Décomposition : $$ \frac{4x+1}{x(x+1)} = \frac{A}{x} + \frac{B}{x+1} $$  
-        Après identification : $$ A=1, B=3 $$  
-        Donc $$ \int \frac{4x+1}{x(x+1)} dx = \ln|x| + 3\ln|x+1| + C $$
-      </p>
+      <div class="math-display">$$ \int \frac{4x+1}{x^2+x} dx = \ln|x| + 3\ln|x+1| + C $$</div>
 
     </article>
   </main>
@@ -165,7 +142,7 @@
     <p>&copy; 2019 Alethia. Tous droits réservés.</p>
   </footer>
 
-  <!-- MathJax pour affichage mathématique -->
+  <!-- MathJax -->
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], packages: {'[+]': ['amsmath']} },
