@@ -49,11 +49,16 @@ nav a:hover {
 }
 
 /* ---- TITRES ---- */
-h2, h3 {
+h2 {
   color: var(--marron-fonce);
   border-bottom: 2px solid var(--marron-clair);
   padding-bottom: 5px;
   margin-top: 30px;
+}
+
+h3 {
+  color: var(--marron-fonce);
+  margin-top: 25px;
 }
 
 /* ---- CONTENU ---- */
@@ -76,12 +81,51 @@ ul {
 .definition, .example, .remark, .theorem {
   border-left: 4px solid var(--marron-clair);
   background-color: #fff7ec;
-  padding: 10px 15px;
+  padding: 12px 15px;
   margin: 15px 0;
   border-radius: 6px;
 }
 
 .definition h3, .example h3, .remark h3, .theorem h3 {
+  margin-top: 0;
+  color: var(--marron-fonce);
+}
+
+/* ---- FORMULES MATHÉMATIQUES ---- */
+.math-display {
+  text-align: center;
+  font-size: 1.25em;
+  margin: 1em 0;
+  padding: 0.3em 0;
+  background-color: transparent; /* pas de fond */
+  border-left: none; /* supprime la ligne verticale */
+}
+
+.math-inline {
+  font-size: 1.05em;
+  background-color: transparent;
+  padding: 0 2px;
+  border-radius: 0;
+}
+
+/* ---- EXEMPLES ET EXERCICES ---- */
+.example {
+  background-color: #fff7ec;
+  border-left: 4px solid var(--marron-clair);
+  padding: 12px 15px;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
+.exercise {
+  background-color: #fff3cd;
+  border-left: 4px solid #f39c12;
+  padding: 12px 15px;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
+.example h4, .exercise h4 {
   margin-top: 0;
   color: var(--marron-fonce);
 }
@@ -146,20 +190,3 @@ footer {
     padding: 10px;
   }
 }
-/* ---- FORMULES MATHÉMATIQUES ---- */
-.math-display {
-  text-align: center;
-  font-size: 1.3em;
-  margin: 1.2em 0;
-  padding: 0.2em 0;
-  background-color: transparent; /* pas de fond coloré */
-  border-left: none; /* supprime la ligne verticale */
-}
-
-.math-inline {
-  font-size: 1.1em;
-  background-color: transparent; /* léger fond si tu veux */
-  padding: 0 2px;
-  border-radius: 0;
-}
-
