@@ -40,18 +40,20 @@
     }
 
     /* ---- Équations ---- */
+    .math-display, .math-inline {
+      font-family: "Times New Roman", Times, serif !important;
+      color: #3a1e00;
+    }
+
     .math-display {
       text-align: center;
-      font-size: 1.3em;
+      font-size: 1.25em;
       margin: 1em 0;
-      padding: 0.3em 0;
     }
 
     .math-inline {
-      font-size: 1.1em;
-      background-color: #fdf7ee;
-      padding: 0 4px;
-      border-radius: 4px;
+      font-size: 1.05em;
+      padding: 0 2px;
     }
 
     /* ---- Blocs spéciaux ---- */
@@ -85,7 +87,6 @@
 
   <main>
     <article>
-
       <h2>Introduction — Intuition géométrique</h2>
       <p>
         L'intégrale d'une fonction réelle continue sur un intervalle <span class="math-inline">[a,b]</span> représente l'aire algébrique délimitée par la courbe <code>y = f(x)</code>, l'axe des abscisses et les droites <span class="math-inline">x = a</span> et <span class="math-inline">x = b</span>.  
@@ -95,26 +96,20 @@
       <hr>
 
       <h2>1. Définition rigoureuse (somme de Riemann)</h2>
-
       <p>Soit <code>f : [a,b] → ℝ</code> bornée. On subdivise l'intervalle en sous-intervalles pour approximer l'aire sous la courbe :</p>
-
       <p>
         Soit une partition <span class="math-inline">P = { x_0 = a < x_1 < ... < x_n = b }</span>.  
         Chaque sous-intervalle est <span class="math-inline">[x_{i-1}, x_i]</span> et sa longueur <span class="math-inline">Δx_i = x_i - x_{i-1}</span>.
       </p>
-
       <p>
         Choisissons un point <span class="math-inline">ξ_i ∈ [x_{i-1}, x_i]</span>. La somme de Riemann est :
       </p>
-
       <div class="math-display">
         S(P,f,ξ) = ∑_{i=1}^{n} f(ξ_i) Δx_i
       </div>
-
       <p>
         Si le pas maximal de la partition tend vers 0 et que la limite est indépendante des choix de ξ_i, on définit l'intégrale :
       </p>
-
       <div class="math-display">
         ∫_a^b f(x) dx = lim_{||P||→0} S(P,f,ξ)
       </div>
@@ -142,11 +137,9 @@
       <hr>
 
       <h2>2. Théorème fondamental du calcul (TFI)</h2>
-
       <p>
         <strong>Partie 1 :</strong> Soit F(x) = ∫_a^x f(t) dt avec f continue. Alors F est dérivable et F'(x) = f(x).
       </p>
-
       <div class="math-display">
         (F(x+h) - F(x))/h = (1/h) ∫_x^{x+h} f(t) dt
       </div>
@@ -155,7 +148,6 @@
       <p>
         <strong>Partie 2 :</strong> Si F est une primitive de f sur [a,b], alors :
       </p>
-
       <div class="math-display">
         ∫_a^b f(x) dx = F(b) - F(a)
       </div>
@@ -163,7 +155,6 @@
       <hr>
 
       <h2>3. Intégrales indéfinies — primitives usuelles</h2>
-
       <div class="example">
         <h4>Exemple</h4>
         ∫ x³ dx = x⁴/4 + C
@@ -189,8 +180,8 @@
         <li>∫ csc² x dx = -cot x + C</li>
         <li>∫ sec x tan x dx = sec x + C</li>
         <li>∫ csc x cot x dx = -csc x + C</li>
-        <li>∫ sin² x dx = x/2 - sin(2x)/4 + C</li>
-        <li>∫ cos² x dx = x/2 + sin(2x)/4 + C</li>
+        <li>∫ sin² x dx = x/2 - sin 2x /4 + C</li>
+        <li>∫ cos² x dx = x/2 + sin 2x /4 + C</li>
       </ul>
 
       <hr>
@@ -209,24 +200,6 @@
         </div>
       </div>
 
-      <div class="example">
-        <h4>Exemple</h4>
-        <p>∫ dx / √(1 - x²)</p>
-        Posons x = sin θ ⇒ dx = cos θ dθ, √(1-x²) = cos θ :
-        <div class="math-display">
-          ∫ dx / √(1 - x²) = ∫ dθ = θ + C = arcsin(x) + C
-        </div>
-      </div>
-
-      <div class="example">
-        <h4>Exemple</h4>
-        <p>∫ 2x / (1 + x²) dx</p>
-        Posons u = 1 + x² ⇒ du = 2x dx :
-        <div class="math-display">
-          ∫ 2x / (1 + x²) dx = ∫ du / u = ln|u| + C = ln|1 + x²| + C
-        </div>
-      </div>
-
       <h3>4.2 Intégration par parties</h3>
       <p>Formule : ∫ u v' dx = u v - ∫ u' v dx</p>
 
@@ -236,24 +209,6 @@
         Posons u = x, dv = e^x dx ⇒ u' = 1, v = e^x :
         <div class="math-display">
           ∫ x e^x dx = x e^x - ∫ e^x dx = x e^x - e^x + C
-        </div>
-      </div>
-
-      <div class="example">
-        <h4>Exemple</h4>
-        ∫ ln x dx  
-        Posons u = ln x, dv = dx ⇒ u' = 1/x, v = x :
-        <div class="math-display">
-          ∫ ln x dx = x ln x - ∫ x*(1/x) dx = x ln x - x + C
-        </div>
-      </div>
-
-      <div class="example">
-        <h4>Exemple</h4>
-        ∫ x cos x dx  
-        Posons u = x, dv = cos x dx ⇒ u' = 1, v = sin x :
-        <div class="math-display">
-          ∫ x cos x dx = x sin x - ∫ sin x dx = x sin x + cos x + C
         </div>
       </div>
 
@@ -270,20 +225,9 @@
         </div>
       </div>
 
-      <div class="example">
-        <h4>Exemple</h4>
-        ∫ (5x + 7)/((x+1)(x+2)) dx  
-        Décomposition : (5x+7)/((x+1)(x+2)) = A/(x+1) + B/(x+2)  
-        Identification : A = 3, B = 2  
-        <div class="math-display">
-          ∫ (5x + 7)/((x+1)(x+2)) dx = 3 ln|x+1| + 2 ln|x+2| + C
-        </div>
-      </div>
-
       <hr>
 
       <h2>5. Intégrales trigonométriques</h2>
-
       <p>Intégrales de puissances de sinus et cosinus :</p>
       <div class="math-display">
         ∫ sin^n x dx, ∫ cos^n x dx
@@ -299,75 +243,16 @@
         ∫ cos³ x dx = sin x - sin³ x / 3 + C
       </div>
 
-      <p>Intégrales des fonctions trigonométriques usuelles :</p>
+      <hr>
+
+      <h2>6. Résumé des techniques d’intégration</h2>
       <ul>
-        <li>∫ sin x dx = -cos x + C</li>
-        <li>∫ cos x dx = sin x + C</li>
-        <li>∫ tan x dx = -ln|cos x| + C</li>
-        <li>∫ cot x dx = ln|sin x| + C</li>
-        <li>∫ sec² x dx = tan x + C</li>
-        <li>∫ csc² x dx = -cot x + C</li>
-        <li>∫ sec x tan x dx = sec x + C</li>
-        <li>∫ csc x cot x dx = -csc x + C</li>
-        <li>∫ sin² x dx = x/2 - sin 2x /4 + C</li>
-        <li>∫ cos² x dx = x/2 + sin 2x /4 + C</li>
-        <li>∫ sin x cos x dx = sin² x / 2 + C</li>
+        <li><strong>Substitution :</strong> ∫ f(φ(x)) φ'(x) dx = ∫ f(u) du</li>
+        <li><strong>Parties :</strong> ∫ u v' dx = u v - ∫ u' v dx</li>
+        <li><strong>Fractions simples :</strong> P(x)/Q(x) = Σ A_i / (x - r_i) + … </li>
+        <li><strong>Trigonométriques :</strong> ∫ sin^n x dx, ∫ cos^n x dx, ∫ sin^m x cos^n x dx</li>
       </ul>
-
-  
-        <hr>
-
-<h2>6. Résumé des techniques d’intégration</h2>
-
-<p>Voici un rappel des principales méthodes pour calculer des intégrales, avec leurs principes :</p>
-
-<ul>
-  <li>
-    <strong>Intégration par substitution (changement de variable) :</strong>
-    <p>Si l’intégrande contient une fonction et sa dérivée, on peut poser <code>u = φ(x)</code> et remplacer <code>dx</code> par <code>du</code> pour simplifier l’intégrale :</p>
-    <div class="math-display">
-      ∫ f(φ(x)) φ'(x) dx = ∫ f(u) du
-    </div>
-  </li>
-
-  <li>
-    <strong>Intégration par parties :</strong>
-    <p>Utilisée lorsque l’intégrande est un produit de fonctions <code>u(x)v'(x)</code>. On choisit <code>u</code> à dériver et <code>v'</code> à intégrer :</p>
-    <div class="math-display">
-      ∫ u v' dx = u v - ∫ u' v dx
-    </div>
-  </li>
-
-  <li>
-    <strong>Décomposition en fractions simples :</strong>
-    <p>Pour une fraction rationnelle <code>P(x)/Q(x)</code> avec <code>deg P < deg Q</code>, on factorise le dénominateur et on écrit la fraction comme somme de fractions simples, plus faciles à intégrer :</p>
-    <div class="math-display">
-      P(x)/Q(x) = Σ A_i / (x - r_i) + … 
-    </div>
-  </li>
-
-  <li>
-    <strong>Intégrales trigonométriques :</strong>
-    <p>Pour des puissances de sinus et cosinus ou des produits, on utilise des identités trigonométriques pour transformer l’intégrale en une forme plus simple :</p>
-    <div class="math-display">
-      ∫ sin^n x dx, ∫ cos^n x dx, ∫ sin^m x cos^n x dx
-    </div>
-  </li>
-
-  <li>
-    <strong>Intégrales de fonctions usuelles :</strong>
-    <p>Certaines intégrales sont directes, comme :</p>
-    <ul>
-      <li>∫ x^n dx = x^(n+1)/(n+1) + C</li>
-      <li>∫ e^(ax) dx = e^(ax)/a + C</li>
-      <li>∫ 1/x dx = ln|x| + C</li>
-      <li>∫ sin x dx = -cos x + C, ∫ cos x dx = sin x + C</li>
-    </ul>
-  </li>
-</ul>
-
-<p>En combinant ces techniques, la majorité des intégrales rencontrées en calcul différentiel peuvent être résolues.</p>
-  </article>
+    </article>
   </main>
 
   <footer>
@@ -378,7 +263,7 @@
   <script>
     window.MathJax = {
       tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], packages: {'[+]': ['amsmath']} },
-      svg: { fontCache: 'global' }
+      svg: { fontCache: 'global', scale: 1.0 }
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
