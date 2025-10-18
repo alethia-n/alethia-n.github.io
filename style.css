@@ -146,3 +146,20 @@ footer {
     padding: 10px;
   }
 }
+/* ---- FORMULES MATHÉMATIQUES ---- */
+.math-display {
+  text-align: center;
+  font-size: 1.3em;
+  margin: 1.2em 0;
+  padding: 0.2em 0;
+  background-color: transparent; /* pas de fond coloré */
+  border-left: none; /* supprime la ligne verticale */
+}
+
+.math-inline {
+  font-size: 1.1em;
+  background-color: transparent; /* léger fond si tu veux */
+  padding: 0 2px;
+  border-radius: 0;
+}
+
