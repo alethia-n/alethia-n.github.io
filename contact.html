@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Import officiel de Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-+2kE/sfXgxQ2M1VdNQ5QnqRZgS62SBBmPz9+gOkdDg6zTVB4eqwAgT4RZldZJ+e3Z7zYFrO+ms7p1KYa3D6jig=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
   <style>
     body {
       display: flex;
@@ -16,9 +26,9 @@
     }
     .facebook-icon {
       color: #6b3e26;
-      font-size: 80px;
+      font-size: 100px;
       text-decoration: none;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, color 0.3s ease;
     }
     .facebook-icon:hover {
       transform: scale(1.2);
@@ -27,10 +37,8 @@
   </style>
 </head>
 <body>
-  <a href="https://web.facebook.com/N.M.Gertrude/" target="_blank" class="facebook-icon">
-    <i class="fab fa-facebook"></i>
+  <a href="https://web.facebook.com/N.M.Gertrude/" target="_blank" class="facebook-icon" aria-label="Facebook">
+    <i class="fa-brands fa-facebook"></i>
   </a>
-
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
