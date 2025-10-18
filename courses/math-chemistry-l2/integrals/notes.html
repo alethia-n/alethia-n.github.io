@@ -4,34 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notes de cours - Intégrales</title>
-  <link rel="stylesheet" href="/style.css"> 
+  <link rel="stylesheet" href="/style.css">
   <style>
-    /* Style pour toutes les formules MathJax */
-    .math-display {
-      text-align: center;
-      margin: 1em 0;
-      font-size: 1.2em;
-      line-height: 1.4;
-    }
-    .math-inline {
-      font-size: 1.1em;
-    }
-
-    /* Style général du contenu */
+    /* --- Style global --- */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      padding: 0;
+      background-color: #f0f2f5;
       margin: 0;
-      background-color: #f8f9fa;
+      padding: 0;
       color: #333;
+      line-height: 1.6;
     }
 
     header, footer {
       background-color: #343a40;
-      color: white;
-      padding: 1em;
+      color: #fff;
       text-align: center;
+      padding: 1em;
+    }
+
+    header h1 {
+      margin: 0.2em 0;
+      font-size: 1.8em;
     }
 
     header nav a {
@@ -48,14 +42,22 @@
     main {
       max-width: 900px;
       margin: 2em auto;
-      padding: 1em 2em;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 2em;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    h1, h2, h3, h4 {
-      color: #212529;
+    h2 {
+      color: #2c3e50;
+      border-bottom: 2px solid #e2e2e2;
+      padding-bottom: 0.2em;
+      margin-top: 2em;
+    }
+
+    h3, h4 {
+      color: #34495e;
+      margin-top: 1.2em;
     }
 
     hr {
@@ -64,12 +66,70 @@
       margin: 2em 0;
     }
 
-    ul {
-      padding-left: 1.2em;
+    p, li {
+      margin: 0.6em 0;
     }
 
-    li {
-      margin: 0.5em 0;
+    ul {
+      padding-left: 1.4em;
+    }
+
+    code {
+      background-color: #f1f1f1;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    /* --- Formules MathJax --- */
+    .math-display {
+      text-align: center;
+      font-size: 1.3em;
+      margin: 1em 0;
+      padding: 0.5em 1em;
+      background-color: #f9f9f9;
+      border-left: 4px solid #2c3e50;
+      border-radius: 6px;
+    }
+
+    .math-inline {
+      font-size: 1.1em;
+      background-color: #f9f9f9;
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+
+    /* --- Exemples et Exercices --- */
+    .example, .exercise {
+      background-color: #e9f7ef;
+      border-left: 4px solid #27ae60;
+      padding: 1em;
+      margin: 1em 0;
+      border-radius: 8px;
+    }
+
+    .exercise {
+      background-color: #fff3cd;
+      border-left-color: #f39c12;
+    }
+
+    .example h4, .exercise h4 {
+      margin-top: 0;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 600px) {
+      main {
+        padding: 1em;
+      }
+
+      header h1 {
+        font-size: 1.5em;
+      }
+
+      .math-display {
+        font-size: 1.1em;
+      }
     }
   </style>
 </head>
@@ -96,21 +156,23 @@
       <h2>1. Définition rigoureuse (somme de Riemann)</h2>
       <p>
         Soit <code>f : [a,b] → ℝ</code> bornée. Pour une partition
-        <span class="math-inline">\(P = \{ x_0 = a < x_1 < \ldots < x_n = b \}\)</span>, on pose <span class="math-inline">\(\Delta x_i = x_i - x_{i-1}\)</span> et on choisit un point <span class="math-inline">\( \xi_i \in [x_{i-1}, x_i] \)</span>. La somme de Riemann est
-        <div class="math-display">
-          $$ S(P,f,\xi) = \sum_{i=1}^n f(\xi_i) \Delta x_i $$
-        </div>
-        Si la limite de ces sommes lorsque le pas maximal de la partition tend vers 0 existe et est indépendante des choix \(\xi_i\), on appelle cette limite l'intégrale de Riemann :
-        <div class="math-display">
-          $$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,\xi) $$
-        </div>
+        <span class="math-inline">\(P = \{ x_0 = a < x_1 < \dots < x_n = b \}\)</span>, on pose <span class="math-inline">\(\Delta x_i = x_i - x_{i-1}\)</span> et on choisit un point <span class="math-inline">\( \xi_i \in [x_{i-1}, x_i] \)</span>. La somme de Riemann est
       </p>
+      <div class="math-display">
+        $$ S(P,f,\xi) = \sum_{i=1}^n f(\xi_i) \Delta x_i $$
+      </div>
+      <p>
+        Si la limite de ces sommes lorsque le pas maximal de la partition tend vers 0 existe et est indépendante des choix \(\xi_i\), on appelle cette limite l'intégrale de Riemann :
+      </p>
+      <div class="math-display">
+        $$ \int_a^b f(x)\,dx = \lim_{\|P\| \to 0} S(P,f,\xi) $$
+      </div>
 
       <h3>Conséquences et remarques</h3>
       <ul>
-        <li>Si <code>f</code> est continue sur <code>[a,b]</code>, alors <code>f</code> est intégrable (Riemann) sur <code>[a,b]</code>.</li>
-        <li>Si <code>f(x) ≥ 0</code>, alors <span class="math-inline">$$\int_a^b f(x)\,dx$$</span> est l'aire sous la courbe. Si <code>f</code> change de signe, on obtient une aire algébrique.</li>
-        <li>Propriétés linéaires : pour toute constante <code>α, β</code> et fonctions intégrables <code>f, g</code>, on a
+        <li>Si <code>f</code> est continue sur <code>[a,b]</code>, alors <code>f</code> est intégrable sur <code>[a,b]</code>.</li>
+        <li>Si <code>f(x) ≥ 0</code>, alors <span class="math-inline">$$\int_a^b f(x)\,dx$$</span> est l'aire sous la courbe. Sinon, c'est une aire algébrique.</li>
+        <li>Propriétés linéaires : pour toute constante <code>α, β</code> et fonctions intégrables <code>f, g</code> :
           <div class="math-display">
             $$ \int_a^b (\alpha f + \beta g)\,dx = \alpha \int_a^b f(x)\,dx + \beta \int_a^b g(x)\,dx $$
           </div>
@@ -121,39 +183,42 @@
 
       <h2>2. Théorème fondamental du calcul (TFI)</h2>
       <p>
-        <strong>Partie 1 (primitive)</strong> : Si <span class="math-inline">\( F(x) = \int_a^x f(t)\,dt \)</span> avec <code>f</code> continue sur <code>[a,b]</code>, alors <span class="math-inline">\(F\)</span> est dérivable et <span class="math-inline">\(F'(x) = f(x)\)</span>.
+        <strong>Partie 1 (primitive)</strong> : Si <span class="math-inline">\( F(x) = \int_a^x f(t)\,dt \)</span> avec <code>f</code> continue, alors <span class="math-inline">\(F'(x) = f(x)\)</span>.
       </p>
       <p>(Preuve courte) :</p>
       <div class="math-display">
         $$ \frac{F(x+h)-F(x)}{h} = \frac{1}{h}\int_x^{x+h} f(t)\,dt $$
       </div>
+
       <p>
-        Par continuité de <code>f</code>, lorsque <code>h→0</code>, la moyenne de <code>f</code> sur <code>[x,x+h]</code> tend vers <code>f(x)</code>, donc la limite vaut <code>f(x)</code>.
+        Par continuité de <code>f</code>, lorsque <code>h→0</code>, la limite vaut <code>f(x)</code>.
       </p>
 
       <p>
         <strong>Partie 2 (calcul d'intégrale par primitive)</strong> :
-        <div class="math-display">
-          $$ \int_a^b f(x)\,dx = F(b) - F(a) $$
-        </div>
       </p>
+      <div class="math-display">
+        $$ \int_a^b f(x)\,dx = F(b) - F(a) $$
+      </div>
 
       <hr>
 
       <h2>3. Intégrales indéfinies — primitives usuelles</h2>
+      <div class="example">
+        <h4>Exemple</h4>
+        <div class="math-display">
+          $$ \int x^3\,dx = \frac{x^4}{4} + C $$
+        </div>
+        Vérification : dérivée de \( x^4/4 = x^3 \).
+      </div>
+
       <ul>
-        <li><div class="math-display">$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C, \quad n\ne -1$$</div></li>
+        <li><div class="math-display">$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C \quad (n\neq -1)$$</div></li>
         <li><div class="math-display">$$\int \frac{1}{x}\,dx = \ln|x| + C$$</div></li>
         <li><div class="math-display">$$\int e^{ax}\,dx = \frac{1}{a} e^{ax} + C$$</div></li>
         <li><div class="math-display">$$\int \sin x\,dx = -\cos x + C, \quad \int \cos x\,dx = \sin x + C$$</div></li>
         <li><div class="math-display">$$\int \sec^2 x\,dx = \tan x + C, \quad \int \csc^2 x\,dx = -\cot x + C$$</div></li>
       </ul>
-
-      <h4>Exemple simple</h4>
-      <div class="math-display">
-        $$ \int x^3\,dx = \frac{x^4}{4} + C $$
-      </div>
-      Vérification : dérivée de \( x^4/4 = x^3 \).
 
       <hr>
 
@@ -163,15 +228,11 @@
       <div class="math-display">
         $$ \int f(\phi(x)) \phi'(x)\,dx = \int f(u)\,du $$
       </div>
-
-      <h4>Exemple 1</h4>
-      <div class="math-display">
-        $$ \int 2x \cos(x^2)\,dx = \int \cos(u)\,du = \sin(u) + C = \sin(x^2) + C $$
-      </div>
-
-      <h4>Exemple 2 (substitution trigonométrique)</h4>
-      <div class="math-display">
-        $$ \int \frac{dx}{\sqrt{1-x^2}} = \int d\theta = \theta + C = \arcsin(x) + C $$
+      <div class="example">
+        <h4>Exemple</h4>
+        <div class="math-display">
+          $$ \int 2x \cos(x^2)\,dx = \int \cos(u)\,du = \sin(x^2) + C $$
+        </div>
       </div>
 
       <h3>4.2 Intégration par parties</h3>
@@ -179,14 +240,19 @@
         $$ \int u v'\,dx = u v - \int u' v\,dx $$
       </div>
 
-      <h4>Exemple 3</h4>
-      <div class="math-display">
-        $$ \int x e^x dx = x e^x - \int e^x dx = x e^x - e^x + C = e^x(x-1) + C $$
+      <div class="example">
+        <h4>Exemple</h4>
+        <div class="math-display">
+          $$ \int x e^x dx = e^x(x-1) + C $$
+        </div>
       </div>
 
       <h3>4.3 Décomposition en éléments simples</h3>
-      <div class="math-display">
-        $$ \int \frac{2x+3}{x(x+1)} dx = \int \frac{A}{x} + \frac{B}{x+1} dx = 3\ln|x| - \ln|x+1| + C $$
+      <div class="example">
+        <h4>Exemple</h4>
+        <div class="math-display">
+          $$ \int \frac{2x+3}{x(x+1)} dx = 3\ln|x| - \ln|x+1| + C $$
+        </div>
       </div>
 
       <hr>
@@ -207,14 +273,19 @@
       <hr>
 
       <h2>9. Exercices guidés</h2>
-      <h4>Exercice 2</h4>
-      <div class="math-display">
-        $$ \int \frac{x}{\sqrt{1+x^2}} dx = \frac{1}{2} \int u^{-1/2} du = \sqrt{1+x^2} + C $$
+
+      <div class="exercise">
+        <h4>Exercice 2</h4>
+        <div class="math-display">
+          $$ \int \frac{x}{\sqrt{1+x^2}} dx = \sqrt{1+x^2} + C $$
+        </div>
       </div>
 
-      <h4>Exercice 3</h4>
-      <div class="math-display">
-        $$ \int \frac{4x+1}{x^2+x} dx = \int \frac{A}{x} + \frac{B}{x+1} dx = \ln|x| + 3\ln|x+1| + C $$
+      <div class="exercise">
+        <h4>Exercice 3</h4>
+        <div class="math-display">
+          $$ \int \frac{4x+1}{x^2+x} dx = \ln|x| + 3\ln|x+1| + C $$
+        </div>
       </div>
 
     </article>
