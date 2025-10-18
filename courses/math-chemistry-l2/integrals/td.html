@@ -16,11 +16,306 @@
   </header>
 
   <main>
-    <p>Placez ici vos TD et exercices sur les intégrales.</p>
-  </main>
+  <article class="cours avancé">
+
+    <h2>Introduction — Intuition géométrique</h2>
+    <p>
+      L'intégrale d'une fonction réelle continue sur un intervalle <em>[a,b]</em> représente, dans l'interprétation classique, <strong>l'aire algébrique</strong> délimitée par la courbe <code>y = f(x)</code>, l'axe des abscisses et les droites <code>x=a</code>, <code>x=b</code>. 
+      Cette idée intuitive est à la base de la définition rigoureuse par sommes de Riemann et débouche sur le lien fondamental entre dérivation et intégration : le <em>théorème fondamental du calcul intégral</em>.
+    </p>
+
+    <hr>
+
+    <h2>1. Définition rigoureuse (somme de Riemann)</h2>
+    <p>
+      Soit <code>f : [a,b] → ℝ</code> bornée. Pour une partition
+      <code>P = {x_0=a < x_1 < ... < x_n=b}</code> on pose <code>Δx_i = x_i - x_{i-1}</code> et on choisit un point <code>ξ_i ∈ [x_{i-1}, x_i]</code>. La somme de Riemann est
+      $$ S(P,f,ξ) = \sum_{i=1}^n f(ξ_i)\,Δx_i. $$
+      Si la limite de ces sommes lorsque le pas maximal de la partition tend vers 0 existe et est indépendante des choix <code>ξ_i</code>, on appelle cette limite l'intégrale de Riemann :
+      $$ \int_a^b f(x)\,dx = \lim_{\|P\|\to 0} S(P,f,ξ). $$
+    </p>
+
+    <h3>Conséquences et remarques</h3>
+    <ul>
+      <li>Si <code>f</code> est continue sur <code>[a,b]</code>, alors <code>f</code> est intégrable (Riemann) sur <code>[a,b]</code>.</li>
+      <li>Si <code>f(x) ≥ 0</code>, alors <code>\int_a^b f(x)\,dx</code> est l'aire sous la courbe. Si <code>f</code> change de signe, on obtient une aire algébrique (zones négatives comptées négativement).</li>
+      <li>Propriétés linéaires : pour toute constante <code>α, β</code> et fonctions intégrables <code>f, g</code>, on a
+        $$ \int_a^b (α f + β g) = α\int_a^b f + β\int_a^b g. $$
+      </li>
+    </ul>
+
+    <hr>
+
+    <h2>2. Théorème fondamental du calcul (TFI) — démonstration utile</h2>
+    <p>
+      <strong>Partie 1 (primitive)</strong> : Si <code>F(x) = \int_a^x f(t)\,dt</code> avec <code>f</code> continue sur <code>[a,b]</code>, alors <code>F</code> est dérivable et <code>F'(x) = f(x)</code>.
+    </p>
+    <p>(Preuve courte) :</p>
+    <p>
+      $$ \frac{F(x+h)-F(x)}{h} = \frac{1}{h}\int_x^{x+h} f(t)\,dt. $$
+      Par continuité de <code>f</code>, lorsque <code>h→0</code> la moyenne de <code>f</code> sur <code>[x,x+h]</code> tend vers <code>f(x)</code>, donc la limite vaut <code>f(x)</code>.
+    </p>
+
+    <p>
+      <strong>Partie 2 (calcul d'intégrale par primitive)</strong> : Si <code>F</code> est une primitive de <code>f</code> sur <code>[a,b]</code>, alors
+      $$ \int_a^b f(x)\,dx = F(b) - F(a). $$
+      (Preuve en combinant la définition des primitives et la partie 1.)
+    </p>
+
+    <hr>
+
+    <h2>3. Intégrales indéfinies — primitives usuelles</h2>
+    <p>Liste (sélection) de primitives souvent utilisées :</p>
+    <ul>
+      <li>$$\int x^n\,dx = \frac{x^{n+1}}{n+1} + C \quad (n\ne -1).$$</li>
+      <li>$$\int \frac{1}{x}\,dx = \ln|x| + C.$$</li>
+      <li>$$\int e^{ax}\,dx = \frac{1}{a} e^{ax} + C.$$</li>
+      <li>$$\int \sin x\,dx = -\cos x + C,\quad \int \cos x\,dx = \sin x + C.$$</li>
+      <li>$$\int \sec^2 x\,dx = \tan x + C,\quad \int \csc^2 x\,dx = -\cot x + C.$$</li>
+    </ul>
+
+    <h3>Exemple simple (vérification)</h3>
+    <p>
+      Calculer <code>\int x^3\,dx</code>.  
+      On utilise la formule : <code>\dfrac{x^{4}}{4} + C</code>.  
+      Vérification : dérivée de <code>x^4/4</code> = <code>x^3</code>.
+    </p>
+
+    <hr>
+
+    <h2>4. Techniques principales d’intégration (avec exemples détaillés)</h2>
+
+    <h3>4.1 Changement de variable (substitution)</h3>
+    <p>
+      Principe : si <code>u = φ(x)</code> est une bijection différentiable et <code>du = φ'(x)\,dx</code>, alors
+      $$ \int f(φ(x)) φ'(x)\,dx = \int f(u)\,du. $$
+    </p>
+
+    <h4>Exemple 1 (classique)</h4>
+    <p>
+      $$ I = \int 2x \cos(x^2)\,dx. $$  
+      Posons <code>u = x^2</code> ⇒ <code>du = 2x dx</code>. Donc
+      $$ I = \int \cos(u)\,du = \sin u + C = \sin(x^2) + C. $$
+    </p>
+
+    <h4>Exemple 2 (substitution trigonométrique)</h4>
+    <p>
+      $$ I = \int \frac{dx}{\sqrt{1 - x^2}}. $$  
+      Poser <code>x = \sin θ</code>, <code>dx = \cos θ\,dθ</code>, racine → <code>\sqrt{1 - \sin^2 θ} = \cos θ</code>, on obtient
+      $$ I = \int dθ = θ + C = \arcsin x + C. $$
+    </p>
+
+    <hr>
+
+    <h3>4.2 Intégration par parties</h3>
+    <p>
+      Formule (issue de la règle du produit) :
+      $$ \int u(x)\,v'(x)\,dx = u(x)v(x) - \int u'(x)v(x)\,dx. $$
+      Bon choix de <code>u</code> et <code>v'</code> est essentiel : on choisit généralement <code>u</code> qui se simplifie après dérivation.
+    </p>
+
+    <h4>Exemple 3</h4>
+    <p>
+      Calculer <code>\int x e^x\,dx</code>.  
+      Poser <code>u = x</code>, <code>v' = e^x</code> ⇒ <code>u' = 1</code>, <code>v = e^x</code>.  
+      Ainsi :
+      $$ \int x e^x dx = x e^x - \int 1\cdot e^x dx = x e^x - e^x + C = e^x(x-1) + C. $$
+    </p>
+
+    <h4>Exemple 4 (itération)</h4>
+    <p>
+      Pour <code>\int x^2 e^x dx</code>, on applique deux fois par parties ou utiliser la méthode de tabulation (tableau d’intégration).
+    </p>
+
+    <hr>
+
+    <h3>4.3 Décomposition en éléments simples (fractions rationnelles)</h3>
+    <p>
+      Soit <code>R(x) = P(x)/Q(x)</code> avec deg(<code>P</code>) &lt; deg(<code>Q</code>). On factorise <code>Q</code> et on écrit une somme de termes simples (pour chaque facteur linéaire ou quadratique irréductible). On intègre chaque terme simple.
+    </p>
+
+    <h4>Procédure générale</h4>
+    <ol>
+      <li>Si deg(<code>P</code>) ≥ deg(<code>Q</code>), effectuer la division euclidienne pour séparer un polynôme + fraction propre.</li>
+      <li>Factoriser <code>Q(x)</code> sur ℝ en facteurs linéaires et quadratiques irréductibles.</li>
+      <li>Pour chaque facteur linéaire <code>(x-a)^k</code>, introduire des termes <code>A_1/(x-a) + A_2/(x-a)^2 + ...</code>.</li>
+      <li>Pour chaque facteur quadratique irréductible <code>(x^2+bx+c)^m</code>, introduire des termes <code>(B x + C)/(x^2+bx+c), ...</code>.</li>
+      <li>Déterminer les coefficients par identification ou méthodes algébriques (évaluation, système linéaire).</li>
+    </ol>
+
+    <h4>Exemple 5 (détaillé)</h4>
+    <p>
+      Calculer
+      $$ I = \int \frac{2x+3}{x(x+1)}\,dx. $$
+      On pose la décomposition
+      $$ \frac{2x+3}{x(x+1)} = \frac{A}{x} + \frac{B}{x+1}. $$
+      Multiplions par <code>x(x+1)</code> :
+      $$ 2x+3 = A(x+1) + Bx = (A+B)x + A. $$
+      Identification des coefficients :  
+      pour <code>x</code> : <code>2 = A + B</code>, pour la constante : <code>3 = A</code> ⇒ <code>A = 3</code>, alors <code>B = 2 - A = -1</code>.
+      Donc
+      $$ I = \int \left( \frac{3}{x} - \frac{1}{x+1} \right)\,dx = 3\ln|x| - \ln|x+1| + C. $$
+    </p>
+
+    <h4>Exemple 6 (racines multiples)</h4>
+    <p>
+      Pour
+      $$ \int \frac{1}{(x-1)^2(x+2)}\,dx $$
+      on écrira
+      $$ \frac{1}{(x-1)^2(x+2)} = \frac{A}{x-1} + \frac{B}{(x-1)^2} + \frac{C}{x+2}, $$
+      puis on résout pour <code>A,B,C</code>.
+    </p>
+
+    <hr>
+
+    <h2>5. Intégrales trigonométriques et substitutions trigonométriques</h2>
+
+    <h3>5.1 Identités usuelles</h3>
+    <ul>
+      <li><code>\sin^2 x = (1-\cos 2x)/2</code>, <code>\cos^2 x = (1+\cos 2x)/2</code></li>
+      <li><code>\sin x \cos x = (1/2)\sin 2x</code></li>
+      <li>Formules d'angle somme : <code>\sin(a±b), \cos(a±b)</code></li>
+    </ul>
+
+    <h3>5.2 Exemples</h3>
+    <h4>Exemple 7</h4>
+    <p>
+      $$ \int \sin^3 x\,dx. $$  
+      Écrire <code>\sin^3 x = \sin^2 x \sin x = (1-\cos^2 x)\sin x</code> et poser <code>u = \cos x</code> (donc <code>du = -\sin x dx</code>), on obtient
+      $$ \int \sin^3 x\,dx = -\int (1-u^2)\,du = -u + \frac{u^3}{3} + C = -\cos x + \frac{\cos^3 x}{3} + C. $$
+    </p>
+
+    <h3>5.3 Substitutions trigonométriques (pour racines carrées)</h3>
+    <ul>
+      <li>Pour <code>\sqrt{a^2 - x^2}</code> → poser <code>x = a \sin θ</code>.</li>
+      <li>Pour <code>\sqrt{a^2 + x^2}</code> → poser <code>x = a \tan θ</code>.</li>
+      <li>Pour <code>\sqrt{x^2 - a^2}</code> → poser <code>x = a \sec θ</code>.</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. Intégrales impropres</h2>
+    <p>
+      Une intégrale est impropre si l'intervalle d'intégration est infini ou si la fonction a une singularité dans l'intervalle. On remplace par une limite.
+    </p>
+
+    <h4>Exemple 8 — convergence</h4>
+    <p>
+      Étudier la convergence de
+      $$ \int_1^{+\infty} \frac{1}{x^p}\,dx. $$
+      Calcul : pour <code>p ≠ 1</code>,
+      $$ \int_1^R x^{-p}\,dx = \frac{R^{1-p}-1}{1-p}. $$
+      Limite quand <code>R→∞</code> :
+      <ul>
+        <li>Si <code>p>1</code>, alors <code>R^{1-p}→0</code> ⇒ intégrale converge et vaut <code>1/(p-1)</code>.</li>
+        <li>Si <code>p≤1</code>, l'intégrale diverge.</li>
+      </ul>
+    </p>
+
+    <hr>
+
+    <h2>7. Applications (ingénierie)</h2>
+    <h3>7.1 Aire</h3>
+    <p>Directement l'interprétation usuelle : <code>A = \int_a^b f(x)\,dx</code> pour <code>f(x) ≥ 0</code>.</p>
+
+    <h3>7.2 Volume de révolution</h3>
+    <p>
+      Par la méthode des disques (axe <code>x</code>) :
+      $$ V = π \int_a^b (f(x))^2 \,dx. $$
+      Par la méthode des cylindres (shells), si on tourne autour de l'axe <code>y</code> :
+      $$ V = 2π \int_a^b x f(x)\,dx. $$
+    </p>
+
+    <h3>7.3 Longueur d'arc</h3>
+    <p>
+      Pour <code>y = f(x)</code> de classe <code>C^1</code> sur <code>[a,b]</code> :
+      $$ L = \int_a^b \sqrt{1 + (f'(x))^2}\,dx. $$
+    </p>
+
+    <hr>
+
+    <h2>8. Méthodes numériques (aperçu)</h2>
+    <p>
+      Quand une primitive explicite est introuvable, on utilise des méthodes numériques.
+    </p>
+    <h3>Trapezoïde</h3>
+    <p>Approximation :
+      $$ \int_a^b f(x)\,dx \approx \frac{b-a}{2n}\left(f(x_0)+2\sum_{k=1}^{n-1} f(x_k) + f(x_n)\right). $$
+    </p>
+    <h3>Simpson (si n pair)</h3>
+    <p>
+      $$ \int_a^b f(x)\,dx \approx \frac{b-a}{3n}\left(f(x_0) + 4\sum_{k \text{ odd}} f(x_k) + 2\sum_{k \text{ even}} f(x_k) + f(x_n)\right). $$
+    </p>
+
+    <hr>
+
+    <h2>9. Exercices guidés (avec solutions succinctes)</h2>
+
+    <h4>Exercice 1</h4>
+    <p>Calculer <code>\int (3x^2 - 2x + 1)\,dx</code>.</p>
+    <p>Solution : primitives terme à terme :
+      $$ \int 3x^2 dx = x^3,\quad \int -2x dx = -x^2,\quad \int 1 dx = x. $$
+      Donc
+      $$ x^3 - x^2 + x + C. $$
+    </p>
+
+    <h4>Exercice 2 (substitution)</h4>
+    <p>Calculer <code>\int \frac{x}{\sqrt{1+x^2}} dx</code>.</p>
+    <p>Solution : poser <code>u=1+x^2</code>, <code>du=2x dx</code> ⇒
+      $$ \int \frac{x}{\sqrt{1+x^2}} dx = \frac{1}{2} \int u^{-1/2} du = \frac{1}{2}\cdot 2 u^{1/2} + C = \sqrt{1+x^2} + C. $$
+    </p>
+
+    <h4>Exercice 3 (fraction rationnelle)</h4>
+    <p>Calculer <code>\int \frac{4x+1}{x^2+x}\,dx</code>.</p>
+    <p>Solution : décomposeurs : <code>\dfrac{4x+1}{x(x+1)} = \dfrac{A}{x} + \dfrac{B}{x+1}</code>. Après identification :
+      <code>4x+1 = A(x+1)+Bx = (A+B)x + A</code> ⇒ <code>A=1, A+B=4 ⇒ B=3</code>.  
+      Ainsi
+      $$ \int \left(\frac{1}{x} + \frac{3}{x+1}\right) dx = \ln|x| + 3\ln|x+1| + C. $$
+    </p>
+
+    <hr>
+
+    <h2>10. Conseils méthodologiques — pour l'examen et le travail</h2>
+    <ul>
+      <li>Avant toute chose, identifie la famille : polynôme, rationnelle, trigonométrique, racines. Choisis la méthode adéquate.</li>
+      <li>Vérifie toujours en différentiant la primitive trouvée.</li>
+      <li>Pour les décompositions en éléments simples, vérifie le degré et effectue la division si nécessaire.</li>
+      <li>Pour les intégrales impropres, sépare en limites et teste la convergence (p-test, comparaison, intégration par parties si nécessaire).</li>
+      <li>Utilise des logiciels (Sympy, Maple, Matlab, WolframAlpha) pour vérifier les résultats mais apprends à reconnaître les formes standards.</li>
+    </ul>
+
+    <hr>
+
+    <h2>11. Ressources complémentaires (pour approfondir)</h2>
+    <ul>
+      <li>Livres classiques : «Calculus» de Michael Spivak (pour la rigueur), «Calculus» de James Stewart (applications)</li>
+      <li>Cours d'analyse réelle (Lebesgue) pour généraliser l'intégrale aux fonctions non-Riemanniennes</li>
+      <li>Modules numériques (Gauss quadrature, méthodes adaptatives)</li>
+    </ul>
+
+    <hr>
+
+    <h2>Remarques finales</h2>
+    <p>
+      Ce cours regroupe les outils essentiels pour aborder la plupart des intégrales rencontrées en première et deuxième année d'ingénierie. 
+      Pour être vraiment à l'aise : <strong>pratique 10–20 exercices variés</strong>, apprendre les substitutions classiques, et maîtriser la décomposition en éléments simples.
+    </p>
+
+  </article>
+
+  <!-- MathJax pour affichage mathématique -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], packages: {'[+]': ['amsmath']} },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</main>
+
 
   <footer>
-    <p>&copy; 2025 Alethia. Tous droits réservés.</p>
+    <p>&copy; 2019 Alethia. Tous droits réservés.</p>
   </footer>
 </body>
 </html>
