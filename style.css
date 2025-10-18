@@ -1,58 +1,148 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #fff8f0;
-  color: #3e2723;
+/* ---- Style global du site Alethia ---- */
+
+:root {
+  --marron-fonce: #3a1e00;
+  --marron-clair: #c8a97e;
+  --beige: #fdfaf7;
 }
 
+body {
+  font-family: "Times New Roman", Times, serif;
+  background-color: var(--beige);
+  color: var(--marron-fonce);
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
+}
+
+/* ---- HEADER ---- */
 header {
-  background-color: #6b3e26;
+  background-color: var(--marron-fonce);
   color: white;
-  padding: 20px;
   text-align: center;
+  padding: 20px 0;
+  border-bottom: 5px solid var(--marron-clair);
+}
+
+header h1 {
+  font-size: 2.2em;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* ---- NAVIGATION ---- */
+nav {
+  margin-top: 10px;
 }
 
 nav a {
-  color: white;
-  text-decoration: none;
+  color: var(--marron-clair);
   margin: 0 15px;
+  text-decoration: none;
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 nav a:hover {
-  color: #ffd9b3;
-}
-
-main {
-  padding: 40px;
-  text-align: center;
-}
-
-footer {
-  background-color: #6b3e26;
+  text-decoration: underline;
   color: white;
+}
+
+/* ---- TITRES ---- */
+h2, h3 {
+  color: var(--marron-fonce);
+  border-bottom: 2px solid var(--marron-clair);
+  padding-bottom: 5px;
+  margin-top: 30px;
+}
+
+/* ---- CONTENU ---- */
+main {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+p, li {
+  text-align: justify;
+  font-size: 1.05em;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+/* ---- BLOCS SPÉCIAUX ---- */
+.definition, .example, .remark, .theorem {
+  border-left: 4px solid var(--marron-clair);
+  background-color: #fff7ec;
+  padding: 10px 15px;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
+.definition h3, .example h3, .remark h3, .theorem h3 {
+  margin-top: 0;
+  color: var(--marron-fonce);
+}
+
+/* ---- LIENS ---- */
+a {
+  color: var(--marron-fonce);
+}
+
+a:hover {
+  color: var(--marron-clair);
+}
+
+/* ---- PIED DE PAGE ---- */
+footer {
   text-align: center;
-  padding: 15px 0;
+  background-color: var(--marron-fonce);
+  color: white;
+  padding: 10px 0;
+  font-size: 0.9em;
   margin-top: 40px;
+  border-top: 4px solid var(--marron-clair);
 }
 
-h1, h2, h3 {
-  color: #5a2e1d;
-}
-
-a.module-link, a.course-link {
+/* ---- MODULES ET COURS ---- */
+.module-link, .course-link {
   display: block;
-  margin: 15px auto;
-  padding: 15px;
-  width: 250px;
-  background-color: #f5e0c3;
-  border-radius: 10px;
+  background-color: #fff7ec;
+  border: 1px solid var(--marron-clair);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  color: var(--marron-fonce);
   text-decoration: none;
-  color: #3e2723;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease-in-out;
 }
 
-a.module-link:hover, a.course-link:hover {
-  background-color: #e3c39b;
+.module-link:hover, .course-link:hover {
+  background-color: var(--marron-clair);
+  color: white;
+}
+
+/* ---- ICONES ---- */
+.icon {
+  font-size: 40px;
+  color: var(--marron-fonce);
+  text-decoration: none;
+}
+
+.icon:hover {
+  color: var(--marron-clair);
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 600px) {
+  nav a {
+    display: block;
+    margin: 10px 0;
+  }
+  main {
+    padding: 10px;
+  }
 }
