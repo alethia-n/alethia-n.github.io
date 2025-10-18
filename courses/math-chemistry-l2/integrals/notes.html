@@ -314,7 +314,60 @@
         <li>∫ sin x cos x dx = sin² x / 2 + C</li>
       </ul>
 
-    </article>
+  
+        <hr>
+
+<h2>6. Résumé des techniques d’intégration</h2>
+
+<p>Voici un rappel des principales méthodes pour calculer des intégrales, avec leurs principes :</p>
+
+<ul>
+  <li>
+    <strong>Intégration par substitution (changement de variable) :</strong>
+    <p>Si l’intégrande contient une fonction et sa dérivée, on peut poser <code>u = φ(x)</code> et remplacer <code>dx</code> par <code>du</code> pour simplifier l’intégrale :</p>
+    <div class="math-display">
+      ∫ f(φ(x)) φ'(x) dx = ∫ f(u) du
+    </div>
+  </li>
+
+  <li>
+    <strong>Intégration par parties :</strong>
+    <p>Utilisée lorsque l’intégrande est un produit de fonctions <code>u(x)v'(x)</code>. On choisit <code>u</code> à dériver et <code>v'</code> à intégrer :</p>
+    <div class="math-display">
+      ∫ u v' dx = u v - ∫ u' v dx
+    </div>
+  </li>
+
+  <li>
+    <strong>Décomposition en fractions simples :</strong>
+    <p>Pour une fraction rationnelle <code>P(x)/Q(x)</code> avec <code>deg P < deg Q</code>, on factorise le dénominateur et on écrit la fraction comme somme de fractions simples, plus faciles à intégrer :</p>
+    <div class="math-display">
+      P(x)/Q(x) = Σ A_i / (x - r_i) + … 
+    </div>
+  </li>
+
+  <li>
+    <strong>Intégrales trigonométriques :</strong>
+    <p>Pour des puissances de sinus et cosinus ou des produits, on utilise des identités trigonométriques pour transformer l’intégrale en une forme plus simple :</p>
+    <div class="math-display">
+      ∫ sin^n x dx, ∫ cos^n x dx, ∫ sin^m x cos^n x dx
+    </div>
+  </li>
+
+  <li>
+    <strong>Intégrales de fonctions usuelles :</strong>
+    <p>Certaines intégrales sont directes, comme :</p>
+    <ul>
+      <li>∫ x^n dx = x^(n+1)/(n+1) + C</li>
+      <li>∫ e^(ax) dx = e^(ax)/a + C</li>
+      <li>∫ 1/x dx = ln|x| + C</li>
+      <li>∫ sin x dx = -cos x + C, ∫ cos x dx = sin x + C</li>
+    </ul>
+  </li>
+</ul>
+
+<p>En combinant ces techniques, la majorité des intégrales rencontrées en calcul différentiel peuvent être résolues.</p>
+  </article>
   </main>
 
   <footer>
