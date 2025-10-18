@@ -3,74 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liste des cours — Alethia</title>
-  <link rel="stylesheet" href="../style.css">
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
-      color: #333;
-      text-align: center;
-    }
-
-    h2 {
-      margin-top: 40px;
-      color: #007bff;
-    }
-
-    .menu {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 30px;
-      gap: 15px;
-    }
-
-    .btn {
-      background: #007bff;
-      color: white;
-      padding: 12px 20px;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.2s;
-      width: 250px;
-      text-align: center;
-    }
-
-    .btn:hover {
-      background: #0056b3;
-    }
-
-    .btn.disabled {
-      background: #6c757d;
-      cursor: not-allowed;
-    }
-
-    .back-btn {
-      display: inline-block;
-      margin-top: 40px;
-      color: #007bff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .back-btn:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <title>Courses - Alethia</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <h2>Liste des cours</h2>
+  <header>
+    <h1>ALETHIA</h1>
+    <nav>
+      <a href="courses.html">Courses</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-  <div class="menu">
-    <a href="math.html" class="btn">Cours 01 : Mathématiques appliquées</a>
-    <a href="#" class="btn disabled" title="Bientôt disponible">Cours 02 : Indisponible</a>
-    <a href="#" class="btn disabled" title="Bientôt disponible">Cours 03 : Indisponible</a>
-  </div>
+  <main>
+    <h2>Liste des modules</h2>
 
-  <a href="../index.html" class="back-btn">← Retour à l’accueil</a>
+    <a href="math-chemistry-l2/index.html" class="module-link">Module 01 : Math - Chemistry L2</a>
+    <a href="#" class="module-link" style="opacity:0.5;pointer-events:none;">Module 02 : Course02 (indisponible)</a>
+    <a href="#" class="module-link" style="opacity:0.5;pointer-events:none;">Module 03 : Course03 (indisponible)</a>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alethia. Tous droits réservés.</p>
+  </footer>
 </body>
 </html>
